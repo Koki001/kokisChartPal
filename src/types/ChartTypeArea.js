@@ -359,7 +359,9 @@ const ChartTypeLine = function () {
             variant="standard"
           />
         </div>
-        <div className="dataLabelContainer">
+        <div className="dataLabelTitle">
+          <h4>Data Title</h4>
+
           {showColorPicker === true ? (
             <div className="colorPicker">
               <GithubPicker
@@ -370,8 +372,7 @@ const ChartTypeLine = function () {
               />
             </div>
           ) : null}
-          <p>Data names</p>
-          <div className="containedInputs">
+          <div className="containedDataName">
             {dataCounter.map(function (line, index) {
               return (
                 <div key={`yeah${index}`} className="newLine">
@@ -390,195 +391,193 @@ const ChartTypeLine = function () {
                     key={line + index}
                     id={`line${index.toString()}`}
                     onChange={handleDataLabel}
-                    placeholder={`Data point ${index + 1}`}
+                    placeholder={`Data ${index + 1} Title`}
                   />
                 </div>
               );
             })}
           </div>
         </div>
-        <div className="inputsLineContainer">
-          <div className="xAxis">
-            <p>Data point labels (X-Axis)</p>
-            <div className="containedInputs">
-              {Object.entries(fmainData.dataPoints).map(function (
-                point,
-                index
-              ) {
-                return (
-                  <div
-                    className="dataPointInputs"
-                    key={`dataPoint${index + 1}`}
-                  >
-                    <TextField
-                      sx={{
-                        "& .MuiInputBase-input": {
-                          padding: "2px 12px",
-                          minWidth: "30px",
-                        },
-                      }}
-                      id={`xData${index.toString()}`}
-                      onChange={handleXData}
-                      placeholder={`X-Axis Label ${index + 1}`}
-                      value={fchartData[index].name}
-                    />
-                  </div>
-                );
-              })}
+        {dataCounter.length !== 0 && fmainData.dataPoints.length > 0 ? (
+          <div className="inputsLineContainer">
+            <div className="labelArrowContainer">
+              {dataCounter.length > 1 && (
+                <Button
+                  onClick={handlePrevClick}
+                  variant="outlined"
+                  startIcon={<KeyboardArrowLeftIcon />}
+                  style={{
+                    minWidth: "30px",
+                    padding: "0 10px",
+                    "& span": {
+                      margin: "0",
+                    },
+                  }}
+                ></Button>
+              )}
+              <h4>
+                {fchartNames[showing].name
+                  ? fchartNames[showing].name
+                  : `No Name`}
+              </h4>
+              {dataCounter.length > 1 && (
+                <Button
+                  onClick={handleNextClick}
+                  variant="outlined"
+                  startIcon={<KeyboardArrowRightIcon />}
+                  style={{
+                    minWidth: "30px",
+                    padding: "0 10px",
+                    "& span": {
+                      margin: "0",
+                    },
+                  }}
+                ></Button>
+              )}
+            </div>
+            <div
+              className="containedDivBorder"
+              style={{
+                border: `2px solid ${fchartNames[showing].color}`,
+                borderRadius: "5px",
+              }}
+            >
+              <div className="containedInputs">
+                <div className="xAxis">
+                  {Object.entries(fmainData.dataPoints).map(function (
+                    point,
+                    index
+                  ) {
+                    return (
+                      <div
+                        className="dataPointInputs"
+                        key={`dataPoint${index + 1}`}
+                      >
+                        <TextField
+                          sx={{
+                            "& .MuiInputBase-input": {
+                              padding: "2px 12px",
+                              minWidth: "30px",
+                            },
+                          }}
+                          id={`xData${index.toString()}`}
+                          onChange={handleXData}
+                          placeholder={`Point ${index + 1} Label`}
+                          value={fchartData[index].name}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+                <div className="yAxis">
+                  {dataCounter.map(function (line, lineIndex) {
+                    if (showing === lineIndex) {
+                      return (
+                        <div
+                          className="containedInputsY"
+                          key={`yInputs${lineIndex}`}
+                        >
+                          {Object.entries(fmainData.dataPoints).map(function (
+                            point,
+                            index
+                          ) {
+                            return (
+                              <div
+                                className="dataPointInputs"
+                                key={`data${index}`}
+                                id={index}
+                              >
+                                <TextField
+                                  sx={{
+                                    "& .MuiInputBase-input": {
+                                      padding: "2px 12px",
+                                      minWidth: "30px",
+                                      textAlign: "center",
+                                    },
+                                  }}
+                                  id={lineIndex.toString()}
+                                  onChange={handleDataChange}
+                                  placeholder={`Data Point ${index + 1} Value`}
+                                  value={fchartData[index][`line${lineIndex}`]}
+                                />
+                              </div>
+                            );
+                          })}
+                        </div>
+                      );
+                    }
+                  })}
+                </div>
+              </div>
             </div>
           </div>
-          {dataCounter.length !== 0 && fmainData.dataPoints.length > 0 ? (
-            <div className="yAxis">
-              <p>Y-Axis Data</p>
-              <div className="labelArrowContainer">
-                {dataCounter.length > 1 && (
-                  // <button onClick={handlePrevClick}>⬅️</button>
-                  <Button
-                    onClick={handlePrevClick}
-                    variant="outlined"
-                    startIcon={<KeyboardArrowLeftIcon />}
-                    style={{
-                      minWidth: "30px",
-                      "& span": {
-                        margin: "0",
-                      },
-                    }}
-                  ></Button>
-                )}
-                <h4>
-                  {fchartNames[showing].name
-                    ? fchartNames[showing].name
-                    : `No Name`}
-                </h4>
-                {dataCounter.length > 1 && (
-                  // <button onClick={handleNextClick}>➡️</button>
-                  <Button
-                    onClick={handleNextClick}
-                    variant="outlined"
-                    startIcon={<KeyboardArrowRightIcon />}
-                    style={{
-                      minWidth: "30px",
-                      "& span": {
-                        margin: "0",
-                      },
-                    }}
-                  ></Button>
-                )}
-              </div>
-              {dataCounter.map(function (line, lineIndex) {
-                if (showing === lineIndex) {
-                  return (
-                    <div className="containedInputs containedInputsY">
-                      {Object.entries(fmainData.dataPoints).map(function (
-                        point,
-                        index
-                      ) {
-                        return (
-                          <div
-                            className="dataPointInputs"
-                            key={`data${index}`}
-                            id={index}
-                          >
-                            {/* <input
-                              onChange={handleDataChange}
-                              type="text"
-                              name={index}
-                              id={lineIndex}
-                              value={fchartData[index][`line${lineIndex}`]}
-                            />
-                            <label htmlFor={index} className={"sr-only"}>
-                              {fchartData[index].name}
-                            </label> */}
-                            <TextField
-                              sx={{
-                                "& .MuiInputBase-input": {
-                                  padding: "2px 12px",
-                                  minWidth: "30px",
-                                  textAlign: "center",
-                                },
-                              }}
-                              id={lineIndex}
-                              onChange={handleDataChange}
-                              placeholder={
-                                fchartData[index] ? fchartData[index].name : ``
-                              }
-                              value={fchartData[index][`line${lineIndex}`]}
-                            />
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                }
-              })}
-            </div>
-          ) : null}
-        </div>
+        ) : null}
       </div>
-      {/* <ResponsiveContainer
+      <ResponsiveContainer
         width="100%"
         height="70%"
         className="chartMainContainer"
-      > */}
-      <BarChart
-        width={width - 50}
-        height={500}
-        data={fchartData}
-        margin={{
-          top: 10,
-          right: 30,
-          left: 20,
-          bottom: 50,
-        }}
       >
-        <CartesianGrid strokeDasharray="3 3" />
-        <XAxis
-          dataKey="name"
-          label={{
-            value: fmainData.xLabel,
-            position: "bottom",
-            className: "xAxisLabel",
-            offset: 15,
+        <BarChart
+          // width={width - 50}
+          // height={500}
+          data={fchartData}
+          margin={{
+            top: 10,
+            right: 30,
+            left: 20,
+            bottom: 50,
           }}
-        />
-        <YAxis
-          domain={[0, "dataMax"]}
-          label={{
-            value: fmainData.yLabel,
-            angle: -90,
-            position: "insideLeft",
-            className: "yAxisLabel",
-            offset: -10
-          }}
-        />
-        <Tooltip />
-        <Legend
-          verticalAlign="top"
-          align="center"
-          height={36}
-          iconSize="14"
-          iconType={"circle"}
-        />
-        {dataCounter.map(function (e, index) {
-          return (
-            <Bar
-              key={`line${index}`}
-              strokeWidth={3}
-              type="monotone"
-              name={
-                fchartNames[index].name
-                  ? fchartNames[index].name
-                  : `line ${index}`
-              }
-              dataKey={`line${index}`}
-              fill={
-                fchartNames[index].color ? fchartNames[index].color : "#000000"
-              }
-            />
-          );
-        })}
-      </BarChart>
-      {/* </ResponsiveContainer> */}
+        >
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey="name"
+            label={{
+              value: fmainData.xLabel,
+              position: "bottom",
+              className: "xAxisLabel",
+              offset: 15,
+            }}
+          />
+          <YAxis
+            domain={[0, "dataMax"]}
+            label={{
+              value: fmainData.yLabel,
+              angle: -90,
+              position: "insideLeft",
+              className: "yAxisLabel",
+            }}
+          />
+          <Tooltip />
+          <Legend
+            verticalAlign="top"
+            align="center"
+            height={36}
+            iconSize="14"
+            iconType={"circle"}
+          />
+          {dataCounter.map(function (e, index) {
+            return (
+              <Bar
+                key={`line${index}`}
+                strokeWidth={2}
+                type="monotone"
+                name={
+                  fchartNames[index].name
+                    ? fchartNames[index].name
+                    : `Data ${index + 1}`
+                }
+                dataKey={`line${index}`}
+                fill={
+                  fchartNames[index].color
+                    ? fchartNames[index].color
+                    : "#000000"
+                }
+              />
+            );
+          })}
+        </BarChart>
+      </ResponsiveContainer>
     </>
   );
 };
