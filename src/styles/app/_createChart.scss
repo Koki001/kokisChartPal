@@ -1,0 +1,121 @@
+.createChart {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+
+}
+.chartContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100vh;
+  width: 100%;
+  select {
+    width: 100px;
+  }
+}
+.chartMainContainer {
+  border-top: 1px solid black;
+  margin-top: 10px;
+  height: 500px;
+}
+.chartConfig {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: flex-start;
+  width: 100%;
+  // flex-wrap: wrap;
+  height: 200px;
+  margin: 20px 0;
+  p {
+    margin: 0 0 15px 0;
+  }
+}
+.yAxisLabel {
+  text-anchor: middle;
+  font-size: 20px;
+}
+.xAxisLabel {
+  font-size: 20px;
+}
+.inputsLineContainer {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+.containedInputs,
+.containedDataName {
+  height: auto;
+  max-height: 135px;
+  overflow-y: scroll;
+}
+.containedInputsY {
+  max-height: 135px;
+}
+.dataPointInputs {
+  display: flex;
+}
+.selectAndAdd {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.yAxis,
+.xAxis {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+    max-height: 135px;
+}
+
+
+
+.containedInputs {
+  display: flex;
+  align-items: center;
+
+  p {
+    align-self: flex-start;
+  }
+}
+h4 {
+  align-self: center;
+  margin-top: 0;
+}
+.dataLabelContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+}
+.topChart,
+.dataLabelContainer,
+.inputsLineContainer {
+  height: 100%;
+  
+}
+.dataLineContainer {
+  max-height: 120px;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.titleContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.topChart {
+  display: flex;
+  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.dataLabelTitle {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}

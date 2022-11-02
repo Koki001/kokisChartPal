@@ -1,0 +1,35 @@
+.colorPicker {
+  background-color: rgb(228, 228, 228);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  z-index: 100;
+  right: 210px;
+  top: 20px;
+  width: 200px;
+}
+
+.labelArrowContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  h4 {
+    margin: 0 25px;
+  }
+  button {
+    padding: 0;
+  }
+}
+
+.newLine {
+  display: flex;
+  button {
+    padding: 10px;
+  }
+}
+
+.recharts-legend-item-text {
+  color: black;
+}
