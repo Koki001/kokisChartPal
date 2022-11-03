@@ -222,14 +222,15 @@ template {
   flex-direction: column;
   text-align: center;
   align-items: center;
+  height: 100vh;
 }
 
 .chartContainer {
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100vh;
   width: 100%;
+  height: 95vh;
 }
 .chartContainer select {
   width: 100px;
@@ -243,10 +244,10 @@ template {
 
 .chartConfig {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: flex-start;
   width: 100%;
-  height: 200px;
+  height: 250px;
   margin: 20px 0;
 }
 .chartConfig p {
@@ -268,11 +269,23 @@ template {
   flex-direction: column;
 }
 
-.containedInputs,
-.containedDataName {
+.containedInputs {
   height: auto;
   max-height: 135px;
   overflow-y: scroll;
+}
+
+.containedDataName {
+  max-height: 150px;
+  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
+}
+
+.newLine {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .containedInputsY {
@@ -347,19 +360,31 @@ h4 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 100%;
+  width: 100%;
+  position: relative;
+}
+.dataLabelTitle h4 {
+  margin: 0;
+}
+
+.labelsXY {
+  display: flex;
+  justify-content: space-between;
 }
 
 .colorPicker {
   background-color: rgb(228, 228, 228);
   display: flex;
   justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   position: absolute;
   z-index: 100;
-  right: 210px;
-  top: 20px;
-  width: 200px;
+  right: -100%;
+  width: 400px;
+}
+.colorPicker .sketch-picker {
+  width: auto;
 }
 
 .labelArrowContainer {
@@ -386,9 +411,54 @@ h4 {
   color: black;
 }
 
+.chartSettings {
+  height: 100%;
+  width: 220px;
+}
+.chartSettings p {
+  margin: 0 10px 0 0;
+}
+.chartSettings .gridOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+}
+.chartSettings .labelsOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+}
+.chartSettings .lineOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+}
+.chartSettings .lineType div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.chartSettings .lineNullOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 30px;
+}
+.chartSettings .MuiFormGroup-root {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+.chartSettings .MuiFormGroup-root label {
+  width: calc(33.3333333333% - 26px);
+}
+
 .wrapper {
   max-width: 1200px;
-  width: 90%;
+  width: 95%;
   margin: 0 auto;
 }
 

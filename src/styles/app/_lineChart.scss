@@ -2,12 +2,15 @@
   background-color: rgb(228, 228, 228);
   display: flex;
   justify-content: center;
-  align-items: center;
+  flex-direction: column;
+  align-items: stretch;
   position: absolute;
   z-index: 100;
-  right: 210px;
-  top: 20px;
-  width: 200px;
+  right: -100%;
+  width: 400px;
+  .sketch-picker {
+    width: auto;
+  }
 }
 
 .labelArrowContainer {
@@ -32,4 +35,48 @@
 
 .recharts-legend-item-text {
   color: black;
+}
+.chartSettings {
+  height: 100%;
+  width: 220px;
+  p {
+    margin: 0 10px 0 0;
+  }
+  .gridOption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 30px;
+  }
+  .labelsOption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 30px;
+  }
+  .lineOption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 30px;
+  }
+  .lineType div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .lineNullOption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 30px;
+  }
+  .MuiFormGroup-root {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+    label {
+      width: calc(100% / 3 - 26px);
+    }
+  }
 }

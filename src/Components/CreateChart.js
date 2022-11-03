@@ -26,7 +26,6 @@ const CreateChart = function () {
 
   return (
     <div className="createChart wrapper">
-      <h2>Chart info</h2>
       <Link to={"/"}>
         <button onClick={handleGoBack}>back</button>
       </Link>
