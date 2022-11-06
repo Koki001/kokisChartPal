@@ -18,7 +18,7 @@
 .chartMainContainer {
   border-top: 1px solid black;
   margin-top: 10px;
-  height: 500px;
+  min-height: 500px;
 }
 .chartConfig {
   display: flex;

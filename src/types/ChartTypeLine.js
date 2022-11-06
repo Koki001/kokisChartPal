@@ -204,7 +204,6 @@ const ChartTypeLine = function () {
     });
   };
   const handleSaveChart = function (e) {
-    // console.log(chartRef.current)
     if (chartRef.current === null) {
       return;
     }
@@ -260,8 +259,6 @@ const ChartTypeLine = function () {
             </Button>
           </div>
           <div className="dataLabelTitle">
-            {/* {fchartNames.length > 0 ? <h4>Group Name</h4> : null} */}
-
             {showColorPicker === true ? (
               <div className="colorPicker">
                 <SketchPicker
@@ -269,7 +266,6 @@ const ChartTypeLine = function () {
                   color={fchartNames[colorButton].color}
                   onChange={handleColorSlider}
                   width="auto"
-                  // onChangeComplete={handleChangeComplete}
                 />
                 <Button
                   onClick={handleChangeComplete}
@@ -285,13 +281,16 @@ const ChartTypeLine = function () {
                 return (
                   <div key={`yeah${index}`} className="newLine">
                     <button
-                      style={{
-                        backgroundColor: `${
-                          fchartNames[index].color
-                            ? fchartNames[index].color
-                            : "black"
-                        }`,
-                      }}
+                      style={
+                        fchartNames[index].color
+                          ? {
+                              backgroundColor: `${fchartNames[index].color}`,
+                            }
+                          : {
+                              background:
+                                "linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%), linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)",
+                            }
+                      }
                       name={index}
                       onClick={handleColorOpen}
                     ></button>
@@ -306,7 +305,7 @@ const ChartTypeLine = function () {
                       key={line + index}
                       id={`line${index.toString()}`}
                       onChange={handleDataLabel}
-                      placeholder={`Data ${index + 1} Title`}
+                      placeholder={`Dataset ${index + 1} Title`}
                     />
                     <IconButton
                       size="small"
@@ -406,6 +405,7 @@ const ChartTypeLine = function () {
                           onChange={handleXData}
                           placeholder={`Point ${index + 1} Label`}
                           value={fchartData[index].name}
+                          variant="filled"
                         />
                       </div>
                     );
@@ -430,6 +430,7 @@ const ChartTypeLine = function () {
                                 id={index}
                               >
                                 <TextField
+                                  type={"number"}
                                   sx={{
                                     "& .MuiInputBase-input": {
                                       padding: "2px 12px",
@@ -441,6 +442,7 @@ const ChartTypeLine = function () {
                                   onChange={handleDataChange}
                                   placeholder={`Data Point ${index + 1} Value`}
                                   value={fchartData[index][`line${lineIndex}`]}
+                                  variant="standard"
                                 />
                               </div>
                             );
@@ -550,7 +552,9 @@ const ChartTypeLine = function () {
               </FormControl>
             </div>
             <div className="saveChart">
-              <button onClick={handleSaveChart}>Download chart</button>
+              <Button variant="outlined" onClick={handleSaveChart}>
+                Download chart
+              </Button>
             </div>
           </div>
         ) : null}

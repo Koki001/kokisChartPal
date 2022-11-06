@@ -39,6 +39,9 @@
 .chartSettings {
   height: 100%;
   width: 220px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   p {
     margin: 0 10px 0 0;
   }

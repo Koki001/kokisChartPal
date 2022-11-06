@@ -1,11 +1,10 @@
 import React, { PureComponent } from "react";
-import { useRef } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import {
-  BarChart,
+  AreaChart,
   Label,
-  Bar,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -13,8 +12,7 @@ import {
   Legend,
   ResponsiveContainer,
 } from "recharts";
-import { GithubPicker } from "react-color";
-import useWindowDimensions from "../features/windowSize";
+import { SketchPicker } from "react-color";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -23,6 +21,20 @@ import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
+import ClearIcon from "@mui/icons-material/Clear";
+import IconButton from "@mui/material/IconButton";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Switch from "@mui/material/Switch";
+import FormGroup from "@mui/material/FormGroup";
+import Slider from "@mui/material/Slider";
+import { findRenderedDOMComponentWithTag } from "react-dom/test-utils";
+import Box from "@mui/material/Box";
+import Radio from "@mui/material/Radio";
+import RadioGroup from "@mui/material/RadioGroup";
+import FormLabel from "@mui/material/FormLabel";
+import { useRef } from "react";
+import * as htmlToImage from "html-to-image";
+import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
 
 const ChartTypeLine = function () {
   const [fmainData, setFmainData] = useState({
@@ -36,161 +48,19 @@ const ChartTypeLine = function () {
   const [dataNumDropdown, setDataNumDropdown] = useState([]);
   const [xAxisData, setXAxisData] = useState([]);
   const [fchartNames, setFChartNames] = useState([]);
-  // const [colorPicker, setColorPicker] = useState({ background: "" });
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [colorButton, setColorButton] = useState([]);
-
+  const [options, setOptions] = useState({
+    lineThickness: 2,
+    lineType: "monotone",
+    showGrid: true,
+    showLabels: true,
+    connectNull: false,
+  });
+  const [chartImage, setChartImage] = useState("");
   const [showing, setShowing] = useState(0);
-  const colorArray = [
-    "aliceblue",
-    "antiquewhite",
-    "aqua",
-    "aquamarine",
-    "azure",
-    "beige",
-    "bisque",
-    "black",
-    "blanchedalmond",
-    "blue",
-    "blueviolet",
-    "brown",
-    "burlywood",
-    "cadetblue",
-    "chartreuse",
-    "chocolate",
-    "coral",
-    "cornflowerblue",
-    "cornsilk",
-    "crimson",
-    "cyan",
-    "darkblue",
-    "darkcyan",
-    "darkgoldenrod",
-    "darkgray",
-    "darkgrey",
-    "darkgreen",
-    "darkkhaki",
-    "darkmagenta",
-    "darkolivegreen",
-    "darkorange",
-    "darkorchid",
-    "darkred",
-    "darksalmon",
-    "darkseagreen",
-    "darkslateblue",
-    "darkslategray",
-    "darkslategrey",
-    "darkturquoise",
-    "darkviolet",
-    "deeppink",
-    "deepskyblue",
-    "dimgray",
-    "dimgrey",
-    "dodgerblue",
-    "firebrick",
-    "floralwhite",
-    "forestgreen",
-    "fuchsia",
-    "gainsboro",
-    "ghostwhite",
-    "gold",
-    "goldenrod",
-    "gray",
-    "grey",
-    "green",
-    "greenyellow",
-    "honeydew",
-    "hotpink",
-    "indianred",
-    "indigo",
-    "ivory",
-    "khaki",
-    "lavender",
-    "lavenderblush",
-    "lawngreen",
-    "lemonchiffon",
-    "lightblue",
-    "lightcoral",
-    "lightcyan",
-    "lightgoldenrodyellow",
-    "lightgray",
-    "lightgrey",
-    "lightgreen",
-    "lightpink",
-    "lightsalmon",
-    "lightseagreen",
-    "lightskyblue",
-    "lightslategray",
-    "lightslategrey",
-    "lightsteelblue",
-    "lightyellow",
-    "lime",
-    "limegreen",
-    "linen",
-    "magenta",
-    "maroon",
-    "mediumaquamarine",
-    "mediumblue",
-    "mediumorchid",
-    "mediumpurple",
-    "mediumseagreen",
-    "mediumslateblue",
-    "mediumspringgreen",
-    "mediumturquoise",
-    "mediumvioletred",
-    "midnightblue",
-    "mintcream",
-    "mistyrose",
-    "moccasin",
-    "navajowhite",
-    "navy",
-    "oldlace",
-    "olive",
-    "olivedrab",
-    "orange",
-    "orangered",
-    "orchid",
-    "palegoldenrod",
-    "palegreen",
-    "paleturquoise",
-    "palevioletred",
-    "papayawhip",
-    "peachpuff",
-    "peru",
-    "pink",
-    "plum",
-    "powderblue",
-    "purple",
-    "red",
-    "rosybrown",
-    "royalblue",
-    "saddlebrown",
-    "salmon",
-    "sandybrown",
-    "seagreen",
-    "seashell",
-    "sienna",
-    "silver",
-    "skyblue",
-    "slateblue",
-    "slategray",
-    "slategrey",
-    "snow",
-    "springgreen",
-    "steelblue",
-    "tan",
-    "teal",
-    "thistle",
-    "tomato",
-    "turquoise",
-    "violet",
-    "wheat",
-    "white",
-    "whitesmoke",
-    "yellow",
-    "yellowgreen",
-  ];
-  const { height, width } = useWindowDimensions();
+  const chartRef = useRef();
+  // const { height, width } = useWindowDimensions();
 
   useEffect(function () {
     let pointNumArray = [];
@@ -199,8 +69,6 @@ const ChartTypeLine = function () {
     }
     setDataNumDropdown(pointNumArray);
   }, []);
-
-  const colors = ["#ff0000", "#dec120", "#0049ff", "#00ff0c"];
 
   const handleDataPointNum = function (e) {
     const pointArray = [];
@@ -298,42 +166,90 @@ const ChartTypeLine = function () {
     }
   };
   const handleChangeComplete = function (e) {
-    let colorArr = [...fchartNames];
-    colorArr[colorButton].color = e.hex;
-    setFChartNames(colorArr);
     setShowColorPicker(false);
   };
   const handleColorOpen = function (e) {
     setColorButton(Number(e.target.name));
     setShowColorPicker(true);
   };
+  const handleColorSlider = function (e, color) {
+    let colorArr = [...fchartNames];
+    colorArr[colorButton].color = e.hex;
+    setFChartNames(colorArr);
+  };
+  const handleLineThickness = function (e) {
+    setOptions(function (current) {
+      return { ...current, lineThickness: e.target.value };
+    });
+  };
 
+  const handleShowGrid = function (e) {
+    setOptions(function (current) {
+      return { ...current, showGrid: e.target.checked };
+    });
+  };
+  const handleShowLabels = function (e) {
+    setOptions(function (current) {
+      return { ...current, showLabels: e.target.checked };
+    });
+  };
+  const handleLineType = function (e) {
+    setOptions(function (current) {
+      return { ...current, lineType: e.target.value };
+    });
+  };
+  const handleNullValues = function (e) {
+    setOptions(function (current) {
+      return { ...current, connectNull: e.target.checked };
+    });
+  };
+  const handleSaveChart = function (e) {
+    if (chartRef.current === null) {
+      return;
+    }
+
+    toPng(chartRef.current.container, {
+      cacheBust: true,
+      backgroundColor: "white",
+    })
+      .then((dataUrl) => {
+        const link = document.createElement("a");
+        link.download = "my-image-name.png";
+        link.href = dataUrl;
+        link.click();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
   return (
     <>
       <div className="chartConfig">
         <div className="topChart">
           <div className="selectAndAdd">
-            <FormControl
-              sx={{ m: 1, minWidth: 130, marginLeft: "0" }}
-              size="small"
-            >
-              <InputLabel id="selectDataPoints">Data Points</InputLabel>
-              <Select
-                labelId="selectDataPoints"
-                id="selectDataPoints"
-                label="Data Points"
-                onChange={handleDataPointNum}
+            {dataNumDropdown.length > 1 ? (
+              <FormControl
+                sx={{ m: 1, minWidth: 130, marginLeft: "0" }}
+                size="small"
               >
-                <MenuItem value={0}>0</MenuItem>
-                {dataNumDropdown.map(function (option, index) {
-                  return (
-                    <MenuItem key={index + 1} value={index + 1}>
-                      {index + 1}
-                    </MenuItem>
-                  );
-                })}
-              </Select>
-            </FormControl>
+                <InputLabel id="selectDataPoints">Data Points</InputLabel>
+                <Select
+                  labelId="selectDataPoints"
+                  id="selectDataPoints"
+                  label="Data Points"
+                  onChange={handleDataPointNum}
+                >
+                  <MenuItem value={"0"}>0</MenuItem>
+                  {dataNumDropdown.map(function (option, index) {
+                    return (
+                      <MenuItem key={index + 1} value={index + 1}>
+                        {index + 1}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+            ) : null}
             <Button
               onClick={handleNewLine}
               variant="contained"
@@ -342,64 +258,86 @@ const ChartTypeLine = function () {
               Add data
             </Button>
           </div>
-          <TextField
-            onChange={handleXLabel}
-            name={"xAxisLabel"}
-            value={fmainData.xLabel}
-            id="standard-basic"
-            label="X-Axis Label"
-            variant="standard"
-          />
-          <TextField
-            onChange={handleYLabel}
-            name={"yAxisLabel"}
-            value={fmainData.yLabel}
-            id="standard-basic"
-            label="Y-Axis Label"
-            variant="standard"
-          />
-        </div>
-        <div className="dataLabelTitle">
-          <h4>Data Title</h4>
-
-          {showColorPicker === true ? (
-            <div className="colorPicker">
-              <GithubPicker
-                triangle="hide"
-                width="100%"
-                colors={colorArray}
-                onChangeComplete={handleChangeComplete}
-              />
+          <div className="dataLabelTitle">
+            {showColorPicker === true ? (
+              <div className="colorPicker">
+                <SketchPicker
+                  triangle="hide"
+                  color={fchartNames[colorButton].color}
+                  onChange={handleColorSlider}
+                  width="auto"
+                />
+                <Button
+                  onClick={handleChangeComplete}
+                  variant="contained"
+                  color="error"
+                >
+                  Exit color picker
+                </Button>
+              </div>
+            ) : null}
+            <div className="containedDataName">
+              {dataCounter.map(function (line, index) {
+                return (
+                  <div key={`yeah${index}`} className="newLine">
+                    <button
+                      style={{
+                        backgroundColor: `${
+                          fchartNames[index].color
+                            ? fchartNames[index].color
+                            : "black"
+                        }`,
+                      }}
+                      name={index}
+                      onClick={handleColorOpen}
+                    ></button>
+                    <TextField
+                      sx={{
+                        "& .MuiInputBase-input": {
+                          padding: "2px 12px",
+                          minWidth: "50px",
+                        },
+                      }}
+                      variant="standard"
+                      key={line + index}
+                      id={`line${index.toString()}`}
+                      onChange={handleDataLabel}
+                      placeholder={`Dataset ${index + 1} Title`}
+                    />
+                    <IconButton
+                      size="small"
+                      color="primary"
+                      aria-label="Remove data group"
+                    >
+                      <ClearIcon fontSize="10px" />
+                    </IconButton>
+                  </div>
+                );
+              })}
             </div>
-          ) : null}
-          <div className="containedDataName">
-            {dataCounter.map(function (line, index) {
-              return (
-                <div key={`yeah${index}`} className="newLine">
-                  <button
-                    style={{ backgroundColor: `${fchartNames[index].color}` }}
-                    name={index}
-                    onClick={handleColorOpen}
-                  ></button>
-                  <TextField
-                    sx={{
-                      "& .MuiInputBase-input": {
-                        padding: "2px 12px",
-                        minWidth: "50px",
-                      },
-                    }}
-                    key={line + index}
-                    id={`line${index.toString()}`}
-                    onChange={handleDataLabel}
-                    placeholder={`Data ${index + 1} Title`}
-                  />
-                </div>
-              );
-            })}
           </div>
         </div>
+
         {dataCounter.length !== 0 && fmainData.dataPoints.length > 0 ? (
           <div className="inputsLineContainer">
+            <div className="labelsXY">
+              <TextField
+                onChange={handleXLabel}
+                name={"xAxisLabel"}
+                value={fmainData.xLabel}
+                id="standard-basic"
+                label="X-Axis Label"
+                variant="standard"
+              />
+              <TextField
+                onChange={handleYLabel}
+                name={"yAxisLabel"}
+                value={fmainData.yLabel}
+                id="standard-basic"
+                label="Y-Axis Label"
+                variant="standard"
+              />
+            </div>
             <div className="labelArrowContainer">
               {dataCounter.length > 1 && (
                 <Button
@@ -438,7 +376,7 @@ const ChartTypeLine = function () {
             <div
               className="containedDivBorder"
               style={{
-                border: `2px solid ${fchartNames[showing].color}`,
+                border: `1px solid ${fchartNames[showing].color}`,
                 borderRadius: "5px",
               }}
             >
@@ -464,6 +402,7 @@ const ChartTypeLine = function () {
                           onChange={handleXData}
                           placeholder={`Point ${index + 1} Label`}
                           value={fchartData[index].name}
+                          variant="filled"
                         />
                       </div>
                     );
@@ -488,6 +427,7 @@ const ChartTypeLine = function () {
                                 id={index}
                               >
                                 <TextField
+                                  type={"number"}
                                   sx={{
                                     "& .MuiInputBase-input": {
                                       padding: "2px 12px",
@@ -499,6 +439,7 @@ const ChartTypeLine = function () {
                                   onChange={handleDataChange}
                                   placeholder={`Data Point ${index + 1} Value`}
                                   value={fchartData[index][`line${lineIndex}`]}
+                                  variant="standard"
                                 />
                               </div>
                             );
@@ -512,15 +453,116 @@ const ChartTypeLine = function () {
             </div>
           </div>
         ) : null}
+        {dataCounter.length !== 0 && fmainData.dataPoints.length > 0 ? (
+          <div className="chartSettings">
+            <div className="gridOption">
+              <p>Show grid</p>
+              <Switch defaultChecked onChange={handleShowGrid} />
+            </div>
+            <div className="labelsOption">
+              <p>Show labels</p>
+              <Switch onChange={handleShowLabels} defaultChecked />
+            </div>
+            <div className="lineNullOption">
+              <p>Connect null values</p>
+              <Switch onChange={handleNullValues} />
+            </div>
+            <div className="lineOption">
+              <p>Line thickness</p>
+              <Box sx={{ width: 50 }}>
+                <Slider
+                  aria-label="Line thickness"
+                  defaultValue={2}
+                  step={1}
+                  marks
+                  min={1}
+                  max={3}
+                  onChange={handleLineThickness}
+                />
+              </Box>
+            </div>
+            <div className="lineType">
+              <FormControl>
+                <FormLabel id="lineTypeRadio">Line Type</FormLabel>
+                <RadioGroup
+                  onChange={handleLineType}
+                  row={true}
+                  aria-labelledby="lineTypeRadio"
+                  defaultValue="monotone"
+                  name="radio-buttons-group"
+                  sx={{
+                    "& .MuiTypography-root": {
+                      fontSize: 14,
+                    },
+                    "& .MuiFormControlLabel-root": {
+                      marginLeft: 1,
+                      marginRight: 1,
+                    },
+                    "& .MuiButtonBase-root": {
+                      padding: "4px",
+                    },
+                  }}
+                >
+                  <FormControlLabel
+                    value="monotone"
+                    control={
+                      <Radio
+                        sx={{
+                          "& .MuiSvgIcon-root": {
+                            fontSize: 22,
+                          },
+                        }}
+                      />
+                    }
+                    label="Monotone"
+                    labelPlacement="bottom"
+                  />
+                  <FormControlLabel
+                    value="step"
+                    control={
+                      <Radio
+                        sx={{
+                          "& .MuiSvgIcon-root": {
+                            fontSize: 22,
+                          },
+                        }}
+                      />
+                    }
+                    label="Step"
+                    labelPlacement="bottom"
+                  />
+                  <FormControlLabel
+                    value="linear"
+                    control={
+                      <Radio
+                        sx={{
+                          "& .MuiSvgIcon-root": {
+                            fontSize: 22,
+                          },
+                        }}
+                      />
+                    }
+                    label="Linear"
+                    labelPlacement="bottom"
+                  />
+                </RadioGroup>
+              </FormControl>
+            </div>
+            <div className="saveChart">
+              <Button variant="outlined" onClick={handleSaveChart}>
+                Download chart
+              </Button>
+            </div>
+          </div>
+        ) : null}
       </div>
       <ResponsiveContainer
         width="100%"
-        height="70%"
+        height="65%"
         className="chartMainContainer"
       >
-        <BarChart
-          // width={width - 50}
-          // height={500}
+        <AreaChart
+          ref={chartRef}
           data={fchartData}
           margin={{
             top: 10,
@@ -529,26 +571,33 @@ const ChartTypeLine = function () {
             bottom: 50,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          {options.showGrid === true && <CartesianGrid strokeDasharray="3 3" />}
           <XAxis
             dataKey="name"
-            label={{
-              value: fmainData.xLabel,
-              position: "bottom",
-              className: "xAxisLabel",
-              offset: 15,
-            }}
+            label={
+              options.showLabels === true && {
+                value: fmainData.xLabel,
+                position: "bottom",
+                className: "xAxisLabel",
+                offset: 15,
+              }
+            }
+            tick={{ dy: 5, fontSize: "14px", fontWeight: "bold" }}
           />
           <YAxis
             domain={[0, "dataMax"]}
-            label={{
-              value: fmainData.yLabel,
-              angle: -90,
-              position: "insideLeft",
-              className: "yAxisLabel",
-            }}
+            label={
+              options.showLabels === true && {
+                value: fmainData.yLabel,
+                angle: -90,
+                position: "insideLeft",
+                className: "yAxisLabel",
+                offset: -5,
+              }
+            }
+            tick={{ dx: -5, fontSize: "14px", fontWeight: "bold" }}
           />
-          <Tooltip />
+          {/* <Tooltip /> */}
           <Legend
             verticalAlign="top"
             align="center"
@@ -558,25 +607,26 @@ const ChartTypeLine = function () {
           />
           {dataCounter.map(function (e, index) {
             return (
-              <Bar
+              <Area
                 key={`line${index}`}
-                strokeWidth={2}
-                type="monotone"
+                strokeWidth={options.lineThickness}
+                type={options.lineType}
                 name={
                   fchartNames[index].name
                     ? fchartNames[index].name
                     : `Data ${index + 1}`
                 }
                 dataKey={`line${index}`}
-                fill={
+                stroke={
                   fchartNames[index].color
                     ? fchartNames[index].color
                     : "#000000"
                 }
+                connectNulls={options.connectNull}
               />
             );
           })}
-        </BarChart>
+        </AreaChart>
       </ResponsiveContainer>
     </>
   );
