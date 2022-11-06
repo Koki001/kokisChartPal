@@ -151,6 +151,13 @@ const ChartTypeLine = function () {
     setDataCounter([...counter]);
     setFChartData(dataArray);
   };
+  const handleRemoveLine = function(e){
+  //   console.log(e.target.value)
+  //   console.log(fchartNames)
+  //   const nameArray = [...fchartNames];
+  //   nameArray.splice(Number(e.target.value), 1)
+  //   setFChartNames(nameArray)
+  }
   const handleNextClick = function () {
     if (showing < fchartNames.length - 1) {
       setShowing(showing + 1);
@@ -229,7 +236,7 @@ const ChartTypeLine = function () {
           <div className="selectAndAdd">
             {dataNumDropdown.length > 1 ? (
               <FormControl
-                sx={{ m: 1, minWidth: 130, marginLeft: "0" }}
+                sx={{ m: 1, minWidth: 90, marginLeft: "0" }}
                 size="small"
               >
                 <InputLabel id="selectDataPoints">Data Points</InputLabel>
@@ -238,6 +245,8 @@ const ChartTypeLine = function () {
                   id="selectDataPoints"
                   label="Data Points"
                   onChange={handleDataPointNum}
+                  defaultValue={0}
+                 
                 >
                   <MenuItem value={"0"}>0</MenuItem>
                   {dataNumDropdown.map(function (option, index) {
@@ -308,6 +317,8 @@ const ChartTypeLine = function () {
                       placeholder={`Dataset ${index + 1} Title`}
                     />
                     <IconButton
+                    value={index}
+                    onClick={handleRemoveLine}
                       size="small"
                       color="primary"
                       aria-label="Remove data group"
@@ -431,6 +442,7 @@ const ChartTypeLine = function () {
                               >
                                 <TextField
                                   type={"number"}
+                                  onWheel={(e) => e.target.blur()}
                                   sx={{
                                     "& .MuiInputBase-input": {
                                       padding: "2px 12px",
@@ -460,15 +472,15 @@ const ChartTypeLine = function () {
           <div className="chartSettings">
             <div className="gridOption">
               <p>Show grid</p>
-              <Switch defaultChecked onChange={handleShowGrid} />
+              <Switch size="small" defaultChecked onChange={handleShowGrid} />
             </div>
             <div className="labelsOption">
               <p>Show labels</p>
-              <Switch onChange={handleShowLabels} defaultChecked />
+              <Switch size="small" onChange={handleShowLabels} defaultChecked />
             </div>
             <div className="lineNullOption">
-              <p>Connect null values</p>
-              <Switch onChange={handleNullValues} />
+              <p>Connect nulls</p>
+              <Switch size="small" onChange={handleNullValues} />
             </div>
             <div className="lineOption">
               <p>Line thickness</p>
@@ -481,75 +493,75 @@ const ChartTypeLine = function () {
                   min={1}
                   max={3}
                   onChange={handleLineThickness}
+                  size="small"
                 />
               </Box>
             </div>
             <div className="lineType">
-              <FormControl>
-                <FormLabel id="lineTypeRadio">Line Type</FormLabel>
-                <RadioGroup
-                  onChange={handleLineType}
-                  row={true}
-                  aria-labelledby="lineTypeRadio"
-                  defaultValue="monotone"
-                  name="radio-buttons-group"
-                  sx={{
-                    "& .MuiTypography-root": {
-                      fontSize: 14,
-                    },
-                    "& .MuiFormControlLabel-root": {
-                      marginLeft: 1,
-                      marginRight: 1,
-                    },
-                    "& .MuiButtonBase-root": {
-                      padding: "4px",
-                    },
-                  }}
-                >
-                  <FormControlLabel
-                    value="monotone"
-                    control={
-                      <Radio
-                        sx={{
-                          "& .MuiSvgIcon-root": {
-                            fontSize: 22,
-                          },
-                        }}
-                      />
-                    }
-                    label="Monotone"
-                    labelPlacement="bottom"
-                  />
-                  <FormControlLabel
-                    value="step"
-                    control={
-                      <Radio
-                        sx={{
-                          "& .MuiSvgIcon-root": {
-                            fontSize: 22,
-                          },
-                        }}
-                      />
-                    }
-                    label="Step"
-                    labelPlacement="bottom"
-                  />
-                  <FormControlLabel
-                    value="linear"
-                    control={
-                      <Radio
-                        sx={{
-                          "& .MuiSvgIcon-root": {
-                            fontSize: 22,
-                          },
-                        }}
-                      />
-                    }
-                    label="Linear"
-                    labelPlacement="bottom"
-                  />
-                </RadioGroup>
-              </FormControl>
+              <p id="lineTypeRadio" sx={{ color: "black" }}>
+                Line Type:
+              </p>
+              <RadioGroup
+                onChange={handleLineType}
+                // row={true}
+                aria-labelledby="lineTypeRadio"
+                defaultValue="monotone"
+                name="radio-buttons-group"
+                sx={{
+                  "& .MuiTypography-root": {
+                    fontSize: 14,
+                  },
+                  "& .MuiFormControlLabel-root": {
+                    marginTop: 0,
+                  },
+                  "& .MuiButtonBase-root": {
+                    padding: "4px",
+                  },
+                }}
+              >
+                <FormControlLabel
+                  value="monotone"
+                  control={
+                    <Radio
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 22,
+                        },
+                      }}
+                    />
+                  }
+                  label="Monotone"
+                  labelPlacement="start"
+                />
+                <FormControlLabel
+                  value="step"
+                  control={
+                    <Radio
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 22,
+                        },
+                      }}
+                    />
+                  }
+                  label="Step"
+                  labelPlacement="start"
+                />
+                <FormControlLabel
+                  value="linear"
+                  control={
+                    <Radio
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 22,
+                        },
+                      }}
+                    />
+                  }
+                  label="Linear"
+                  labelPlacement="start"
+                />
+              </RadioGroup>
             </div>
             <div className="saveChart">
               <Button variant="outlined" onClick={handleSaveChart}>
