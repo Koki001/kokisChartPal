@@ -229,9 +229,16 @@ const ChartTypeLine = function () {
         console.log(err);
       });
   };
+  // const tickArray = [
+  //   0,
+  //   Math.trunc("dataMax" / 4),
+  //   Math.trunc("dataMax" / 2),
+  //   Math.trunc((3 * "dataMax") / 4),
+  //   "dataMax",
+  // ];
   return (
     <>
-      <div className="chartConfig">
+      <div className="chartConfig wrapper">
         <div className="topChart">
           <div className="selectAndAdd">
             {dataNumDropdown.length > 1 ? (
@@ -246,7 +253,6 @@ const ChartTypeLine = function () {
                   label="Data Points"
                   onChange={handleDataPointNum}
                   defaultValue={0}
-                 
                 >
                   <MenuItem value={"0"}>0</MenuItem>
                   {dataNumDropdown.map(function (option, index) {
@@ -317,8 +323,8 @@ const ChartTypeLine = function () {
                       placeholder={`Dataset ${index + 1} Title`}
                     />
                     <IconButton
-                    value={index}
-                    onClick={handleRemoveLine}
+                      value={index}
+                      onClick={handleRemoveLine}
                       size="small"
                       color="primary"
                       aria-label="Remove data group"
@@ -600,7 +606,7 @@ const ChartTypeLine = function () {
             tick={{ dy: 5, fontSize: "14px", fontWeight: "bold" }}
           />
           <YAxis
-            domain={[0, "dataMax"]}
+            domain={[0, `dataMax`]}
             label={
               options.showLabels === true && {
                 value: fmainData.yLabel,
@@ -611,8 +617,9 @@ const ChartTypeLine = function () {
               }
             }
             tick={{ dx: -5, fontSize: "14px", fontWeight: "bold" }}
+            tickCount={20}
           />
-          {/* <Tooltip /> */}
+          <Tooltip />
           <Legend
             verticalAlign="top"
             align="center"
