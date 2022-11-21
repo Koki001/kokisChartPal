@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 import { selectedType } from "../features/chartTypeSlice";
 import ChartTypeLine from "../types/ChartTypeLine";
 import ChartTypeArea from "../types/ChartTypeArea";
+import ChartTypeBar from "../types/ChartTypeBar";
+import ChartTypePie from "../types/ChartTypePie";
 
 const CreateChart = function () {
   const [chartType, setChartType] = useState("");
@@ -34,7 +36,13 @@ const CreateChart = function () {
           <ChartTypeLine />
         ) : chartType.value === "area" ? (
           <ChartTypeArea />
-        ) : null}
+        ) : chartType.value === "bar" ? (
+          <ChartTypeBar />
+        ) 
+        // : chartType.value === "pie" ? (
+        //   <ChartTypePie /> 
+        // ) 
+        : null}
       </div>
     </div>
   );

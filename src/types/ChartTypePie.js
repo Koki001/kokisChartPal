@@ -2,9 +2,9 @@ import React, { PureComponent } from "react";
 import { useState } from "react";
 import { useEffect } from "react";
 import {
-  AreaChart,
+  PieChart,
   Label,
-  Area,
+  Pie,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -489,23 +489,23 @@ const ChartTypeLine = function () {
               <Switch size="small" onChange={handleNullValues} />
             </div>
             <div className="lineOption">
-              <p>Line thickness</p>
+              <p>Bar thickness</p>
               <Box sx={{ width: 50 }}>
                 <Slider
-                  aria-label="Line thickness"
+                  aria-label="Bar thickness"
                   defaultValue={2}
-                  step={1}
+                  step={4}
                   marks
                   min={1}
-                  max={3}
+                  max={12}
                   onChange={handleLineThickness}
                   size="small"
                 />
               </Box>
             </div>
-            <div className="lineType">
+            {/* <div className="lineType">
               <p id="lineTypeRadio" sx={{ color: "black" }}>
-                Area Type:
+                Bar Type:
               </p>
               <RadioGroup
                 onChange={handleLineType}
@@ -554,7 +554,7 @@ const ChartTypeLine = function () {
                   labelPlacement="start"
                 />
               </RadioGroup>
-            </div>
+            </div> */}
             <div className="saveChart">
               <Button variant="outlined" onClick={handleSaveChart}>
                 Download chart
@@ -568,7 +568,7 @@ const ChartTypeLine = function () {
         height="65%"
         className="chartMainContainer"
       >
-        <AreaChart
+        <PieChart
           ref={chartRef}
           data={fchartData}
           margin={{
@@ -579,7 +579,7 @@ const ChartTypeLine = function () {
           }}
         >
           {options.showGrid === true && <CartesianGrid strokeDasharray="3 3" />}
-          <XAxis
+          {/* <XAxis
             dataKey="name"
             label={
               options.showLabels === true && {
@@ -604,7 +604,7 @@ const ChartTypeLine = function () {
             }
             tick={{ dx: -5, fontSize: "14px", fontWeight: "bold" }}
             tickCount={20}
-          />
+          /> */}
           <Tooltip />
           <Legend
             verticalAlign="top"
@@ -615,10 +615,10 @@ const ChartTypeLine = function () {
           />
           {dataCounter.map(function (e, index) {
             return (
-              <Area
+              <Pie
+                // barSize={options.lineThickness * 10}
                 key={`line${index}`}
-                strokeWidth={options.lineThickness}
-                type={options.lineType}
+                // type={options.lineType}
                 name={
                   fchartNames[index].name
                     ? fchartNames[index].name
@@ -639,7 +639,7 @@ const ChartTypeLine = function () {
               />
             );
           })}
-        </AreaChart>
+        </PieChart>
       </ResponsiveContainer>
     </>
   );
