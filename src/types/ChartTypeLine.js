@@ -35,6 +35,12 @@ import FormLabel from "@mui/material/FormLabel";
 import { useRef } from "react";
 import * as htmlToImage from "html-to-image";
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import Swal from "sweetalert2";
 
 const ChartTypeLine = function () {
   const [fmainData, setFmainData] = useState({
@@ -59,6 +65,7 @@ const ChartTypeLine = function () {
   });
   const [chartImage, setChartImage] = useState("");
   const [showing, setShowing] = useState(0);
+  const [downloadAlert, setDownloadAlert] = useState(false);
   const chartRef = useRef();
   // const { height, width } = useWindowDimensions();
 
@@ -151,13 +158,13 @@ const ChartTypeLine = function () {
     setDataCounter([...counter]);
     setFChartData(dataArray);
   };
-  const handleRemoveLine = function(e){
-  //   console.log(e.target.value)
-  //   console.log(fchartNames)
-  //   const nameArray = [...fchartNames];
-  //   nameArray.splice(Number(e.target.value), 1)
-  //   setFChartNames(nameArray)
-  }
+  const handleRemoveLine = function (e) {
+    //   console.log(e.target.value)
+    //   console.log(fchartNames)
+    //   const nameArray = [...fchartNames];
+    //   nameArray.splice(Number(e.target.value), 1)
+    //   setFChartNames(nameArray)
+  };
   const handleNextClick = function () {
     if (showing < fchartNames.length - 1) {
       setShowing(showing + 1);
@@ -210,32 +217,73 @@ const ChartTypeLine = function () {
       return { ...current, connectNull: e.target.checked };
     });
   };
+  const inputOptions = {
+    white: "White",
+    transparent: "Transparent",
+  };
   const handleSaveChart = function (e) {
     if (chartRef.current === null) {
       return;
-    }
-
-    toPng(chartRef.current.container, {
-      cacheBust: true,
-      backgroundColor: "white",
-    })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "my-image-name.png";
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
+    } else {
+      const { value: color } = Swal.fire({
+        showCancelButton: true,
+        showConfirmButton: true,
+        title: "Select background color",
+        input: "radio",
+        inputOptions: inputOptions,
+        inputValidator: (value) => {
+          console.log(value);
+          if (!value) {
+            return "You need to choose something!";
+          } else {
+            toPng(chartRef.current.container, {
+              cacheBust: true,
+              backgroundColor: value,
+            })
+              .then((dataUrl) => {
+                const link = document.createElement("a");
+                link.download = "my-image-name.png";
+                link.href = dataUrl;
+                link.click();
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        },
       });
+    }
+    // if (result.isConfirmed) {
+    // toPng(chartRef.current.container, {
+    //   cacheBust: true,
+    //   backgroundColor: "white",
+    // })
+    //   .then((dataUrl) => {
+    //     const link = document.createElement("a");
+    //     link.download = "my-image-name.png";
+    //     link.href = dataUrl;
+    //     link.click();
+    //   })
+    //   .catch((err) => {
+    //     console.log(err);
+    //   });
+    // } else if (result.isDenied) {
+    //   toPng(chartRef.current.container, {
+    //     cacheBust: true,
+    //     backgroundColor: "transparent",
+    //   })
+    //     .then((dataUrl) => {
+    //       const link = document.createElement("a");
+    //       link.download = "my-image-name.png";
+    //       link.href = dataUrl;
+    //       link.click();
+    //     })
+    //     .catch((err) => {
+    //       console.log(err);
+    //     });
+    // }
   };
-  // const tickArray = [
-  //   0,
-  //   Math.trunc("dataMax" / 4),
-  //   Math.trunc("dataMax" / 2),
-  //   Math.trunc((3 * "dataMax") / 4),
-  //   "dataMax",
-  // ];
+
   return (
     <>
       <div className="chartConfig wrapper">
@@ -606,7 +654,7 @@ const ChartTypeLine = function () {
             tick={{ dy: 5, fontSize: "14px", fontWeight: "bold" }}
           />
           <YAxis
-            domain={[0, `dataMax`]}
+            domain={[0, `dataMax + 100`]}
             label={
               options.showLabels === true && {
                 value: fmainData.yLabel,

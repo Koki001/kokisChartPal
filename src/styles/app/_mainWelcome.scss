@@ -1,0 +1,34 @@
+.mainApp {
+  height: 100vh;
+  width: 100%;
+}
+.mainContainer {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  height: 100%;
+  h1 {
+    margin-bottom: 40px;
+    margin-top: 20px;
+  }
+}
+.chartTypes {
+  display: flex;
+  width: 345px;
+  margin-bottom: 80px;
+}
+
+.chartExample {
+  display: flex;
+  margin-bottom: 20px;
+}
+.chartExampleText {
+  width: 30%;
+}
+.chartExampleImage {
+  width: 70%;
+  img {
+    width: 100%;
+  }
+}

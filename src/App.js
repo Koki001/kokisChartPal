@@ -11,7 +11,7 @@ import "@fontsource/roboto/700.css";
 
 function App() {
   return (
-    <div>
+    <div className="mainApp">
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/create" element={<CreateChart />} />
