@@ -35,6 +35,9 @@ const HomePage = function () {
         <use class="text" xlinkHref="#s-text"></use>
         <use class="text" xlinkHref="#s-text"></use>
       </svg> */}
+      <video autoPlay muted loop id="welcomeVideo">
+        <source src={"./assets/background/welcomeBackground.mp4"} type="video/mp4" />
+      </video>
       <svg className="svgTitle" viewBox="0 0 2220 200">
         <text x="50%" y="50%" dy=".35em" textAnchor="middle">
           The Chart Emporium
@@ -102,7 +105,10 @@ const HomePage = function () {
                 <div className="lineText">
                   <h3>Usage example:</h3>
                   <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas in nobis saepe nemo molestiae laborum minima! Ad, autem. Odio quidem officiis cupiditate adipisci expedita quas, eius impedit eveniet dolorem ipsa.{" "}
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                    Quas in nobis saepe nemo molestiae laborum minima! Ad,
+                    autem. Odio quidem officiis cupiditate adipisci expedita
+                    quas, eius impedit eveniet dolorem ipsa.{" "}
                   </p>
                 </div>
                 <div className="buttonLink">
@@ -116,7 +122,10 @@ const HomePage = function () {
                 <div className="lineText">
                   <h3>Usage example:</h3>
                   <p>
-                    Lorem ipsum dolor, sit amet consectetur adipisicing elit. Commodi natus unde tempore, magni at deserunt obcaecati perspiciatis fugit numquam amet accusantium non quaerat voluptatum, consequuntur ea quasi laborum a facilis.{" "}
+                    Lorem ipsum dolor, sit amet consectetur adipisicing elit.
+                    Commodi natus unde tempore, magni at deserunt obcaecati
+                    perspiciatis fugit numquam amet accusantium non quaerat
+                    voluptatum, consequuntur ea quasi laborum a facilis.{" "}
                   </p>
                 </div>
                 <div className="buttonLink">

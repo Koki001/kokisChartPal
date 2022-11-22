@@ -251,7 +251,7 @@ template {
 
 #root {
   background: rgb(255, 255, 255);
-  background: linear-gradient(0deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(215, 225, 236) 100%);
+  background: linear-gradient(0deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(202, 214, 228) 100%);
 }
 
 h1,
@@ -550,7 +550,18 @@ h4 {
 .chartTypes {
   width: 200px;
   margin-bottom: 50px;
-  margin-top: 100px;
+  margin-top: 80px;
+  background-color: rgba(255, 255, 255, 0.6705882353);
+  border-radius: 10px;
+  position: relative;
+  padding: 8px;
+}
+
+#welcomeVideo {
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  opacity: 0.3;
 }
 
 .chartExample {
@@ -562,6 +573,12 @@ h4 {
 .chartExampleText {
   width: 30%;
 }
+.chartExampleText p {
+  background-color: rgba(255, 255, 255, 0.6705882353);
+  border-radius: 10px;
+  position: relative;
+  padding: 10px;
+}
 
 .lineExample {
   height: 100%;
@@ -572,6 +589,9 @@ h4 {
 
 .chartExampleImage {
   width: 60%;
+  background-color: rgba(255, 255, 255, 0.6705882353);
+  border-radius: 10px;
+  position: relative;
 }
 .chartExampleImage img {
   width: 100%;
