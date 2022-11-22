@@ -253,35 +253,7 @@ const ChartTypeLine = function () {
         },
       });
     }
-    // if (result.isConfirmed) {
-    // toPng(chartRef.current.container, {
-    //   cacheBust: true,
-    //   backgroundColor: "white",
-    // })
-    //   .then((dataUrl) => {
-    //     const link = document.createElement("a");
-    //     link.download = "my-image-name.png";
-    //     link.href = dataUrl;
-    //     link.click();
-    //   })
-    //   .catch((err) => {
-    //     console.log(err);
-    //   });
-    // } else if (result.isDenied) {
-    //   toPng(chartRef.current.container, {
-    //     cacheBust: true,
-    //     backgroundColor: "transparent",
-    //   })
-    //     .then((dataUrl) => {
-    //       const link = document.createElement("a");
-    //       link.download = "my-image-name.png";
-    //       link.href = dataUrl;
-    //       link.click();
-    //     })
-    //     .catch((err) => {
-    //       console.log(err);
-    //     });
-    // }
+
   };
 
   return (
@@ -654,7 +626,8 @@ const ChartTypeLine = function () {
             tick={{ dy: 5, fontSize: "14px", fontWeight: "bold" }}
           />
           <YAxis
-            domain={[0, `dataMax + 100`]}
+            // domain={[0, `dataMax`]}
+            domain={[0, "auto"]}
             label={
               options.showLabels === true && {
                 value: fmainData.yLabel,
@@ -665,7 +638,7 @@ const ChartTypeLine = function () {
               }
             }
             tick={{ dx: -5, fontSize: "14px", fontWeight: "bold" }}
-            tickCount={20}
+            tickCount={10}
           />
           <Tooltip />
           <Legend

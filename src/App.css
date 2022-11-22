@@ -530,30 +530,32 @@ h4 {
 }
 
 .mainApp {
-  height: 100vh;
   width: 100%;
 }
 
 .mainContainer {
   display: flex;
-  justify-content: flex-start;
   align-items: center;
   flex-direction: column;
   height: 100%;
+  min-height: 100vh;
 }
 .mainContainer h1 {
   margin-bottom: 40px;
   margin-top: 20px;
+  position: absolute;
+  top: 10px;
 }
 
 .chartTypes {
-  display: flex;
-  width: 345px;
-  margin-bottom: 80px;
+  width: 200px;
+  margin-bottom: 50px;
+  margin-top: 100px;
 }
 
 .chartExample {
   display: flex;
+  justify-content: space-around;
   margin-bottom: 20px;
 }
 
@@ -561,11 +563,59 @@ h4 {
   width: 30%;
 }
 
+.lineExample {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+}
+
 .chartExampleImage {
-  width: 70%;
+  width: 60%;
 }
 .chartExampleImage img {
   width: 100%;
+}
+
+.mainContainer .svgTitle {
+  font-family: "Russo One", sans-serif;
+  max-width: 1400px;
+  margin-top: 20px;
+}
+
+.svgTitle text {
+  text-transform: uppercase;
+  animation: stroke 5s;
+  stroke-width: 2;
+  stroke: #365fa0;
+  font-size: 140px;
+  fill: rgb(72, 138, 204);
+}
+
+@keyframes stroke {
+  0% {
+    fill: rgba(72, 138, 20, 0);
+    stroke: rgb(54, 95, 160);
+    stroke-dashoffset: 25%;
+    stroke-dasharray: 0 50%;
+    stroke-width: 2;
+  }
+  70% {
+    fill: rgba(19, 129, 192, 0);
+    stroke: rgb(54, 95, 160);
+  }
+  80% {
+    fill: rgba(26, 76, 185, 0.507);
+    stroke: rgb(54, 95, 160);
+    stroke-width: 3;
+  }
+  100% {
+    fill: rgb(72, 138, 204);
+    stroke: rgba(54, 95, 160, 0);
+    stroke-dashoffset: -25%;
+    stroke-dasharray: 50% 0;
+    stroke-width: 0;
+  }
 }
 
 /*# sourceMappingURL=App.css.map */

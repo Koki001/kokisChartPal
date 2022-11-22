@@ -35,6 +35,7 @@ import FormLabel from "@mui/material/FormLabel";
 import { useRef } from "react";
 import * as htmlToImage from "html-to-image";
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
+import Swal from "sweetalert2";
 
 const ChartTypeLine = function () {
   const [fmainData, setFmainData] = useState({
@@ -210,24 +211,42 @@ const ChartTypeLine = function () {
       return { ...current, connectNull: e.target.checked };
     });
   };
+    const inputOptions = {
+      white: "White",
+      transparent: "Transparent",
+    };
   const handleSaveChart = function (e) {
     if (chartRef.current === null) {
       return;
-    }
-
-    toPng(chartRef.current.container, {
-      cacheBust: true,
-      backgroundColor: "white",
-    })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "my-image-name.png";
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
+    } else {
+      const { value: color } = Swal.fire({
+        showCancelButton: true,
+        showConfirmButton: true,
+        title: "Select background color",
+        input: "radio",
+        inputOptions: inputOptions,
+        inputValidator: (value) => {
+          console.log(value);
+          if (!value) {
+            return "You need to choose something!";
+          } else {
+            toPng(chartRef.current.container, {
+              cacheBust: true,
+              backgroundColor: value,
+            })
+              .then((dataUrl) => {
+                const link = document.createElement("a");
+                link.download = "my-image-name.png";
+                link.href = dataUrl;
+                link.click();
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        },
       });
+    }
   };
   // const tickArray = [
   //   0,
@@ -592,7 +611,7 @@ const ChartTypeLine = function () {
             tick={{ dy: 5, fontSize: "14px", fontWeight: "bold" }}
           />
           <YAxis
-            domain={[0, `dataMax`]}
+            domain={[0, "auto"]}
             label={
               options.showLabels === true && {
                 value: fmainData.yLabel,
@@ -603,7 +622,7 @@ const ChartTypeLine = function () {
               }
             }
             tick={{ dx: -5, fontSize: "14px", fontWeight: "bold" }}
-            tickCount={20}
+            tickCount={10}
           />
           <Tooltip />
           <Legend

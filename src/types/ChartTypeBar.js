@@ -35,6 +35,7 @@ import FormLabel from "@mui/material/FormLabel";
 import { useRef } from "react";
 import * as htmlToImage from "html-to-image";
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
+import Swal from "sweetalert2";
 
 const ChartTypeLine = function () {
   const [fmainData, setFmainData] = useState({
@@ -210,24 +211,42 @@ const ChartTypeLine = function () {
       return { ...current, connectNull: e.target.checked };
     });
   };
+  const inputOptions = {
+    white: "White",
+    transparent: "Transparent",
+  };
   const handleSaveChart = function (e) {
     if (chartRef.current === null) {
       return;
-    }
-
-    toPng(chartRef.current.container, {
-      cacheBust: true,
-      backgroundColor: "white",
-    })
-      .then((dataUrl) => {
-        const link = document.createElement("a");
-        link.download = "my-image-name.png";
-        link.href = dataUrl;
-        link.click();
-      })
-      .catch((err) => {
-        console.log(err);
+    } else {
+      const { value: color } = Swal.fire({
+        showCancelButton: true,
+        showConfirmButton: true,
+        title: "Select background color",
+        input: "radio",
+        inputOptions: inputOptions,
+        inputValidator: (value) => {
+          console.log(value);
+          if (!value) {
+            return "You need to choose something!";
+          } else {
+            toPng(chartRef.current.container, {
+              cacheBust: true,
+              backgroundColor: value,
+            })
+              .then((dataUrl) => {
+                const link = document.createElement("a");
+                link.download = "my-image-name.png";
+                link.href = dataUrl;
+                link.click();
+              })
+              .catch((err) => {
+                console.log(err);
+              });
+          }
+        },
       });
+    }
   };
   // const tickArray = [
   //   0,
@@ -490,71 +509,19 @@ const ChartTypeLine = function () {
             </div>
             <div className="lineOption">
               <p>Bar thickness</p>
-              <Box sx={{ width: 50 }}>
+              <Box sx={{ width: 70 }}>
                 <Slider
                   aria-label="Bar thickness"
                   defaultValue={2}
-                  step={4}
+                  step={1}
                   marks
                   min={1}
-                  max={12}
+                  max={8}
                   onChange={handleLineThickness}
                   size="small"
                 />
               </Box>
             </div>
-            {/* <div className="lineType">
-              <p id="lineTypeRadio" sx={{ color: "black" }}>
-                Bar Type:
-              </p>
-              <RadioGroup
-                onChange={handleLineType}
-                // row={true}
-                aria-labelledby="lineTypeRadio"
-                defaultValue="monotone"
-                name="radio-buttons-group"
-                sx={{
-                  "& .MuiTypography-root": {
-                    fontSize: 14,
-                  },
-                  "& .MuiFormControlLabel-root": {
-                    marginTop: 0,
-                  },
-                  "& .MuiButtonBase-root": {
-                    padding: "4px",
-                  },
-                }}
-              >
-                <FormControlLabel
-                  value="monotone"
-                  control={
-                    <Radio
-                      sx={{
-                        "& .MuiSvgIcon-root": {
-                          fontSize: 22,
-                        },
-                      }}
-                    />
-                  }
-                  label="Monotone"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  value="linear"
-                  control={
-                    <Radio
-                      sx={{
-                        "& .MuiSvgIcon-root": {
-                          fontSize: 22,
-                        },
-                      }}
-                    />
-                  }
-                  label="Linear"
-                  labelPlacement="start"
-                />
-              </RadioGroup>
-            </div> */}
             <div className="saveChart">
               <Button variant="outlined" onClick={handleSaveChart}>
                 Download chart
@@ -592,7 +559,7 @@ const ChartTypeLine = function () {
             tick={{ dy: 5, fontSize: "14px", fontWeight: "bold" }}
           />
           <YAxis
-            domain={[0, `dataMax`]}
+            domain={[0, "auto"]}
             label={
               options.showLabels === true && {
                 value: fmainData.yLabel,
@@ -603,7 +570,7 @@ const ChartTypeLine = function () {
               }
             }
             tick={{ dx: -5, fontSize: "14px", fontWeight: "bold" }}
-            tickCount={20}
+            tickCount={10}
           />
           <Tooltip />
           <Legend
@@ -618,7 +585,6 @@ const ChartTypeLine = function () {
               <Bar
                 barSize={options.lineThickness * 10}
                 key={`line${index}`}
-          
                 // type={options.lineType}
                 name={
                   fchartNames[index].name
