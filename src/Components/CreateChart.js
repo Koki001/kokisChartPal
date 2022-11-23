@@ -27,22 +27,24 @@ const CreateChart = function () {
   };
 
   return (
-    <div className="createChart wrapper">
-      <Link to={"/"}>
-        <button onClick={handleGoBack}>back</button>
-      </Link>
-      <div className="chartContainer">
-        {chartType.value === "line" ? (
-          <ChartTypeLine />
-        ) : chartType.value === "area" ? (
-          <ChartTypeArea />
-        ) : chartType.value === "bar" ? (
-          <ChartTypeBar />
-        ) 
-        // : chartType.value === "pie" ? (
-        //   <ChartTypePie /> 
-        // ) 
-        : null}
+    <div className="createChart">
+      <div className="wrapper">
+        <Link to={"/"}>
+          <button onClick={handleGoBack}>back</button>
+        </Link>
+        <div className="chartContainer">
+          {chartType.value === "line" ? (
+            <ChartTypeLine />
+          ) : chartType.value === "area" ? (
+            <ChartTypeArea />
+          ) : chartType.value === "bar" ? (
+            <ChartTypeBar />
+          )
+          // : chartType.value === "pie" ? (
+          //   <ChartTypePie />
+          // )
+          : null}
+        </div>
       </div>
     </div>
   );

@@ -258,7 +258,7 @@ const ChartTypeLine = function () {
 
   return (
     <>
-      <div className="chartConfig wrapper">
+      <div className="chartConfig">
         <div className="topChart">
           <div className="selectAndAdd">
             {dataNumDropdown.length > 1 ? (
@@ -607,8 +607,8 @@ const ChartTypeLine = function () {
           data={fchartData}
           margin={{
             top: 10,
-            right: 30,
-            left: 20,
+            right: 50,
+            left: options.showLabels === true ? 20 : 0,
             bottom: 50,
           }}
         >

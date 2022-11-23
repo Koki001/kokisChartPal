@@ -268,6 +268,7 @@ h5 {
   text-align: center;
   align-items: center;
   height: 100vh;
+  min-width: 800px;
 }
 
 .chartContainer {
@@ -277,20 +278,35 @@ h5 {
 .chartContainer select {
   width: 100px;
 }
+.chartContainer .chartConfig {
+  margin-top: 30px;
+  position: relative;
+}
+.chartContainer .chartConfig::after {
+  content: "";
+  background-image: url(../public/assets/background/chartBackground.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  opacity: 0.08;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  position: absolute;
+  pointer-events: none;
+}
 
 .chartMainContainer {
-  border-top: 1px solid black;
   margin-top: 10px;
-  min-height: 500px;
+  min-height: 400px;
 }
 
 .chartConfig {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  width: 100%;
   min-height: 260px;
-  margin: 20px 0;
 }
 .chartConfig p {
   margin: 0 0 15px 0;
@@ -521,6 +537,17 @@ h4 {
 .chartSettings .saveChart {
   display: flex;
   justify-content: flex-end;
+}
+
+#chartVideo {
+  position: fixed;
+  min-width: 100%;
+  min-height: 100%;
+  opacity: 0.2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  mask-image: linear-gradient(to bottom, rgb(0, 0, 0) 10%, transparent 100%);
 }
 
 .wrapper {
