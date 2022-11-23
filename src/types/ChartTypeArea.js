@@ -248,13 +248,6 @@ const ChartTypeLine = function () {
       });
     }
   };
-  // const tickArray = [
-  //   0,
-  //   Math.trunc("dataMax" / 4),
-  //   Math.trunc("dataMax" / 2),
-  //   Math.trunc((3 * "dataMax") / 4),
-  //   "dataMax",
-  // ];
   return (
     <>
       <div className="chartConfig wrapper">

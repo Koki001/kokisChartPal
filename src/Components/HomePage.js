@@ -8,35 +8,37 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Button from "@mui/material/Button";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 
 const HomePage = function () {
   const [selectedChart, setSelectedChart] = useState("default");
+  const [infoWelcomeEl, setInfoWelcomeEl] = useState(null);
   const dispatch = useDispatch();
-  const chart = useSelector(function (state) {
-    return state.chart;
-  });
+  // const chart = useSelector(function (state) {
+  //   return state.chart;
+  // });
+  const openInfoWelcome = Boolean(infoWelcomeEl);
+  const idInfoPop = openInfoWelcome ? "info-popup-tick" : undefined;
 
   const handleChartType = function (event) {
     setSelectedChart(event.target.value);
     dispatch(selectedType(event.target.value));
   };
-  console.log(selectedChart);
+  const handleInfoWelcomeOpen = function (e) {
+    setInfoWelcomeEl(e.currentTarget);
+  };
+  const handleInfoWelcomeClose = function (e) {
+    setInfoWelcomeEl(null);
+  };
   return (
     <div className="wrapper mainContainer">
-      {/* <svg viewBox="0 0 1400 200">
-        <symbol id="s-text">
-          <text text-anchor="middle" x="50%" y="35%" dy=".35em">
-            Koki's Chart Emporium
-          </text>
-        </symbol>
-        <use class="text" xlinkHref="#s-text"></use>
-        <use class="text" xlinkHref="#s-text"></use>
-        <use class="text" xlinkHref="#s-text"></use>
-        <use class="text" xlinkHref="#s-text"></use>
-        <use class="text" xlinkHref="#s-text"></use>
-      </svg> */}
       <video autoPlay muted loop id="welcomeVideo">
-        <source src={"./assets/background/welcomeBackground.mp4"} type="video/mp4" />
+        <source
+          src={"./assets/background/welcomeBackground.mp4"}
+          type="video/mp4"
+        />
       </video>
       <svg className="svgTitle" viewBox="0 0 2220 200">
         <text x="50%" y="50%" dy=".35em" textAnchor="middle">
@@ -77,10 +79,48 @@ const HomePage = function () {
             </MenuItem>
           </Select>
         </FormControl>
+        <div className="progressText">
+          <PriorityHighIcon
+            color="warning"
+            aria-describedby={idInfoPop}
+            fontSize={"large"}
+            onClick={handleInfoWelcomeOpen}
+          />
+          <Popover
+            id={idInfoPop}
+            open={openInfoWelcome}
+            anchorEl={infoWelcomeEl}
+            onClose={handleInfoWelcomeClose}
+            anchorOrigin={{
+              vertical: "bottom",
+              horizontal: "left",
+            }}
+          >
+            <Typography
+              sx={{
+                backgroundColor: "#ffffffab",
+                padding: "15px 20px 15px 20px",
+                fontSize: "15px",
+                width: "500px",
+              }}
+            >
+              Hey! Thanks for visiting :). Currently, I am trying to get the{" "}
+              <em>Line</em> chart functionality to 100% before moving on to the
+              Area and Bar charts, respectively. Also, the site is not optimized
+              for smaller screen sizes (800 viewport width or less). If you run
+              into any issues, or have suggestions about the site, connect with
+              me over{" "}
+              <a
+                href="https://www.linkedin.com/in/koki-vasileski/"
+                target={"_blank"}
+              >LinkedIn</a>{" "}
+              or <a href="https://github.com/Koki001" target={"_blank"}>GitHub</a> and let me know!
+            </Typography>
+          </Popover>
+        </div>
       </div>
       {selectedChart !== "default" && (
         <div className="chartExample">
-          {/* <h2>Chart example:</h2> */}
           <div className="chartExampleText">
             {selectedChart === "line" ? (
               <div className="lineExample">
@@ -144,11 +184,6 @@ const HomePage = function () {
           </div>
         </div>
       )}
-      {/* {selectedChart !== "default" && (
-        <Link to={"/create"}>
-          <Button variant="outlined">Use this type</Button>
-        </Link>
-      )} */}
     </div>
   );
 };

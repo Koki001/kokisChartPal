@@ -517,6 +517,7 @@ h4 {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+  margin-bottom: 5px;
 }
 .chartSettings .lineType p {
   margin-top: 4px;
@@ -526,6 +527,7 @@ h4 {
   justify-content: space-between;
   align-items: center;
   height: 30px;
+  position: relative;
 }
 .chartSettings .MuiFormGroup-root {
   display: flex;
@@ -536,7 +538,23 @@ h4 {
 }
 .chartSettings .saveChart {
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
+}
+.chartSettings .lineTicks {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 5px;
+  position: relative;
+}
+.chartSettings #filled-basic {
+  padding: 0;
+  width: 50px;
+  text-align: center;
+}
+.chartSettings .infoPopIconAbsolute {
+  position: absolute;
+  cursor: pointer;
+  left: -20px;
 }
 
 #chartVideo {
@@ -622,6 +640,13 @@ h4 {
 }
 .chartExampleImage img {
   width: 100%;
+}
+
+.progressText {
+  position: absolute;
+  left: -50px;
+  top: 15px;
+  cursor: pointer;
 }
 
 .mainContainer .svgTitle {

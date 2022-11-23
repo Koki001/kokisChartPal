@@ -9,6 +9,7 @@ import ChartTypeLine from "../types/ChartTypeLine";
 import ChartTypeArea from "../types/ChartTypeArea";
 import ChartTypeBar from "../types/ChartTypeBar";
 import ChartTypePie from "../types/ChartTypePie";
+import Button from "@mui/material/Button";
 
 const CreateChart = function () {
   const [chartType, setChartType] = useState("");
@@ -30,7 +31,7 @@ const CreateChart = function () {
     <div className="createChart">
       <div className="wrapper">
         <Link to={"/"}>
-          <button onClick={handleGoBack}>back</button>
+          <Button color="warning" sx={{padding: "0", marginTop: "10px"}} variant="outlined" onClick={handleGoBack}>back</Button>
         </Link>
         <div className="chartContainer">
           {chartType.value === "line" ? (

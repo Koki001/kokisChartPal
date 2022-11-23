@@ -19,7 +19,7 @@
   width: 200px;
   margin-bottom: 50px;
   margin-top: 80px;
-    background-color: #ffffffab;
+  background-color: #ffffffab;
   border-radius: 10px;
   position: relative;
   padding: 8px;
@@ -38,10 +38,10 @@
 .chartExampleText {
   width: 30%;
   p {
-      background-color: #ffffffab;
-  border-radius: 10px;
-  position: relative;
-  padding: 10px;
+    background-color: #ffffffab;
+    border-radius: 10px;
+    position: relative;
+    padding: 10px;
   }
 }
 .lineExample {
@@ -59,4 +59,10 @@
   img {
     width: 100%;
   }
+}
+.progressText {
+  position: absolute;
+  left: -50px;
+  top: 15px;
+  cursor: pointer;
 }

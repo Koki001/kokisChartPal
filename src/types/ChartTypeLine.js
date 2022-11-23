@@ -31,16 +31,12 @@ import { findRenderedDOMComponentWithTag } from "react-dom/test-utils";
 import Box from "@mui/material/Box";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import FormLabel from "@mui/material/FormLabel";
 import { useRef } from "react";
-import * as htmlToImage from "html-to-image";
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
-import Dialog from "@mui/material/Dialog";
-import DialogActions from "@mui/material/DialogActions";
-import DialogContent from "@mui/material/DialogContent";
-import DialogContentText from "@mui/material/DialogContentText";
-import DialogTitle from "@mui/material/DialogTitle";
 import Swal from "sweetalert2";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 
 const ChartTypeLine = function () {
   const [fmainData, setFmainData] = useState({
@@ -62,13 +58,22 @@ const ChartTypeLine = function () {
     showGrid: true,
     showLabels: true,
     connectNull: false,
+    tickNumber: 10,
   });
   const [chartImage, setChartImage] = useState("");
   const [showing, setShowing] = useState(0);
   const [downloadAlert, setDownloadAlert] = useState(false);
+  const [infoTickEl, setInfoTickEl] = useState(null);
+  const [infoNullEl, setInfoNullEl] = useState(null);
   const chartRef = useRef();
   // const { height, width } = useWindowDimensions();
-
+  const openInfoTick = Boolean(infoTickEl);
+  const openInfoNull = Boolean(infoNullEl);
+  const idInfoPop = openInfoTick
+    ? "info-popup-tick"
+    : openInfoNull
+    ? "info-popup-null"
+    : undefined;
   useEffect(function () {
     let pointNumArray = [];
     for (let i = 0; i < 20; i++) {
@@ -217,6 +222,26 @@ const ChartTypeLine = function () {
       return { ...current, connectNull: e.target.checked };
     });
   };
+  const handleTickChange = function (e) {
+    setOptions(function (current) {
+      return {
+        ...current,
+        tickNumber: e.target.value > 20 ? "20" : e.target.value,
+      };
+    });
+  };
+  const handleInfoTickOpen = function (e) {
+    setInfoTickEl(e.currentTarget);
+  };
+  const handleInfoTickClose = function (e) {
+    setInfoTickEl(null);
+  };
+  const handleInfoNullOpen = function (e) {
+    setInfoNullEl(e.currentTarget);
+  };
+  const handleInfoNullClose = function (e) {
+    setInfoNullEl(null);
+  };
   const inputOptions = {
     white: "White",
     transparent: "Transparent",
@@ -253,7 +278,6 @@ const ChartTypeLine = function () {
         },
       });
     }
-
   };
 
   return (
@@ -287,10 +311,14 @@ const ChartTypeLine = function () {
             ) : null}
             <Button
               onClick={handleNewLine}
-              variant="contained"
+              variant="outlined"
               disabled={fmainData.dataPoints.length > 0 ? false : true}
+              sx={{
+                backgroundColor: "rgba(255, 255, 255, 0.3)",
+                fontWeight: "bold"
+              }}
             >
-              Add data
+              {fchartNames.length <= 0 ? "New" : "Add"} data
             </Button>
           </div>
           <div className="dataLabelTitle">
@@ -348,6 +376,7 @@ const ChartTypeLine = function () {
                       size="small"
                       color="primary"
                       aria-label="Remove data group"
+                      disabled
                     >
                       <ClearIcon fontSize="10px" />
                     </IconButton>
@@ -386,7 +415,7 @@ const ChartTypeLine = function () {
                   startIcon={<KeyboardArrowLeftIcon />}
                   style={{
                     minWidth: "30px",
-                    padding: "0 10px",
+                    padding: "0 0 0 10px",
                     "& span": {
                       margin: "0",
                     },
@@ -405,7 +434,7 @@ const ChartTypeLine = function () {
                   startIcon={<KeyboardArrowRightIcon />}
                   style={{
                     minWidth: "30px",
-                    padding: "0 10px",
+                    padding: "0 0 0 10px",
                     "& span": {
                       margin: "0",
                     },
@@ -505,6 +534,38 @@ const ChartTypeLine = function () {
               <Switch size="small" onChange={handleShowLabels} defaultChecked />
             </div>
             <div className="lineNullOption">
+              <div className="infoPopIconAbsolute">
+                <PriorityHighIcon
+                  color="warning"
+                  aria-describedby={idInfoPop}
+                  fontSize={"small"}
+                  onClick={handleInfoNullOpen}
+                />
+                <Popover
+                  id={idInfoPop}
+                  open={openInfoNull}
+                  anchorEl={infoNullEl}
+                  onClose={handleInfoNullClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      backgroundColor: "#357fca",
+                      color: "white",
+                      padding: "5px 10px 5px 10px",
+                      fontSize: "15px",
+                      width: "230px",
+                    }}
+                  >
+                    Connects points even if certain data points are missing.
+                    Example: If your 3rd x-axis point has no data, but your 2nd
+                    and 4th do, it will connect the 2nd and 4th points.
+                  </Typography>
+                </Popover>
+              </div>
               <p>Connect nulls</p>
               <Switch size="small" onChange={handleNullValues} />
             </div>
@@ -520,6 +581,56 @@ const ChartTypeLine = function () {
                   max={3}
                   onChange={handleLineThickness}
                   size="small"
+                />
+              </Box>
+            </div>
+            <div className="lineTicks">
+              <div className="infoPopIconAbsolute">
+                <PriorityHighIcon
+                  color="warning"
+                  aria-describedby={idInfoPop}
+                  fontSize={"small"}
+                  onClick={handleInfoTickOpen}
+                />
+                <Popover
+                  id={idInfoPop}
+                  open={openInfoTick}
+                  anchorEl={infoTickEl}
+                  onClose={handleInfoTickClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      backgroundColor: "#357fca",
+                      color: "white",
+                      padding: "5px 10px 5px 10px",
+                      fontSize: "15px",
+                      width: "230px",
+                    }}
+                  >
+                    Sets the number of intervals on the Y-Axis. Current maximum
+                    value is 20.
+                  </Typography>
+                </Popover>
+              </div>
+              <p>Tick count</p>
+              <Box component="form" noValidate autoComplete="off">
+                <TextField
+                  onChange={handleTickChange}
+                  placeholder={"10"}
+                  id="filled-basic"
+                  variant="filled"
+                  type={"number"}
+                  InputProps={{
+                    inputProps: {
+                      max: 20,
+                      min: 1,
+                    },
+                  }}
+                  value={options.tickNumber > 20 ? "20" : options.tickNumber}
                 />
               </Box>
             </div>
@@ -541,7 +652,7 @@ const ChartTypeLine = function () {
                     marginTop: 0,
                   },
                   "& .MuiButtonBase-root": {
-                    padding: "4px",
+                    padding: "1px",
                   },
                 }}
               >
@@ -590,7 +701,15 @@ const ChartTypeLine = function () {
               </RadioGroup>
             </div>
             <div className="saveChart">
-              <Button variant="outlined" onClick={handleSaveChart}>
+              <Button
+                sx={{
+                  padding: "2px 10px",
+                  fontSize: "13px",
+                  backgroundColor: "rgba(255, 255, 255, 0.3)",
+                }}
+                variant="outlined"
+                onClick={handleSaveChart}
+              >
                 Download chart
               </Button>
             </div>
@@ -638,7 +757,7 @@ const ChartTypeLine = function () {
               }
             }
             tick={{ dx: -5, fontSize: "14px", fontWeight: "bold" }}
-            tickCount={10}
+            tickCount={options.tickNumber}
           />
           <Tooltip />
           <Legend
