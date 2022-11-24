@@ -46,6 +46,9 @@
     margin: 0 0 15px 0;
   }
 }
+.chartSettings {
+  animation: rightSlide 0.3s linear 1;
+}
 .yAxisLabel {
   text-anchor: middle;
   font-size: 20px;
@@ -67,20 +70,29 @@
   background-color: #ffffffab;
 }
 .containedDataName {
-  max-height: 160px;
+  max-height: 152px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  background-color: #ffffffab;
-  border-radius: 10px;
-  padding: 5px;
+}
+.containedDataName:first-child {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.containedDataName:last-child {
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
 }
 .newLine {
   display: flex;
   justify-content: center;
   align-items: center;
+  animation: leftSlideLine 0.3s linear 1;
+  background-color: #ffffffab;
+  padding: 0 5px;
   button {
     cursor: pointer;
+    border-radius: 50%;
   }
   svg,
   svg * {
@@ -99,6 +111,9 @@
   justify-content: space-between;
   width: 100%;
   margin-bottom: 30px;
+  button {
+    height: 40px;
+  }
 }
 .yAxis,
 .xAxis {
@@ -107,6 +122,7 @@
   flex-direction: column;
   justify-content: space-between;
   max-height: 135px;
+  animation: middleExpand 0.3s linear 1;
 }
 
 .containedInputs {
@@ -148,8 +164,8 @@ h4 {
   align-items: flex-start;
   flex-direction: column;
   justify-content: space-between;
-  width: 280px;
-  min-width: 201px;
+  width: 270px;
+  min-width: 210px;
 }
 .dataLabelTitle {
   display: flex;
@@ -165,4 +181,51 @@ h4 {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
+}
+.labelsXY > div:first-child,
+.labelsXY > div:last-child
+ {
+  background-color: #ffffffab;
+  // padding: 5px;
+  border-radius: 10px;
+}
+@keyframes leftSlideLine {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  80% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes rightSlide {
+  0% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+@keyframes middleExpand {
+  0% {
+    max-width: 0;
+    max-height: 0;
+    overflow: hidden;
+    visibility: hidden;
+  }
+  100% {
+    max-width: auto;
+    max-height: auto;
+    overflow: visible;
+    visibility: visible;
+  }
 }

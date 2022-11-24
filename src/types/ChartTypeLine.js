@@ -287,8 +287,8 @@ const ChartTypeLine = function () {
             toPng(chartRef.current.container, {
               cacheBust: true,
               backgroundColor: value,
-              canvasWidth: 1920,
-              canvasHeight: 1080,
+              // canvasWidth: 1920,
+              // canvasHeight: 1080,
             })
               .then((dataUrl) => {
                 const link = document.createElement("a");
@@ -364,54 +364,53 @@ const ChartTypeLine = function () {
                 </Button>
               </div>
             ) : null}
-            {fchartNames.length > 0 &&
-
-            <div className="containedDataName">
-              {dataCounter.map(function (line, index) {
-                return (
-                  <div key={`yeah${index}`} className="newLine">
-                    <button
-                      style={
-                        fchartNames[index].color
-                          ? {
-                              backgroundColor: `${fchartNames[index].color}`,
-                            }
-                          : {
-                              background:
-                                "linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%), linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)",
-                            }
-                      }
-                      name={index}
-                      onClick={handleColorOpen}
-                    ></button>
-                    <TextField
-                      sx={{
-                        "& .MuiInputBase-input": {
-                          padding: "2px 12px",
-                          minWidth: "50px",
-                        },
-                      }}
-                      variant="standard"
-                      key={line + index}
-                      id={`line${index.toString()}`}
-                      onChange={handleDataLabel}
-                      placeholder={`Dataset ${index + 1} Title`}
-                    />
-                    <IconButton
-                      value={index}
-                      onClick={handleRemoveLine}
-                      size="small"
-                      color="primary"
-                      aria-label="Remove data group"
-                      disabled
-                    >
-                      <ClearIcon fontSize="10px" />
-                    </IconButton>
-                  </div>
-                );
-              })}
-            </div>
-            }
+            {fchartNames.length > 0 && (
+              <div className="containedDataName">
+                {dataCounter.map(function (line, index) {
+                  return (
+                    <div key={`yeah${index}`} className="newLine">
+                      <button
+                        style={
+                          fchartNames[index].color
+                            ? {
+                                backgroundColor: `${fchartNames[index].color}`,
+                              }
+                            : {
+                                background:
+                                  "linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%), linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)",
+                              }
+                        }
+                        name={index}
+                        onClick={handleColorOpen}
+                      ></button>
+                      <TextField
+                        sx={{
+                          "& .MuiInputBase-input": {
+                            padding: "2px 12px",
+                            minWidth: "50px",
+                          },
+                        }}
+                        variant="standard"
+                        key={line + index}
+                        id={`line${index.toString()}`}
+                        onChange={handleDataLabel}
+                        placeholder={`Dataset ${index + 1} Title`}
+                      />
+                      <IconButton
+                        value={index}
+                        onClick={handleRemoveLine}
+                        size="small"
+                        color="primary"
+                        aria-label="Remove data group"
+                        disabled
+                      >
+                        <ClearIcon fontSize="10px" />
+                      </IconButton>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 
@@ -424,7 +423,8 @@ const ChartTypeLine = function () {
                 value={fmainData.xLabel}
                 id="standard-basic"
                 label="X-Axis Label"
-                variant="standard"
+                variant="outlined"
+                sx={{ width: "45%" }}
               />
               <TextField
                 onChange={handleYLabel}
@@ -432,7 +432,8 @@ const ChartTypeLine = function () {
                 value={fmainData.yLabel}
                 id="standard-basic"
                 label="Y-Axis Label"
-                variant="standard"
+                variant="outlined"
+                sx={{ width: "45%" }}
               />
             </div>
             <div className="labelArrowContainer">
@@ -789,8 +790,8 @@ const ChartTypeLine = function () {
         ) : null}
       </div>
       <ResponsiveContainer
-        width = {"100%"}
-        height = {"65%"}
+        width={"100%"}
+        height={"65%"}
         className="chartMainContainer"
       >
         <LineChart

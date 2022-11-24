@@ -39,7 +39,7 @@
 }
 .chartSettings {
   height: 100%;
-  width: 220px;
+  width: 270px;
   min-width: 190px;
   display: flex;
   flex-direction: column;
@@ -130,8 +130,14 @@
   .infoPopIconAbsolute {
     position: absolute;
     cursor: pointer;
-    left: -20px;
-
+    left: -22px;
+    top: 4px;
+    svg {
+      transition: all 0.2s linear;
+    }
+    svg:hover {
+      transform: scale(1.5);
+    }
   }
 }
 #chartVideo {

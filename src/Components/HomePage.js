@@ -15,6 +15,7 @@ import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 const HomePage = function () {
   const [selectedChart, setSelectedChart] = useState("default");
   const [infoWelcomeEl, setInfoWelcomeEl] = useState(null);
+  const [animation, setAnimation] = useState(false)
   const dispatch = useDispatch();
   // const chart = useSelector(function (state) {
   //   return state.chart;
@@ -25,6 +26,7 @@ const HomePage = function () {
   const handleChartType = function (event) {
     setSelectedChart(event.target.value);
     dispatch(selectedType(event.target.value));
+    setAnimation(true)
   };
   const handleInfoWelcomeOpen = function (e) {
     setInfoWelcomeEl(e.currentTarget);
@@ -113,25 +115,34 @@ const HomePage = function () {
               <a
                 href="https://www.linkedin.com/in/koki-vasileski/"
                 target={"_blank"}
-              >LinkedIn</a>{" "}
-              or <a href="https://github.com/Koki001" target={"_blank"}>GitHub</a> and let me know!
+              >
+                LinkedIn
+              </a>{" "}
+              or{" "}
+              <a href="https://github.com/Koki001" target={"_blank"}>
+                GitHub
+              </a>{" "}
+              and let me know!
             </Typography>
           </Popover>
         </div>
       </div>
       {selectedChart !== "default" && (
         <div className="chartExample">
-          <div className="chartExampleText">
+          <div
+            onAnimationEnd={() => setAnimation(false)}
+            className={`chartExampleText ${animation}TextAnimation`}
+          >
             {selectedChart === "line" ? (
               <div className="lineExample">
                 <div className="lineText">
-                  <h3>Usage example:</h3>
+                  <h3>Suggested use:</h3>
                   <p>
-                    Best used to showcase a continuous dataset, or multiple
+                    When wanting to showcase a continuous dataset, or multiple
                     datasets over the same period of time. It's a simple and
                     effective way to compare different groups of data over short
                     and long periods of time, especially when the changes in
-                    data are smaller.{" "}
+                    data over time are smaller.{" "}
                   </p>
                 </div>
                 <div className="buttonLink">
@@ -176,7 +187,10 @@ const HomePage = function () {
               </div>
             ) : null}
           </div>
-          <div className="chartExampleImage">
+          <div
+            onAnimationEnd={() => setAnimation(false)}
+            className={`chartExampleImage ${animation}ImageAnimation`}
+          >
             <img
               src={`./assets/chartSelectTypes/${selectedChart}.png`}
               alt=""
