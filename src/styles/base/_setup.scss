@@ -210,6 +210,7 @@ template {
 #root {
 background: rgb(255,255,255);
 background: linear-gradient(0deg, rgba(255,255,255,1) 0%, rgba(255,255,255,1) 50%, rgb(202, 214, 228) 100%);
+min-width: 800px;
 }
 
 h1,

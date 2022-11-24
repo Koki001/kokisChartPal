@@ -57,6 +57,8 @@ const ChartTypeLine = function () {
     lineType: "monotone",
     showGrid: true,
     showLabels: true,
+    rotateLabels: false,
+    showLegend: true,
     connectNull: false,
     tickNumber: 10,
   });
@@ -65,15 +67,19 @@ const ChartTypeLine = function () {
   const [downloadAlert, setDownloadAlert] = useState(false);
   const [infoTickEl, setInfoTickEl] = useState(null);
   const [infoNullEl, setInfoNullEl] = useState(null);
+  const [infoRotateEl, setInfoRotateEl] = useState(null);
   const chartRef = useRef();
   // const { height, width } = useWindowDimensions();
   const openInfoTick = Boolean(infoTickEl);
   const openInfoNull = Boolean(infoNullEl);
+  const openInfoRotate = Boolean(infoRotateEl);
   const idInfoPop = openInfoTick
     ? "info-popup-tick"
     : openInfoNull
     ? "info-popup-null"
-    : undefined;
+    : openInfoRotate
+    ? "info-popup-rotate"
+    : null;
   useEffect(function () {
     let pointNumArray = [];
     for (let i = 0; i < 20; i++) {
@@ -212,6 +218,16 @@ const ChartTypeLine = function () {
       return { ...current, showLabels: e.target.checked };
     });
   };
+  const handleRotateLabels = function (e) {
+    setOptions(function (current) {
+      return { ...current, rotateLabels: e.target.checked };
+    });
+  };
+  const handleShowLegend = function (e) {
+    setOptions(function (current) {
+      return { ...current, showLegend: e.target.checked };
+    });
+  };
   const handleLineType = function (e) {
     setOptions(function (current) {
       return { ...current, lineType: e.target.value };
@@ -235,6 +251,12 @@ const ChartTypeLine = function () {
   };
   const handleInfoTickClose = function (e) {
     setInfoTickEl(null);
+  };
+  const handleInfoRotateOpen = function (e) {
+    setInfoRotateEl(e.currentTarget);
+  };
+  const handleInfoRotateClose = function (e) {
+    setInfoRotateEl(null);
   };
   const handleInfoNullOpen = function (e) {
     setInfoNullEl(e.currentTarget);
@@ -315,7 +337,7 @@ const ChartTypeLine = function () {
               disabled={fmainData.dataPoints.length > 0 ? false : true}
               sx={{
                 backgroundColor: "rgba(255, 255, 255, 0.3)",
-                fontWeight: "bold"
+                fontWeight: "bold",
               }}
             >
               {fchartNames.length <= 0 ? "New" : "Add"} data
@@ -533,6 +555,49 @@ const ChartTypeLine = function () {
               <p>Show labels</p>
               <Switch size="small" onChange={handleShowLabels} defaultChecked />
             </div>
+            <div className="rotateOption">
+              <div className="infoPopIconAbsolute">
+                <PriorityHighIcon
+                  color="warning"
+                  aria-describedby={idInfoPop}
+                  fontSize={"small"}
+                  onClick={handleInfoRotateOpen}
+                />
+                <Popover
+                  id={idInfoPop}
+                  open={openInfoRotate}
+                  anchorEl={infoRotateEl}
+                  onClose={handleInfoRotateClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      backgroundColor: "#357fca",
+                      color: "white",
+                      padding: "5px 10px 5px 10px",
+                      fontSize: "15px",
+                      width: "230px",
+                    }}
+                  >
+                    Rotates labels along the X-Axis at an angle. This also
+                    causes each space separated word to go in the next line. If
+                    the labels are written before this option is selected, you
+                    must interact with the label input for the word line break
+                    to take effect (Like adding an empty space in the desired
+                    input).
+                  </Typography>
+                </Popover>
+              </div>
+              <p>Rotate labels</p>
+              <Switch size="small" onChange={handleRotateLabels} />
+            </div>
+            <div className="legendOption">
+              <p>Show legend</p>
+              <Switch size="small" onChange={handleShowLegend} defaultChecked />
+            </div>
             <div className="lineNullOption">
               <div className="infoPopIconAbsolute">
                 <PriorityHighIcon
@@ -561,8 +626,8 @@ const ChartTypeLine = function () {
                     }}
                   >
                     Connects points even if certain data points are missing.
-                    Example: If your 3rd x-axis point has no data, but your 2nd
-                    and 4th do, it will connect the 2nd and 4th points.
+                    Example: If your 3rd and 4th X-Axis points have no data, but
+                    your 2nd and 5th do, it will connect the 2nd and 5th points.
                   </Typography>
                 </Popover>
               </div>
@@ -635,15 +700,16 @@ const ChartTypeLine = function () {
               </Box>
             </div>
             <div className="lineType">
-              <p id="lineTypeRadio" sx={{ color: "black" }}>
+              {/* <p id="lineTypeRadio" sx={{ color: "black" }}>
                 Line Type:
-              </p>
+              </p> */}
               <RadioGroup
                 onChange={handleLineType}
                 // row={true}
                 aria-labelledby="lineTypeRadio"
                 defaultValue="monotone"
                 name="radio-buttons-group"
+                row
                 sx={{
                   "& .MuiTypography-root": {
                     fontSize: 14,
@@ -667,7 +733,7 @@ const ChartTypeLine = function () {
                       }}
                     />
                   }
-                  label="Monotone"
+                  label="Mono"
                   labelPlacement="start"
                 />
                 <FormControlLabel
@@ -733,16 +799,24 @@ const ChartTypeLine = function () {
         >
           {options.showGrid === true && <CartesianGrid strokeDasharray="3 3" />}
           <XAxis
+            interval={0}
+            angle={options.rotateLabels === true ? -45 : 0}
             dataKey="name"
             label={
               options.showLabels === true && {
                 value: fmainData.xLabel,
                 position: "bottom",
                 className: "xAxisLabel",
-                offset: 15,
+                offset: options.rotateLabels === true ? 30 : 15,
               }
             }
-            tick={{ dy: 5, fontSize: "14px", fontWeight: "bold" }}
+            tick={{
+              dy: options.rotateLabels === true ? 20 : 5,
+              fontSize: "14px",
+              width: options.rotateLabels === true ? "50px" : null,
+              wordWrap: options.rotateLabels === true ? "break-word" : "normal",
+              fill: options.showLabels === true ? "black" : "transparent",
+            }}
           />
           <YAxis
             // domain={[0, `dataMax`]}
@@ -756,17 +830,23 @@ const ChartTypeLine = function () {
                 offset: -5,
               }
             }
-            tick={{ dx: -5, fontSize: "14px", fontWeight: "bold" }}
+            tick={{
+              dx: -5,
+              fontSize: "14px",
+              fill: options.showLabels === true ? "black" : "transparent",
+            }}
             tickCount={options.tickNumber}
           />
           <Tooltip />
-          <Legend
-            verticalAlign="top"
-            align="center"
-            height={36}
-            iconSize="14"
-            iconType={"circle"}
-          />
+          {options.showLegend === true && (
+            <Legend
+              verticalAlign="top"
+              align="center"
+              height={36}
+              iconSize="14"
+              iconType={"circle"}
+            />
+          )}
           {dataCounter.map(function (e, index) {
             return (
               <Line

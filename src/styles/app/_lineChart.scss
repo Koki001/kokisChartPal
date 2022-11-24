@@ -40,45 +40,65 @@
 .chartSettings {
   height: 100%;
   width: 220px;
-  min-width: 175px;
+  min-width: 190px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  background-color: #ffffffab;
+  border-radius: 10px;
+  padding: 5px;
   p {
-    margin: 0 10px 0 0;
+    margin: 0;
   }
   .gridOption {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 30px;
+    height: 25px;
   }
   .labelsOption {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 30px;
+    height: 25px;
+  }
+    .rotateOption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 25px;
+    position: relative;
+  }
+  .legendOption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 25px;
   }
   .lineOption {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 30px;
+    height: 25px;
   }
   .lineType {
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 5px;
+    justify-content: center;
+    height: 25px;
+    margin-top: 5px;
     p {
       margin-top: 4px;
+    }
+    .MuiFormGroup-root {
+      width: 100%;
+      justify-content: space-between;
     }
   }
   .lineNullOption {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    height: 30px;
+    height: 25px;
     position: relative;
   }
   .MuiFormGroup-root {
@@ -90,14 +110,17 @@
     }
   }
   .saveChart {
+    margin-top: 10px;
     display: flex;
     justify-content: center;
+    height: 25px;
   }
   .lineTicks {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5px;
+    align-items: center;
     position: relative;
+    height: 25px;
   }
   #filled-basic {
     padding: 0;
@@ -108,6 +131,7 @@
     position: absolute;
     cursor: pointer;
     left: -20px;
+
   }
 }
 #chartVideo {

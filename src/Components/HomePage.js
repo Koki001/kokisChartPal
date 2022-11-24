@@ -107,7 +107,7 @@ const HomePage = function () {
               Hey! Thanks for visiting :). Currently, I am trying to get the{" "}
               <em>Line</em> chart functionality to 100% before moving on to the
               Area and Bar charts, respectively. Also, the site is not optimized
-              for smaller screen sizes (800 viewport width or less). If you run
+              for smaller screen sizes (850 viewport width or less). If you run
               into any issues, or have suggestions about the site, connect with
               me over{" "}
               <a
