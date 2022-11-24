@@ -67,10 +67,13 @@
   background-color: #ffffffab;
 }
 .containedDataName {
-  max-height: 150px;
+  max-height: 160px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
+  background-color: #ffffffab;
+  border-radius: 10px;
+  padding: 5px;
 }
 .newLine {
   display: flex;
@@ -152,9 +155,6 @@ h4 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: #ffffffab;
-  border-radius: 10px;
-  padding: 5px;
   width: 100%;
   position: relative;
   h4 {
@@ -165,5 +165,4 @@ h4 {
   display: flex;
   justify-content: space-between;
   margin-bottom: 20px;
-  
 }

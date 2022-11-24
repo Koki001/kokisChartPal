@@ -37,6 +37,7 @@ import Swal from "sweetalert2";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import { height } from "@mui/system";
 
 const ChartTypeLine = function () {
   const [fmainData, setFmainData] = useState({
@@ -286,6 +287,8 @@ const ChartTypeLine = function () {
             toPng(chartRef.current.container, {
               cacheBust: true,
               backgroundColor: value,
+              canvasWidth: 1920,
+              canvasHeight: 1080,
             })
               .then((dataUrl) => {
                 const link = document.createElement("a");
@@ -361,6 +364,8 @@ const ChartTypeLine = function () {
                 </Button>
               </div>
             ) : null}
+            {fchartNames.length > 0 &&
+
             <div className="containedDataName">
               {dataCounter.map(function (line, index) {
                 return (
@@ -406,6 +411,7 @@ const ChartTypeLine = function () {
                 );
               })}
             </div>
+            }
           </div>
         </div>
 
@@ -783,8 +789,8 @@ const ChartTypeLine = function () {
         ) : null}
       </div>
       <ResponsiveContainer
-        width="100%"
-        height="65%"
+        width = {"100%"}
+        height = {"65%"}
         className="chartMainContainer"
       >
         <LineChart

@@ -252,7 +252,7 @@ template {
 #root {
   background: rgb(255, 255, 255);
   background: linear-gradient(0deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(202, 214, 228) 100%);
-  min-width: 800px;
+  min-width: 850px;
 }
 
 h1,
@@ -338,10 +338,13 @@ h5 {
 }
 
 .containedDataName {
-  max-height: 150px;
+  max-height: 160px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
+  background-color: rgba(255, 255, 255, 0.6705882353);
+  border-radius: 10px;
+  padding: 5px;
 }
 
 .newLine {
@@ -433,9 +436,6 @@ h4 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: rgba(255, 255, 255, 0.6705882353);
-  border-radius: 10px;
-  padding: 5px;
   width: 100%;
   position: relative;
 }
