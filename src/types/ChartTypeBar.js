@@ -618,14 +618,14 @@ const ChartTypeLine = function () {
             </div>
             <div className="lineOption">
               <p>Bar thickness</p>
-              <Box sx={{ width: 70 }}>
+              <Box sx={{ width: 100 }}>
                 <Slider
                   aria-label="Bar thickness"
                   defaultValue={2}
-                  step={3}
+                  step={10}
                   marks
                   min={1}
-                  max={21}
+                  max={60}
                   onChange={handleLineThickness}
                   size="small"
                 />
@@ -784,7 +784,7 @@ const ChartTypeLine = function () {
       >
         <BarChart
           layout={options.barType === "vertical" ? "vertical" : "horizontal"}
-          barGap={21}
+          barGap={8}
           ref={chartRef}
           data={fchartData}
           margin={{
@@ -908,7 +908,7 @@ const ChartTypeLine = function () {
                     : null
                 }
                 stackId={options.barType === "stacked" ? "stacked" : null}
-                barSize={options.lineThickness * 5}
+                barSize={options.lineThickness}
                 key={`line${index}`}
                 type={options.barType}
                 name={
