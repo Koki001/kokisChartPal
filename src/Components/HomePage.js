@@ -59,8 +59,12 @@ const HomePage = function () {
           >
             <MenuItem disabled value="default"></MenuItem>
             <MenuItem value="line">Line</MenuItem>
-            <MenuItem value="area">Area</MenuItem>
-            <MenuItem value="bar">Bar</MenuItem>
+            <MenuItem value="area">
+              Area
+            </MenuItem>
+            <MenuItem value="bar">
+              Bar
+            </MenuItem>
             <MenuItem disabled value="composed">
               Composed
             </MenuItem>

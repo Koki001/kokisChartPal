@@ -3,8 +3,8 @@ import { useState } from "react";
 import { useEffect } from "react";
 import {
   BarChart,
-  Label,
   Bar,
+  Area,
   XAxis,
   YAxis,
   CartesianGrid,
@@ -31,11 +31,13 @@ import { findRenderedDOMComponentWithTag } from "react-dom/test-utils";
 import Box from "@mui/material/Box";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";
-import FormLabel from "@mui/material/FormLabel";
 import { useRef } from "react";
-import * as htmlToImage from "html-to-image";
 import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
 import Swal from "sweetalert2";
+import Popover from "@mui/material/Popover";
+import Typography from "@mui/material/Typography";
+import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import { height } from "@mui/system";
 
 const ChartTypeLine = function () {
   const [fmainData, setFmainData] = useState({
@@ -53,16 +55,33 @@ const ChartTypeLine = function () {
   const [colorButton, setColorButton] = useState([]);
   const [options, setOptions] = useState({
     lineThickness: 2,
-    lineType: "monotone",
+    barType: "simple",
+    showBarVal: true,
     showGrid: true,
     showLabels: true,
+    rotateLabels: false,
+    showLegend: true,
     connectNull: false,
+    tickNumber: 10,
   });
   const [chartImage, setChartImage] = useState("");
   const [showing, setShowing] = useState(0);
+  const [downloadAlert, setDownloadAlert] = useState(false);
+  const [infoTickEl, setInfoTickEl] = useState(null);
+  const [infoNullEl, setInfoNullEl] = useState(null);
+  const [infoRotateEl, setInfoRotateEl] = useState(null);
   const chartRef = useRef();
   // const { height, width } = useWindowDimensions();
-
+  const openInfoTick = Boolean(infoTickEl);
+  const openInfoNull = Boolean(infoNullEl);
+  const openInfoRotate = Boolean(infoRotateEl);
+  const idInfoPop = openInfoTick
+    ? "info-popup-tick"
+    : openInfoNull
+    ? "info-popup-null"
+    : openInfoRotate
+    ? "info-popup-rotate"
+    : null;
   useEffect(function () {
     let pointNumArray = [];
     for (let i = 0; i < 20; i++) {
@@ -201,16 +220,58 @@ const ChartTypeLine = function () {
       return { ...current, showLabels: e.target.checked };
     });
   };
+
+  const handleShowBarVal = function (e) {
+    setOptions(function (current) {
+      return { ...current, showBarVal: e.target.checked };
+    });
+  };
+  const handleRotateLabels = function (e) {
+    setOptions(function (current) {
+      return { ...current, rotateLabels: e.target.checked };
+    });
+  };
+  const handleShowLegend = function (e) {
+    setOptions(function (current) {
+      return { ...current, showLegend: e.target.checked };
+    });
+  };
   const handleLineType = function (e) {
     setOptions(function (current) {
-      return { ...current, lineType: e.target.value };
+      return { ...current, barType: e.target.value };
     });
   };
-  const handleNullValues = function (e) {
+  // const handleNullValues = function (e) {
+  //   setOptions(function (current) {
+  //     return { ...current, connectNull: e.target.checked };
+  //   });
+  // };
+  const handleTickChange = function (e) {
     setOptions(function (current) {
-      return { ...current, connectNull: e.target.checked };
+      return {
+        ...current,
+        tickNumber: e.target.value > 20 ? "20" : e.target.value,
+      };
     });
   };
+  const handleInfoTickOpen = function (e) {
+    setInfoTickEl(e.currentTarget);
+  };
+  const handleInfoTickClose = function (e) {
+    setInfoTickEl(null);
+  };
+  const handleInfoRotateOpen = function (e) {
+    setInfoRotateEl(e.currentTarget);
+  };
+  const handleInfoRotateClose = function (e) {
+    setInfoRotateEl(null);
+  };
+  // const handleInfoNullOpen = function (e) {
+  //   setInfoNullEl(e.currentTarget);
+  // };
+  // const handleInfoNullClose = function (e) {
+  //   setInfoNullEl(null);
+  // };
   const inputOptions = {
     white: "White",
     transparent: "Transparent",
@@ -233,6 +294,8 @@ const ChartTypeLine = function () {
             toPng(chartRef.current.container, {
               cacheBust: true,
               backgroundColor: value,
+              // canvasWidth: 1920,
+              // canvasHeight: 1080,
             })
               .then((dataUrl) => {
                 const link = document.createElement("a");
@@ -248,16 +311,10 @@ const ChartTypeLine = function () {
       });
     }
   };
-  // const tickArray = [
-  //   0,
-  //   Math.trunc("dataMax" / 4),
-  //   Math.trunc("dataMax" / 2),
-  //   Math.trunc((3 * "dataMax") / 4),
-  //   "dataMax",
-  // ];
+
   return (
     <>
-      <div className="chartConfig wrapper">
+      <div className="chartConfig">
         <div className="topChart">
           <div className="selectAndAdd">
             {dataNumDropdown.length > 1 ? (
@@ -286,10 +343,14 @@ const ChartTypeLine = function () {
             ) : null}
             <Button
               onClick={handleNewLine}
-              variant="contained"
+              variant="outlined"
               disabled={fmainData.dataPoints.length > 0 ? false : true}
+              sx={{
+                backgroundColor: "rgba(255, 255, 255, 0.3)",
+                fontWeight: "bold",
+              }}
             >
-              Add data
+              {fchartNames.length <= 0 ? "New" : "Add"} data
             </Button>
           </div>
           <div className="dataLabelTitle">
@@ -310,50 +371,53 @@ const ChartTypeLine = function () {
                 </Button>
               </div>
             ) : null}
-            <div className="containedDataName">
-              {dataCounter.map(function (line, index) {
-                return (
-                  <div key={`yeah${index}`} className="newLine">
-                    <button
-                      style={
-                        fchartNames[index].color
-                          ? {
-                              backgroundColor: `${fchartNames[index].color}`,
-                            }
-                          : {
-                              background:
-                                "linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%), linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)",
-                            }
-                      }
-                      name={index}
-                      onClick={handleColorOpen}
-                    ></button>
-                    <TextField
-                      sx={{
-                        "& .MuiInputBase-input": {
-                          padding: "2px 12px",
-                          minWidth: "50px",
-                        },
-                      }}
-                      variant="standard"
-                      key={line + index}
-                      id={`line${index.toString()}`}
-                      onChange={handleDataLabel}
-                      placeholder={`Dataset ${index + 1} Title`}
-                    />
-                    <IconButton
-                      value={index}
-                      onClick={handleRemoveLine}
-                      size="small"
-                      color="primary"
-                      aria-label="Remove data group"
-                    >
-                      <ClearIcon fontSize="10px" />
-                    </IconButton>
-                  </div>
-                );
-              })}
-            </div>
+            {fchartNames.length > 0 && (
+              <div className="containedDataName">
+                {dataCounter.map(function (line, index) {
+                  return (
+                    <div key={`yeah${index}`} className="newLine">
+                      <button
+                        style={
+                          fchartNames[index].color
+                            ? {
+                                backgroundColor: `${fchartNames[index].color}`,
+                              }
+                            : {
+                                background:
+                                  "linear-gradient(217deg, rgba(255,0,0,.8), rgba(255,0,0,0) 70.71%), linear-gradient(127deg, rgba(0,255,0,.8), rgba(0,255,0,0) 70.71%),linear-gradient(336deg, rgba(0,0,255,.8), rgba(0,0,255,0) 70.71%)",
+                              }
+                        }
+                        name={index}
+                        onClick={handleColorOpen}
+                      ></button>
+                      <TextField
+                        sx={{
+                          "& .MuiInputBase-input": {
+                            padding: "2px 12px",
+                            minWidth: "50px",
+                          },
+                        }}
+                        variant="standard"
+                        key={line + index}
+                        id={`line${index.toString()}`}
+                        onChange={handleDataLabel}
+                        placeholder={`Dataset ${index + 1} Title`}
+                      />
+                      <IconButton
+                        value={index}
+                        onClick={handleRemoveLine}
+                        size="small"
+                        color="primary"
+                        aria-label="Remove data group"
+                        disabled
+                      >
+                        <ClearIcon fontSize="10px" />
+                      </IconButton>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
         </div>
 
@@ -366,7 +430,8 @@ const ChartTypeLine = function () {
                 value={fmainData.xLabel}
                 id="standard-basic"
                 label="X-Axis Label"
-                variant="standard"
+                variant="outlined"
+                sx={{ width: "45%" }}
               />
               <TextField
                 onChange={handleYLabel}
@@ -374,7 +439,8 @@ const ChartTypeLine = function () {
                 value={fmainData.yLabel}
                 id="standard-basic"
                 label="Y-Axis Label"
-                variant="standard"
+                variant="outlined"
+                sx={{ width: "45%" }}
               />
             </div>
             <div className="labelArrowContainer">
@@ -385,7 +451,7 @@ const ChartTypeLine = function () {
                   startIcon={<KeyboardArrowLeftIcon />}
                   style={{
                     minWidth: "30px",
-                    padding: "0 10px",
+                    padding: "0 0 0 10px",
                     "& span": {
                       margin: "0",
                     },
@@ -404,7 +470,7 @@ const ChartTypeLine = function () {
                   startIcon={<KeyboardArrowRightIcon />}
                   style={{
                     minWidth: "30px",
-                    padding: "0 10px",
+                    padding: "0 0 0 10px",
                     "& span": {
                       margin: "0",
                     },
@@ -503,9 +569,52 @@ const ChartTypeLine = function () {
               <p>Show labels</p>
               <Switch size="small" onChange={handleShowLabels} defaultChecked />
             </div>
-            <div className="lineNullOption">
-              <p>Connect nulls</p>
-              <Switch size="small" onChange={handleNullValues} />
+            <div className="labelsOption">
+              <p>Show value</p>
+              <Switch size="small" onChange={handleShowBarVal} defaultChecked />
+            </div>
+            <div className="rotateOption">
+              <div className="infoPopIconAbsolute">
+                <PriorityHighIcon
+                  color="warning"
+                  aria-describedby={idInfoPop}
+                  fontSize={"small"}
+                  onClick={handleInfoRotateOpen}
+                />
+                <Popover
+                  id={idInfoPop}
+                  open={openInfoRotate}
+                  anchorEl={infoRotateEl}
+                  onClose={handleInfoRotateClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      backgroundColor: "#357fca",
+                      color: "white",
+                      padding: "5px 10px 5px 10px",
+                      fontSize: "15px",
+                      width: "230px",
+                    }}
+                  >
+                    Rotates labels along the X-Axis at an angle. This also
+                    causes each space separated word to go in the next line. If
+                    the labels are written before this option is selected, you
+                    must interact with the label input for the word line break
+                    to take effect (Like adding an empty space in the desired
+                    input).
+                  </Typography>
+                </Popover>
+              </div>
+              <p>Rotate labels</p>
+              <Switch size="small" onChange={handleRotateLabels} />
+            </div>
+            <div className="legendOption">
+              <p>Show legend</p>
+              <Switch size="small" onChange={handleShowLegend} defaultChecked />
             </div>
             <div className="lineOption">
               <p>Bar thickness</p>
@@ -513,17 +622,143 @@ const ChartTypeLine = function () {
                 <Slider
                   aria-label="Bar thickness"
                   defaultValue={2}
-                  step={1}
+                  step={3}
                   marks
                   min={1}
-                  max={8}
+                  max={21}
                   onChange={handleLineThickness}
                   size="small"
                 />
               </Box>
             </div>
+            <div className="lineTicks">
+              <div className="infoPopIconAbsolute">
+                <PriorityHighIcon
+                  color="warning"
+                  aria-describedby={idInfoPop}
+                  fontSize={"small"}
+                  onClick={handleInfoTickOpen}
+                />
+                <Popover
+                  id={idInfoPop}
+                  open={openInfoTick}
+                  anchorEl={infoTickEl}
+                  onClose={handleInfoTickClose}
+                  anchorOrigin={{
+                    vertical: "bottom",
+                    horizontal: "left",
+                  }}
+                >
+                  <Typography
+                    sx={{
+                      backgroundColor: "#357fca",
+                      color: "white",
+                      padding: "5px 10px 5px 10px",
+                      fontSize: "15px",
+                      width: "230px",
+                    }}
+                  >
+                    Sets the number of intervals on the Y-Axis (horizontal
+                    chart) or X-Axis (vertical chart). Current maximum value is
+                    20.
+                  </Typography>
+                </Popover>
+              </div>
+              <p>Tick count</p>
+              <Box component="form" noValidate autoComplete="off">
+                <TextField
+                  onChange={handleTickChange}
+                  placeholder={"10"}
+                  id="filled-basic"
+                  variant="filled"
+                  type={"number"}
+                  InputProps={{
+                    inputProps: {
+                      max: 20,
+                      min: 1,
+                    },
+                  }}
+                  value={options.tickNumber > 20 ? "20" : options.tickNumber}
+                />
+              </Box>
+            </div>
+            <div className="lineType">
+              {/* <p id="lineTypeRadio" sx={{ color: "black" }}>
+                Line Type:
+              </p> */}
+              <RadioGroup
+                onChange={handleLineType}
+                // row={true}
+                aria-labelledby="lineTypeRadio"
+                defaultValue="simple"
+                name="radio-buttons-group"
+                row
+                sx={{
+                  "& .MuiTypography-root": {
+                    fontSize: 14,
+                  },
+                  "& .MuiFormControlLabel-root": {
+                    marginTop: 0,
+                  },
+                  "& .MuiButtonBase-root": {
+                    padding: "1px",
+                  },
+                }}
+              >
+                <FormControlLabel
+                  value="simple"
+                  control={
+                    <Radio
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 22,
+                        },
+                      }}
+                    />
+                  }
+                  label="Simple"
+                  labelPlacement="start"
+                />
+                <FormControlLabel
+                  value="stacked"
+                  control={
+                    <Radio
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 22,
+                        },
+                      }}
+                    />
+                  }
+                  label="Stacked"
+                  labelPlacement="start"
+                />
+                <FormControlLabel
+                  value="vertical"
+                  control={
+                    <Radio
+                      sx={{
+                        "& .MuiSvgIcon-root": {
+                          fontSize: 22,
+                        },
+                      }}
+                    />
+                  }
+                  label="Vertical"
+                  labelPlacement="start"
+                />
+              </RadioGroup>
+            </div>
             <div className="saveChart">
-              <Button variant="outlined" onClick={handleSaveChart}>
+              <Button
+                sx={{
+                  padding: "2px 10px",
+                  fontSize: "13px",
+                  backgroundColor: "rgba(255, 255, 255, 0.3)",
+                }}
+                variant="outlined"
+                onClick={handleSaveChart}
+              >
                 Download chart
               </Button>
             </div>
@@ -531,61 +766,147 @@ const ChartTypeLine = function () {
         ) : null}
       </div>
       <ResponsiveContainer
-        width="100%"
-        height="65%"
+        width={"100%"}
+        height={
+          options.barType === "vertical" && fmainData.dataPoints.length >= 10
+            ? "100%"
+            : options.barType === "vertical" &&
+              fmainData.dataPoints.length > 5 &&
+              fmainData.dataPoints.length < 10
+            ? "75%"
+            : "65%"
+        }
         className="chartMainContainer"
       >
         <BarChart
+          layout={options.barType === "vertical" ? "vertical" : "horizontal"}
+          barGap={21}
           ref={chartRef}
           data={fchartData}
           margin={{
             top: 10,
-            right: 30,
-            left: 20,
+            right: 50,
+            left: options.showLabels === true ? 20 : 0,
             bottom: 50,
           }}
         >
           {options.showGrid === true && <CartesianGrid strokeDasharray="3 3" />}
-          <XAxis
-            dataKey="name"
-            label={
-              options.showLabels === true && {
-                value: fmainData.xLabel,
-                position: "bottom",
-                className: "xAxisLabel",
-                offset: 15,
-              }
-            }
-            tick={{ dy: 5, fontSize: "14px", fontWeight: "bold" }}
-          />
-          <YAxis
-            domain={[0, "auto"]}
-            label={
-              options.showLabels === true && {
-                value: fmainData.yLabel,
-                angle: -90,
-                position: "insideLeft",
-                className: "yAxisLabel",
-                offset: -5,
-              }
-            }
-            tick={{ dx: -5, fontSize: "14px", fontWeight: "bold" }}
-            tickCount={10}
-          />
+          {options.barType === "vertical" ? (
+            <>
+              <YAxis
+                type="category"
+                interval={0}
+                dataKey="name"
+                label={
+                  options.showLabels === true && {
+                    value: fmainData.yLabel,
+                    position: "insideLeft",
+                    className: "yAxisLabel",
+                    angle: -90,
+                    offset: -5,
+                  }
+                }
+                tick={{
+                  dx: -5,
+                  fontSize: "14px",
+                  width: options.rotateLabels === true ? "50px" : null,
+                  wordWrap:
+                    options.rotateLabels === true ? "break-word" : "normal",
+                  fill: options.showLabels === true ? "black" : "transparent",
+                }}
+              />
+              <XAxis
+                type="number"
+                // domain={[0, `dataMax`]}
+                domain={[0, "auto"]}
+                angle={options.rotateLabels === true ? -45 : 0}
+                label={
+                  options.showLabels === true && {
+                    value: fmainData.xLabel,
+                    position: "bottom",
+                    className: "xAxisLabel",
+                    offset: options.rotateLabels === true ? 30 : 15,
+                  }
+                }
+                tick={{
+                  dy: options.rotateLabels === true ? 20 : 5,
+                  fontSize: "14px",
+                  fill: options.showLabels === true ? "black" : "transparent",
+                }}
+                tickCount={options.tickNumber}
+              />
+            </>
+          ) : (
+            <>
+              <XAxis
+                interval={0}
+                type={"category"}
+                angle={options.rotateLabels === true ? -45 : 0}
+                dataKey="name"
+                label={
+                  options.showLabels === true && {
+                    value: fmainData.xLabel,
+                    position: "bottom",
+                    className: "xAxisLabel",
+                    offset: options.rotateLabels === true ? 30 : 15,
+                  }
+                }
+                tick={{
+                  dy: options.rotateLabels === true ? 20 : 5,
+                  fontSize: "14px",
+                  width: options.rotateLabels === true ? "50px" : null,
+                  wordWrap:
+                    options.rotateLabels === true ? "break-word" : "normal",
+                  fill: options.showLabels === true ? "black" : "transparent",
+                }}
+              />
+              <YAxis
+                // domain={[0, `dataMax`]}
+                domain={[0, `auto`]}
+                type={"number"}
+                label={
+                  options.showLabels === true && {
+                    value: fmainData.yLabel,
+                    angle: -90,
+                    position: "insideLeft",
+                    className: "yAxisLabel",
+                    offset: -5,
+                  }
+                }
+                tick={{
+                  dx: -5,
+                  fontSize: "14px",
+                  fill: options.showLabels === true ? "black" : "transparent",
+                }}
+                tickCount={options.tickNumber}
+              />
+            </>
+          )}
           <Tooltip />
-          <Legend
-            verticalAlign="top"
-            align="center"
-            height={36}
-            iconSize="14"
-            iconType={"circle"}
-          />
+          {options.showLegend === true && (
+            <Legend
+              verticalAlign="top"
+              align="center"
+              height={36}
+              iconSize="14"
+              iconType={"circle"}
+            />
+          )}
           {dataCounter.map(function (e, index) {
             return (
               <Bar
-                barSize={options.lineThickness * 10}
+                label={
+                  options.showBarVal === true && options.barType !== "vertical"
+                    ? { position: "top", offset: "5" }
+                    : options.showBarVal === true &&
+                      options.barType === "vertical"
+                    ? { position: "right", offset: "5" }
+                    : null
+                }
+                stackId={options.barType === "stacked" ? "stacked" : null}
+                barSize={options.lineThickness * 5}
                 key={`line${index}`}
-                // type={options.lineType}
+                type={options.barType}
                 name={
                   fchartNames[index].name
                     ? fchartNames[index].name
@@ -597,12 +918,12 @@ const ChartTypeLine = function () {
                     ? fchartNames[index].color
                     : "#000000"
                 }
+                connectNulls={options.connectNull}
                 stroke={
                   fchartNames[index].color
                     ? fchartNames[index].color
                     : "#000000"
                 }
-                connectNulls={options.connectNull}
               />
             );
           })}
