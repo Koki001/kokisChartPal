@@ -3,7 +3,7 @@
 }
 .mainContainer {
   display: flex;
-
+  overflow-x: hidden;
   align-items: center;
   flex-direction: column;
   height: 100%;
@@ -39,7 +39,6 @@
 }
 .chartExampleText {
   width: 30%;
-  // position: absolute;
   left: 0;
   // animation: leftSlide 0.3s linear 1;
   p {
@@ -60,9 +59,7 @@
   width: 60%;
   background-color: #ffffffab;
   border-radius: 10px;
-  // position: absolute;
   right: 0;
-  // animation: rightSlide 0.3s linear 1;
   img {
     width: 100%;
   }
@@ -96,6 +93,7 @@
   100% {
     transform: translateX(0);
     opacity: 1;
+    position: static;
   }
 }
 @keyframes rightSlide {

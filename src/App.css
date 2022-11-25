@@ -684,6 +684,7 @@ h4 {
 
 .mainContainer {
   display: flex;
+  overflow-x: hidden;
   align-items: center;
   flex-direction: column;
   height: 100%;
@@ -780,6 +781,7 @@ h4 {
   100% {
     transform: translateX(0);
     opacity: 1;
+    position: static;
   }
 }
 @keyframes rightSlide {
