@@ -4,7 +4,7 @@
   text-align: center;
   align-items: center;
   height: 100vh;
-  min-width: 850px;
+  min-width: 1000px;
 }
 .chartContainer {
   width: 100%;
@@ -110,10 +110,13 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
   button {
     height: 40px;
   }
+}
+.selectAndAdd div:first-child {
+  margin: 0;
 }
 .yAxis,
 .xAxis {
@@ -188,6 +191,7 @@ h4 {
   background-color: #ffffffab;
   // padding: 5px;
   border-radius: 10px;
+  // height: 40px;
 }
 @keyframes leftSlideLine {
   0% {

@@ -12,7 +12,7 @@ import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 
-const HomePage = function () {
+const HomePage = function (props) {
   const [selectedChart, setSelectedChart] = useState("default");
   const [infoWelcomeEl, setInfoWelcomeEl] = useState(null);
   const [animation, setAnimation] = useState(false)
@@ -22,10 +22,11 @@ const HomePage = function () {
   // });
   const openInfoWelcome = Boolean(infoWelcomeEl);
   const idInfoPop = openInfoWelcome ? "info-popup-tick" : undefined;
-
+  // console.log(chart)
   const handleChartType = function (event) {
     setSelectedChart(event.target.value);
     dispatch(selectedType(event.target.value));
+    props.type(event.target.value)
     setAnimation(true)
   };
   const handleInfoWelcomeOpen = function (e) {
@@ -59,12 +60,8 @@ const HomePage = function () {
           >
             <MenuItem disabled value="default"></MenuItem>
             <MenuItem value="line">Line</MenuItem>
-            <MenuItem value="area">
-              Area
-            </MenuItem>
-            <MenuItem value="bar">
-              Bar
-            </MenuItem>
+            <MenuItem value="area">Area</MenuItem>
+            <MenuItem value="bar">Bar</MenuItem>
             <MenuItem disabled value="composed">
               Composed
             </MenuItem>
@@ -111,9 +108,8 @@ const HomePage = function () {
               }}
             >
               Hey! Thanks for visiting :). Currently, I am trying to get the{" "}
-              <em>Line</em> chart functionality to 100% before moving on to the
-              Area and Bar charts, respectively. Also, the site is not optimized
-              for smaller screen sizes (850 viewport width or less). If you run
+              <em>Line, Area, and Bar</em> charts functionality to 100% before moving on to the rest of the chart types. Also, the site is not optimized
+              for smaller screen sizes (1000 viewport width or less). If you run
               into any issues, or have suggestions about the site, connect with
               me over{" "}
               <a
@@ -150,7 +146,7 @@ const HomePage = function () {
                   </p>
                 </div>
                 <div className="buttonLink">
-                  <Link to={"/create"}>
+                  <Link to={`/create/${selectedChart}`}>
                     <Button variant="outlined">Use this type</Button>
                   </Link>
                 </div>
@@ -167,7 +163,7 @@ const HomePage = function () {
                   </p>
                 </div>
                 <div className="buttonLink">
-                  <Link to={"/create"}>
+                  <Link to={`/create/${selectedChart}`}>
                     <Button variant="outlined">Use this type</Button>
                   </Link>
                 </div>
@@ -184,7 +180,7 @@ const HomePage = function () {
                   </p>
                 </div>
                 <div className="buttonLink">
-                  <Link to={"/create"}>
+                  <Link to={`/create/${selectedChart}`}>
                     <Button variant="outlined">Use this type</Button>
                   </Link>
                 </div>

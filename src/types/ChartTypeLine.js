@@ -304,7 +304,7 @@ const ChartTypeLine = function () {
       });
     }
   };
-
+  const handleMoreSettings = function () {};
   return (
     <>
       <div className="chartConfig">
@@ -424,10 +424,12 @@ const ChartTypeLine = function () {
                 id="standard-basic"
                 label="X-Axis Label"
                 variant="outlined"
+                size="small"
                 sx={{ width: "45%" }}
               />
               <TextField
                 onChange={handleYLabel}
+                size="small"
                 name={"yAxisLabel"}
                 value={fmainData.yLabel}
                 id="standard-basic"
@@ -774,6 +776,17 @@ const ChartTypeLine = function () {
               </RadioGroup>
             </div>
             <div className="saveChart">
+              <Button
+                sx={{
+                  padding: "2px 10px",
+                  fontSize: "13px",
+                  backgroundColor: "rgba(255, 255, 255, 0.3)",
+                }}
+                variant="outlined"
+                onClick={handleMoreSettings}
+              >
+                Settings +
+              </Button>
               <Button
                 sx={{
                   padding: "2px 10px",
