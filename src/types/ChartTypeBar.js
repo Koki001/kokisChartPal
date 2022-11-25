@@ -658,9 +658,8 @@ const ChartTypeLine = function () {
                       width: "230px",
                     }}
                   >
-                    Sets the number of intervals on the Y-Axis (horizontal
-                    chart) or X-Axis (vertical chart). Current maximum value is
-                    20.
+                    Sets the number of intervals on the Y-Axis (vertical chart)
+                    or X-Axis (horizontal chart). Current maximum value is 20.
                   </Typography>
                 </Popover>
               </div>
@@ -744,7 +743,8 @@ const ChartTypeLine = function () {
                       }}
                     />
                   }
-                  label="Vertical"
+                  // should change all
+                  label="Horizontal"
                   labelPlacement="start"
                 />
               </RadioGroup>
@@ -774,6 +774,10 @@ const ChartTypeLine = function () {
               fmainData.dataPoints.length > 5 &&
               fmainData.dataPoints.length < 10
             ? "75%"
+            : options.barType === "vertical" &&
+              fchartNames.length > 2 &&
+              fmainData.dataPoints.length > 2
+            ? "90%"
             : "65%"
         }
         className="chartMainContainer"
