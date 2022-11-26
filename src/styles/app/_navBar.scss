@@ -1,16 +1,21 @@
 .navMain {
+  width: 100%;
+  background-color: #ffffff80;
   position: absolute;
   top: 0;
   height: 40px;
+  border-bottom: 1px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.navInner {
   max-width: 1400px;
-  width: 100%;
-  padding: 0 2.5%;
+  width: 95%;
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
-  background-color: #ffffff80;
   align-items: center;
-  border-bottom: 1px solid black;
   .navBack {
     margin: 0;
   }

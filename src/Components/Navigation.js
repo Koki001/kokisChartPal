@@ -10,33 +10,39 @@ const Navigation = function () {
   const chart = useSelector(function (state) {
     return state.chart;
   });
+  const chartOptions = useSelector(function(state){
+    return state.options
+  })
+  // console.log(chartOptions)
   const handleGoBack = function () {
     dispatch(selectedType("default"));
   };
   return (
     <nav className="navMain">
-      <Link to={"/"}>
+      <div className="navInner">
+        <Link to={"/"}>
+          <Button
+            className="navBack"
+            color="warning"
+            sx={{ padding: "0" }}
+            variant="outlined"
+            onClick={handleGoBack}
+          >
+            back
+          </Button>
+        </Link>
+        <p className="navChartType">
+          Chart type: <span>{chart.value}</span>
+        </p>
         <Button
-          className="navBack"
           color="warning"
-          sx={{ padding: "0"}}
+          sx={{ padding: "0", visibility: "hidden" }}
           variant="outlined"
-          onClick={handleGoBack}
+          disabled
         >
-          back
+          stuff
         </Button>
-      </Link>
-      <p className="navChartType">
-        Chart type: <span>{chart.value}</span>
-      </p>
-      <Button
-        color="warning"
-        sx={{ padding: "0"}}
-        variant="outlined"
-        disabled
-      >
-        stuff
-      </Button>
+      </div>
     </nav>
   );
 };

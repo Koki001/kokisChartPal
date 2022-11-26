@@ -16,7 +16,7 @@ import SettingsIcon from "@mui/icons-material/Settings";
 const HomePage = function (props) {
   const [selectedChart, setSelectedChart] = useState("default");
   const [infoWelcomeEl, setInfoWelcomeEl] = useState(null);
-  const [animation, setAnimation] = useState(false)
+  const [animation, setAnimation] = useState(false);
   const dispatch = useDispatch();
   // const chart = useSelector(function (state) {
   //   return state.chart;
@@ -27,8 +27,8 @@ const HomePage = function (props) {
   const handleChartType = function (event) {
     setSelectedChart(event.target.value);
     dispatch(selectedType(event.target.value));
-    props.type(event.target.value)
-    setAnimation(true)
+    props.type(event.target.value);
+    setAnimation(true);
   };
   const handleInfoWelcomeOpen = function (e) {
     setInfoWelcomeEl(e.currentTarget);
@@ -109,12 +109,13 @@ const HomePage = function (props) {
                   width: "500px",
                 }}
               >
-                Hey! Thanks for visiting :). Currently, I am trying to get the{" "}
-                <em>Line, Area, and Bar</em> charts' functionality to 100% before
-                moving on to the rest of the chart types. Also, the site is not
-                optimized for smaller screen sizes (1000 viewport width or less).
-                If you run into any issues, or have suggestions about the site,
-                connect with me over{" "}
+                Hey! Thanks for visiting :). With the chart settings starting to
+                take up more and more room, and the introduction of a navigation
+                bar, I've started to store state in Redux so that I can remove
+                the "settings" element from the chart components. <br />
+                <br /> The site is not optimized for smaller screen sizes (1000
+                viewport width or less). If you run into any issues, or have
+                suggestions about the site, connect with me over{" "}
                 <a
                   href="https://www.linkedin.com/in/koki-vasileski/"
                   target={"_blank"}
@@ -131,7 +132,7 @@ const HomePage = function (props) {
           </div>
         </div>
         <Button disabled className="gearButton">
-          <SettingsIcon className="gearIcon" fontSize="large"/>
+          <SettingsIcon className="gearIcon" fontSize="large" />
         </Button>
       </div>
       {selectedChart !== "default" && (
