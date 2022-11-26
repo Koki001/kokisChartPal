@@ -3,7 +3,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { selectedType } from "../features/chartTypeSlice";
+import { selectedType } from "../slices/chartMainSlice";
 import Button from "@mui/material/Button";
 
 import Select, { SelectChangeEvent } from "@mui/material/Select";
@@ -33,7 +33,7 @@ import {
   cShowLegend,
   cConnectNull,
   cTickNumber,
-} from "../features/chartOptionsSlice";
+} from "../slices/chartOptionsSlice";
 
 const Navigation = function () {
   const [chartImage, setChartImage] = useState("");

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-import { selectedType } from "../features/chartTypeSlice";
+import { selectedType } from "../slices/chartMainSlice";
 import ChartTypeLine from "../types/ChartTypeLine";
 import ChartTypeArea from "../types/ChartTypeArea";
 import ChartTypeBar from "../types/ChartTypeBar";

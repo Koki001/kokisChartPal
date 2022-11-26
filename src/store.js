@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
-import chartTypeSlice from "./features/chartTypeSlice";
-import chartOptionsSlice from "./features/chartOptionsSlice";
+import chartMainSlice from "./slices/chartMainSlice";
+import chartOptionsSlice from "./slices/chartOptionsSlice";
 
 export default configureStore({
   reducer: {
-    chart: chartTypeSlice,
+    chart: chartMainSlice,
     options: chartOptionsSlice 
   },
 });

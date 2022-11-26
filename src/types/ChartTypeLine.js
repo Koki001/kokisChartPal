@@ -28,13 +28,22 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { toPng } from "html-to-image";
 import Swal from "sweetalert2";
 import DownloadIcon from "@mui/icons-material/Download";
+import {
+  selectedType,
+  dataPointNum,
+  addXTitle,
+  addYTitle,
+  addChartData,
+  addDataset,
+} from "../slices/chartMainSlice";
 
 const ChartTypeLine = function () {
   const [fmainData, setFmainData] = useState({
     dataPoints: [],
-    xLabel: "",
-    yLabel: "",
+    xTitle: "",
+    yTitle: "",
     data: [],
+    dataset: [],
   });
   const [fchartData, setFChartData] = useState([]);
   const [dataCounter, setDataCounter] = useState([]);
@@ -49,6 +58,9 @@ const ChartTypeLine = function () {
   const options = useSelector(function (state) {
     return state.options;
   });
+  const chart = useSelector(function (state) {
+    return state.chart;
+  });
 
   useEffect(function () {
     let pointNumArray = [];
@@ -60,13 +72,13 @@ const ChartTypeLine = function () {
   const dispatch = useDispatch();
   const handleDataPointNum = function (e) {
     const pointArray = [];
-    const dataArray = [...fchartData];
+    const dataArray = [...fmainData.data];
 
     for (let i = 0; i < Number(e.target.value); i++) {
       pointArray.push(i);
 
       if (!dataArray.includes(dataArray[i])) {
-        dataArray.push({ name: "" });
+        dataArray.push({ pointName: "" });
       }
     }
     for (let x = e.target.value; x < dataArray.length; x++) {
@@ -75,59 +87,72 @@ const ChartTypeLine = function () {
     setFmainData(function (current) {
       return { ...current, dataPoints: pointArray };
     });
-    setFChartData(dataArray);
+    // setFChartData(dataArray);
+    setFmainData(function (current) {
+      return { ...current, data: [...dataArray] };
+    });
   };
   const handleXLabel = function (e) {
     setFmainData(function (current) {
-      return { ...current, xLabel: e.target.value };
+      return { ...current, xTitle: e.target.value };
     });
   };
   const handleYLabel = function (e) {
     setFmainData(function (current) {
-      return { ...current, yLabel: e.target.value };
+      return { ...current, yTitle: e.target.value };
     });
   };
-  useEffect(
-    function () {
-      let xAxisDataNames = [];
-      for (let i = 0; i < fmainData.dataPoints.length; i++) {
-        xAxisDataNames.push({ name: "" });
-      }
-      setXAxisData([...xAxisDataNames]);
-    },
-    [fmainData.dataPoints]
-  );
+  // useEffect(
+  //   function () {
+  //     let xAxisDataNames = [];
+  //     for (let i = 0; i < fmainData.dataPoints.length; i++) {
+  //       xAxisDataNames.push({ name: "" });
+  //     }
+  //     setXAxisData([...xAxisDataNames]);
+  //   },
+  //   [fmainData.dataPoints]
+  // );
 
-  const handleXData = function (e) {
-    const updateXDataName = fchartData.slice();
+  const handlePointLabel = function (e) {
+    const updatePointLabel = [...fmainData.data];
 
     for (let i = 0; i < Object.entries(fmainData.dataPoints).length; i++) {
       if (`xData${i}` == e.target.id) {
-        updateXDataName[i].name = e.target.value;
+        updatePointLabel[i].pointName = e.target.value;
       }
     }
-    setFChartData(updateXDataName);
+    // setFChartData(updatePointLabel);
+    setFmainData(function (current) {
+      return { ...current, data: [...updatePointLabel] };
+    });
   };
   const handleDataChange = function (e) {
-    const chartCopy = [...fchartData];
+    const chartCopy = [...fmainData.data];
     chartCopy[e.target.parentElement.parentElement.parentElement.id][
       `line${e.target.id}`
     ] = Number(e.target.value);
-    setFChartData(chartCopy);
+
+    // setFChartData(chartCopy);
+    setFmainData(function (current) {
+      return { ...current, data: [...chartCopy] };
+    });
   };
   const handleDataLabel = function (e) {
-    const updateDataLabel = [...fchartNames];
+    const updateDataLabel = [...fmainData.dataset];
     for (let i = 0; i < dataCounter.length + 1; i++) {
       if (e.target.id == `line${i}`) {
         updateDataLabel[i].name = e.target.value;
       }
     }
-    setFChartNames(updateDataLabel);
+    // setFChartNames(updateDataLabel);
+        setFmainData(function (current) {
+          return { ...current, dataset: [...updateDataLabel] };
+        });
   };
-  const handleNewLine = function (e) {
-    const nameArray = [...fchartNames];
+  const handleNewDataset = function (e) {
+    const nameArray = [...fmainData.dataset];
     nameArray.push({ name: "", color: "" });
-    let dataArray = [...fchartData];
+    let dataArray = [...fmainData.data];
     let counter = [];
     for (let i = 0; i < dataCounter.length + 1; i++) {
       counter.push(i);
@@ -135,23 +160,26 @@ const ChartTypeLine = function () {
     for (let d = 0; d < dataArray.length; d++) {
       dataArray[d] = { ...dataArray[d], [`line${dataCounter.length}`]: "" };
     }
-    setFChartNames(nameArray);
+    // setFChartNames(nameArray);
     setDataCounter([...counter]);
-    setFChartData(dataArray);
+    // setFChartData(dataArray);
+    setFmainData(function (current) {
+      return { ...current, data: [...dataArray], dataset: [...nameArray] };
+    });
   };
   const handleRemoveLine = function (e) {};
   const handleNextClick = function () {
-    if (showing < fchartNames.length - 1) {
+    if (showing < fmainData.dataset.length - 1) {
       setShowing(showing + 1);
-    } else if (showing === fchartNames.length - 1) {
+    } else if (showing === fmainData.dataset.length - 1) {
       setShowing(0);
     }
   };
   const handlePrevClick = function () {
-    if (showing <= fchartNames.length && showing > 0) {
+    if (showing <= fmainData.dataset.length && showing > 0) {
       setShowing(showing - 1);
     } else if (showing === 0 || showing < 0) {
-      setShowing(fchartNames.length - 1);
+      setShowing(fmainData.dataset.length - 1);
     }
   };
   const handleChangeComplete = function (e) {
@@ -162,9 +190,12 @@ const ChartTypeLine = function () {
     setShowColorPicker(true);
   };
   const handleColorSlider = function (e, color) {
-    let colorArr = [...fchartNames];
+    let colorArr = [...fmainData.dataset];
     colorArr[colorButton].color = e.hex;
-    setFChartNames(colorArr);
+    // setFChartNames(colorArr);
+            setFmainData(function (current) {
+              return { ...current, dataset: [...colorArr] };
+            });
   };
 
   const inputOptions = {
@@ -172,6 +203,9 @@ const ChartTypeLine = function () {
     transparent: "Transparent",
   };
   const handleSaveChart = function (e) {
+    console.log(fmainData, "main data");
+    // console.log(fchartData, "chart data");
+    // console.log(fchartNames, "chart names");
     if (chartRef.current === null) {
       return;
     } else {
@@ -237,7 +271,7 @@ const ChartTypeLine = function () {
               </FormControl>
             ) : null}
             <Button
-              onClick={handleNewLine}
+              onClick={handleNewDataset}
               variant="outlined"
               disabled={fmainData.dataPoints.length > 0 ? false : true}
               sx={{
@@ -245,9 +279,9 @@ const ChartTypeLine = function () {
                 fontWeight: "bold",
               }}
             >
-              {fchartNames.length <= 0 ? "New" : "Add"} data
+              {fmainData.dataset.length <= 0 ? "New" : "Add"} data
             </Button>
-            {fchartNames.length > 0 && (
+            {fmainData.dataset.length > 0 && (
               <Button
                 sx={{
                   padding: "2px 10px",
@@ -266,7 +300,7 @@ const ChartTypeLine = function () {
               <div className="colorPicker">
                 <SketchPicker
                   triangle="hide"
-                  color={fchartNames[colorButton].color}
+                  color={fmainData.dataset[colorButton].color}
                   onChange={handleColorSlider}
                   width="auto"
                 />
@@ -279,16 +313,16 @@ const ChartTypeLine = function () {
                 </Button>
               </div>
             ) : null}
-            {fchartNames.length > 0 && (
+            {fmainData.dataset.length > 0 && (
               <div className="containedDataName">
                 {dataCounter.map(function (line, index) {
                   return (
                     <div key={`yeah${index}`} className="newLine">
                       <button
                         style={
-                          fchartNames[index].color
+                          fmainData.dataset[index].color
                             ? {
-                                backgroundColor: `${fchartNames[index].color}`,
+                                backgroundColor: `${fmainData.dataset[index].color}`,
                               }
                             : {
                                 background:
@@ -335,7 +369,7 @@ const ChartTypeLine = function () {
               <TextField
                 onChange={handleXLabel}
                 name={"xAxisLabel"}
-                value={fmainData.xLabel}
+                value={fmainData.xTitle}
                 id="standard-basic"
                 label="X-Axis Label"
                 variant="outlined"
@@ -346,7 +380,7 @@ const ChartTypeLine = function () {
                 onChange={handleYLabel}
                 size="small"
                 name={"yAxisLabel"}
-                value={fmainData.yLabel}
+                value={fmainData.yTitle}
                 id="standard-basic"
                 label="Y-Axis Label"
                 variant="outlined"
@@ -369,8 +403,8 @@ const ChartTypeLine = function () {
                 ></Button>
               )}
               <h4>
-                {fchartNames[showing].name
-                  ? fchartNames[showing].name
+                {fmainData.dataset[showing].name
+                  ? fmainData.dataset[showing].name
                   : `Dataset ${showing + 1} Title`}
               </h4>
               {dataCounter.length > 1 && (
@@ -391,7 +425,7 @@ const ChartTypeLine = function () {
             <div
               className="containedDivBorder"
               style={{
-                border: `1px solid ${fchartNames[showing].color}`,
+                border: `1px solid ${fmainData.dataset[showing].color}`,
                 borderRadius: "5px",
               }}
             >
@@ -414,9 +448,9 @@ const ChartTypeLine = function () {
                             },
                           }}
                           id={`xData${index.toString()}`}
-                          onChange={handleXData}
+                          onChange={handlePointLabel}
                           placeholder={`Point ${index + 1} Label`}
-                          value={fchartData[index].name}
+                          value={fmainData.data[index].pointName}
                           variant="filled"
                         />
                       </div>
@@ -443,6 +477,7 @@ const ChartTypeLine = function () {
                               >
                                 <TextField
                                   type={"number"}
+                                  inputProps={{ type: "number" }}
                                   onWheel={(e) => e.target.blur()}
                                   sx={{
                                     "& .MuiInputBase-input": {
@@ -454,7 +489,10 @@ const ChartTypeLine = function () {
                                   id={lineIndex.toString()}
                                   onChange={handleDataChange}
                                   placeholder={`Point ${index + 1} Value`}
-                                  value={fchartData[index][`line${lineIndex}`]}
+                                  value={
+                                    fmainData.data[index][`line${lineIndex}`] &&
+                                    fmainData.data[index][`line${lineIndex}`]
+                                  }
                                   variant="standard"
                                 />
                               </div>
@@ -490,7 +528,7 @@ const ChartTypeLine = function () {
         >
           <LineChart
             ref={chartRef}
-            data={fchartData}
+            data={fmainData.data}
             margin={{
               top: 10,
               right: 50,
@@ -498,14 +536,17 @@ const ChartTypeLine = function () {
               bottom: 50,
             }}
           >
-            {options.showGrid === true && <CartesianGrid strokeDasharray="3 3" />}
+            {options.showGrid === true && (
+              <CartesianGrid strokeDasharray="3 3" />
+            )}
             <XAxis
+              domain={[0, "dataMax"]}
               interval={0}
               angle={options.rotateLabels === true ? -45 : 0}
-              dataKey="name"
+              dataKey="pointName"
               label={
                 options.showLabels === true && {
-                  value: fmainData.xLabel,
+                  value: fmainData.xTitle,
                   position: "bottom",
                   className: "xAxisLabel",
                   offset: options.rotateLabels === true ? 30 : 15,
@@ -515,7 +556,8 @@ const ChartTypeLine = function () {
                 dy: options.rotateLabels === true ? 20 : 5,
                 fontSize: "14px",
                 width: options.rotateLabels === true ? "50px" : null,
-                wordWrap: options.rotateLabels === true ? "break-word" : "normal",
+                wordWrap:
+                  options.rotateLabels === true ? "break-word" : "normal",
                 fill: options.showLabels === true ? "black" : "transparent",
               }}
             />
@@ -524,7 +566,7 @@ const ChartTypeLine = function () {
               domain={[0, "auto"]}
               label={
                 options.showLabels === true && {
-                  value: fmainData.yLabel,
+                  value: fmainData.yTitle,
                   angle: -90,
                   position: "insideLeft",
                   className: "yAxisLabel",
@@ -555,14 +597,14 @@ const ChartTypeLine = function () {
                   strokeWidth={options.lineThickness}
                   type={options.lineType}
                   name={
-                    fchartNames[index].name
-                      ? fchartNames[index].name
+                    fmainData.dataset[index].pointName
+                      ? fmainData.dataset[index].pointName
                       : `Data ${index + 1}`
                   }
                   dataKey={`line${index}`}
                   stroke={
-                    fchartNames[index].color
-                      ? fchartNames[index].color
+                    fmainData.dataset[index].color
+                      ? fmainData.dataset[index].color
                       : "#000000"
                   }
                   connectNulls={options.connectNull}
