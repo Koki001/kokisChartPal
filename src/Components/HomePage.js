@@ -109,12 +109,12 @@ const HomePage = function (props) {
                   width: "500px",
                 }}
               >
-                Hey! Thanks for visiting :). With the chart settings starting to
-                take up more and more room, and the introduction of a navigation
-                bar, I've started to store state in Redux so that I can remove
-                the "settings" element from the chart components. <br />
-                <br /> The site is not optimized for smaller screen sizes (1000
-                viewport width or less). If you run into any issues, or have
+                Hey! Thanks for visiting :). Currently implementing Redux on the
+                Line Chart. Area and Bar charts are still using old code with
+                component states. <br />
+                <br /> The site is not optimized for smaller screen sizes but
+                I've added a basic media query and the chart view is now in a
+                scrollable container. If you run into any issues, or have
                 suggestions about the site, connect with me over{" "}
                 <a
                   href="https://www.linkedin.com/in/koki-vasileski/"
