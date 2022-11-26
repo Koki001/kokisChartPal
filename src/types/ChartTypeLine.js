@@ -145,9 +145,9 @@ const ChartTypeLine = function () {
       }
     }
     // setFChartNames(updateDataLabel);
-        setFmainData(function (current) {
-          return { ...current, dataset: [...updateDataLabel] };
-        });
+    setFmainData(function (current) {
+      return { ...current, dataset: [...updateDataLabel] };
+    });
   };
   const handleNewDataset = function (e) {
     const nameArray = [...fmainData.dataset];
@@ -193,9 +193,9 @@ const ChartTypeLine = function () {
     let colorArr = [...fmainData.dataset];
     colorArr[colorButton].color = e.hex;
     // setFChartNames(colorArr);
-            setFmainData(function (current) {
-              return { ...current, dataset: [...colorArr] };
-            });
+    setFmainData(function (current) {
+      return { ...current, dataset: [...colorArr] };
+    });
   };
 
   const inputOptions = {
@@ -203,7 +203,7 @@ const ChartTypeLine = function () {
     transparent: "Transparent",
   };
   const handleSaveChart = function (e) {
-    console.log(fmainData, "main data");
+    // console.log(fmainData, "main data");
     // console.log(fchartData, "chart data");
     // console.log(fchartNames, "chart names");
     if (chartRef.current === null) {
@@ -540,10 +540,14 @@ const ChartTypeLine = function () {
               <CartesianGrid strokeDasharray="3 3" />
             )}
             <XAxis
-              domain={[0, "dataMax"]}
+              domain={"     "}
               interval={0}
               angle={options.rotateLabels === true ? -45 : 0}
-              dataKey="pointName"
+              dataKey={
+                fmainData.data[0] && fmainData.data[0].pointName !== ""
+                  ? "pointName"
+                  : "      "
+              }
               label={
                 options.showLabels === true && {
                   value: fmainData.xTitle,
@@ -597,8 +601,8 @@ const ChartTypeLine = function () {
                   strokeWidth={options.lineThickness}
                   type={options.lineType}
                   name={
-                    fmainData.dataset[index].pointName
-                      ? fmainData.dataset[index].pointName
+                    fmainData.dataset[index].name
+                      ? fmainData.dataset[index].name
                       : `Data ${index + 1}`
                   }
                   dataKey={`line${index}`}

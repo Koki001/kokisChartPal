@@ -33,9 +33,21 @@ import {
   cShowLegend,
   cConnectNull,
   cTickNumber,
+  RESET_STATE_OPTIONS,
 } from "../slices/chartOptionsSlice";
+import { RESET_STATE_MAIN } from "../slices/chartMainSlice";
+import { useNavigate } from "react-router-dom";
 
 const Navigation = function () {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const chart = useSelector(function (state) {
+    return state.chart;
+  });
+  const options = useSelector(function (state) {
+    return state.options;
+  });
+  // const [reduxOptions, setReduxOptions] = useState(options)
   const [chartImage, setChartImage] = useState("");
   const [downloadAlert, setDownloadAlert] = useState(false);
   const [infoTickEl, setInfoTickEl] = useState(null);
@@ -53,19 +65,31 @@ const Navigation = function () {
     : openInfoRotate
     ? "info-popup-rotate"
     : null;
-  const dispatch = useDispatch();
-  const chart = useSelector(function (state) {
-    return state.chart;
-  });
-  const options = useSelector(function (state) {
-    return state.options;
-  });
   // const chartOptions = useSelector(function (state) {
   //   return state.options;
   // });
   // console.log(chartOptions)
+
   const handleGoBack = function () {
-    dispatch(selectedType("default"));
+    Swal.fire({
+      text: "Would you like to save your chart options?",
+      confirmButtonText: "Yes",
+      confirmButtonColor: "green",
+      denyButtonText: "No",
+      showConfirmButton: true,
+      showDenyButton: true,
+      showCancelButton: true,
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        dispatch(RESET_STATE_OPTIONS());
+        dispatch(selectedType("default"));
+        navigate("/");
+      } else if (result.isDenied) {
+        dispatch(selectedType("default"));
+        navigate("/");
+      }
+    });
+    // dispatch(RESET_STATE_OPTIONS());
   };
   const handleLineThickness = function (e) {
     dispatch(cLineThickness(e.target.value));
@@ -156,17 +180,17 @@ const Navigation = function () {
   return (
     <nav className="navMain">
       <div className="navInner">
-        <Link to={"/"}>
-          <Button
-            className="navBack"
-            color="warning"
-            sx={{ padding: "0" }}
-            variant="outlined"
-            onClick={handleGoBack}
-          >
-            back
-          </Button>
-        </Link>
+        {/* <Link to={"/"}> */}
+        <Button
+          className="navBack"
+          color="warning"
+          sx={{ padding: "0" }}
+          variant="outlined"
+          onClick={handleGoBack}
+        >
+          back
+        </Button>
+        {/* </Link> */}
         <p className="navChartType">
           Chart type: <span>{chart.value}</span>
         </p>
@@ -208,11 +232,21 @@ const Navigation = function () {
           >
             <div className="gridOption">
               <p>Show grid</p>
-              <Switch size="small" defaultChecked onChange={handleShowGrid} />
+              <Switch
+                inputProps={{ "aria-label": "controlled" }}
+                size="small"
+                checked={options.showGrid}
+                onChange={handleShowGrid}
+              />
             </div>
             <div className="labelsOption">
               <p>Show labels</p>
-              <Switch size="small" onChange={handleShowLabels} defaultChecked />
+              <Switch
+                inputProps={{ "aria-label": "controlled" }}
+                size="small"
+                onChange={handleShowLabels}
+                checked={options.showLabels}
+              />
             </div>
             <div className="rotateOption">
               <div className="textIcon">
@@ -244,20 +278,30 @@ const Navigation = function () {
                       }}
                     >
                       Rotates labels along the X-Axis at an angle. This also
-                      causes each space separated word to go in the next line. If
-                      the labels are written before this option is selected, you
-                      must interact with the label input for the word line break
-                      to take effect (Like adding an empty space in the desired
-                      input).
+                      causes each space separated word to go in the next line.
+                      If the labels are written before this option is selected,
+                      you must interact with the label input for the word line
+                      break to take effect (Like adding an empty space in the
+                      desired input).
                     </Typography>
                   </Popover>
                 </div>
               </div>
-              <Switch size="small" onChange={handleRotateLabels} />
+              <Switch
+                inputProps={{ "aria-label": "controlled" }}
+                size="small"
+                onChange={handleRotateLabels}
+                checked={options.rotateLabels}
+              />
             </div>
             <div className="legendOption">
               <p>Show legend</p>
-              <Switch size="small" onChange={handleShowLegend} defaultChecked />
+              <Switch
+                inputProps={{ "aria-label": "controlled" }}
+                size="small"
+                onChange={handleShowLegend}
+                checked={options.showLegend}
+              />
             </div>
             <div className="lineNullOption">
               <div className="textIcon">
@@ -289,20 +333,26 @@ const Navigation = function () {
                       }}
                     >
                       Connects points even if certain data points are missing.
-                      Example: If your 3rd and 4th X-Axis points have no data, but
-                      your 2nd and 5th do, it will connect the 2nd and 5th points.
+                      Example: If your 3rd and 4th X-Axis points have no data,
+                      but your 2nd and 5th do, it will connect the 2nd and 5th
+                      points.
                     </Typography>
                   </Popover>
                 </div>
               </div>
-              <Switch size="small" onChange={handleNullValues} />
+              <Switch
+                inputProps={{ "aria-label": "controlled" }}
+                size="small"
+                onChange={handleNullValues}
+                checked={options.connectNull}
+              />
             </div>
             <div className="lineOption">
               <p>Line thickness</p>
               <Box sx={{ width: 50 }}>
                 <Slider
                   aria-label="Line thickness"
-                  defaultValue={2}
+                  value={options.lineThickness}
                   step={1}
                   marks
                   min={1}
@@ -341,8 +391,8 @@ const Navigation = function () {
                         width: "230px",
                       }}
                     >
-                      Sets the number of intervals on the Y-Axis. Current maximum
-                      value is 20.
+                      Sets the number of intervals on the Y-Axis. Current
+                      maximum value is 20.
                     </Typography>
                   </Popover>
                 </div>
@@ -432,7 +482,7 @@ const Navigation = function () {
               </RadioGroup>
             </div>
             {/* <div className="saveChart"> */}
-              {/* <Button
+            {/* <Button
                 sx={{
                   padding: "2px 10px",
                   fontSize: "13px",
@@ -445,17 +495,19 @@ const Navigation = function () {
                 Settings +
               </Button> */}
             {/* </div> */}
-              <Button
-                sx={{
-                  padding: "2px 10px",
-                  fontSize: "13px",
-                  backgroundColor: "rgba(255, 255, 255, 0.3)",
-                }}
-                variant="outlined"
-                onClick={() => {setChartSettingsShow(false)}}
-              >
-                Exit Options
-              </Button>
+            <Button
+              sx={{
+                padding: "2px 10px",
+                fontSize: "13px",
+                backgroundColor: "rgba(255, 255, 255, 0.3)",
+              }}
+              variant="outlined"
+              onClick={() => {
+                setChartSettingsShow(false);
+              }}
+            >
+              Exit Options
+            </Button>
           </div>
           {/* ) : null} */}
         </div>

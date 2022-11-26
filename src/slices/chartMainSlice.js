@@ -1,5 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const initialState = {
+  value: "default",
+  dataPoints: [],
+  xTitle: "",
+  yTitle: "",
+  data: [],
+  dataset: {},
+};
 export const chartMainSlice = createSlice({
   name: "chart",
   initialState: {
@@ -29,10 +37,19 @@ export const chartMainSlice = createSlice({
     addDataset: (state, action) => {
       state.dataset = action.payload;
     },
+    RESET_STATE_MAIN: () => initialState,
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { selectedType, dataPointNum, addXTitle, addYTitle, addChartData, addDataset } = chartMainSlice.actions;
+export const {
+  selectedType,
+  dataPointNum,
+  addXTitle,
+  addYTitle,
+  addChartData,
+  addDataset,
+  RESET_STATE_MAIN,
+} = chartMainSlice.actions;
 
 export default chartMainSlice.reducer;
