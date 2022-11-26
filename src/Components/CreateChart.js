@@ -10,10 +10,11 @@ import ChartTypeArea from "../types/ChartTypeArea";
 import ChartTypeBar from "../types/ChartTypeBar";
 import ChartTypePie from "../types/ChartTypePie";
 import Button from "@mui/material/Button";
+import Navigation from "./Navigation";
 
 const CreateChart = function () {
   const [chartType, setChartType] = useState("");
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const chart = useSelector(function (state) {
     return state.chart;
@@ -23,16 +24,17 @@ const CreateChart = function () {
     setChartType(chart);
   }, []);
 
-  const handleGoBack = function () {
-    dispatch(selectedType("default"));
-  };
+  // const handleGoBack = function () {
+  //   dispatch(selectedType("default"));
+  // };
 
   return (
     <div className="createChart">
+      <Navigation />
       <div className="wrapper">
-        <Link to={"/"}>
+        {/* <Link to={"/"}>
           <Button color="warning" sx={{padding: "0", marginTop: "10px"}} variant="outlined" onClick={handleGoBack}>back</Button>
-        </Link>
+        </Link> */}
         <div className="chartContainer">
           {chartType.value === "line" ? (
             <ChartTypeLine />
@@ -40,11 +42,10 @@ const CreateChart = function () {
             <ChartTypeArea />
           ) : chartType.value === "bar" ? (
             <ChartTypeBar />
-          )
-          // : chartType.value === "pie" ? (
+          ) : // : chartType.value === "pie" ? (
           //   <ChartTypePie />
           // )
-          : null}
+          null}
         </div>
       </div>
     </div>

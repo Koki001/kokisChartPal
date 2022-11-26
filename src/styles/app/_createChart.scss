@@ -48,6 +48,7 @@
 }
 .chartSettings {
   animation: rightSlide 0.3s linear 1;
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
 }
 .yAxisLabel {
   text-anchor: middle;
@@ -74,10 +75,12 @@
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
+  
 }
 .containedDataName:first-child {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
+  
 }
 .containedDataName:last-child {
   border-bottom-left-radius: 10px;
@@ -176,6 +179,7 @@ h4 {
   justify-content: space-between;
   width: 100%;
   position: relative;
+  
   h4 {
     margin: 0;
   }
@@ -193,6 +197,9 @@ h4 {
   border-radius: 10px;
   // height: 40px;
 }
+#menu- div ul {
+  height: 300px;
+}
 @keyframes leftSlideLine {
   0% {
     transform: translateX(-120%);
@@ -204,6 +211,7 @@ h4 {
   100% {
     transform: translateX(0);
     opacity: 1;
+    
   }
 }
 @keyframes rightSlide {
@@ -217,6 +225,7 @@ h4 {
   100% {
     transform: translateX(0);
     opacity: 1;
+    
   }
 }
 @keyframes middleExpand {
