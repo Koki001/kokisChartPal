@@ -17,12 +17,32 @@
 }
 .chartTypes {
   width: 200px;
-  margin-bottom: 50px;
-  margin-top: 80px;
   background-color: #ffffffab;
   border-radius: 10px;
   position: relative;
   padding: 8px;
+}
+.typeSettingsFlex {
+  margin-bottom: 50px;
+  margin-top: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .gearButton {
+    padding: 0 10px;
+    span {
+      background-color: transparent;
+    }
+  }
+  .gearButton:hover {
+    background-color: transparent;
+  }
+  .gearIcon {
+    transition: all 0.2s linear;
+  }
+  .gearIcon:hover {
+    transform: scale(1.5);
+  }
 }
 #welcomeVideo {
   position: fixed;

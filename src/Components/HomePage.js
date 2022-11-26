@@ -11,6 +11,7 @@ import Button from "@mui/material/Button";
 import Popover from "@mui/material/Popover";
 import Typography from "@mui/material/Typography";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
+import SettingsIcon from "@mui/icons-material/Settings";
 
 const HomePage = function (props) {
   const [selectedChart, setSelectedChart] = useState("default");
@@ -48,84 +49,90 @@ const HomePage = function (props) {
           The Chart Emporium
         </text>
       </svg>
-      <div className="chartTypes">
-        <FormControl variant="standard" fullWidth>
-          <InputLabel id="selectDropdown">Select chart type</InputLabel>
-          <Select
-            labelId="selectDropdown"
-            id="selectWelcome"
-            value={selectedChart !== "default" ? selectedChart : ""}
-            label="Chart list type"
-            onChange={handleChartType}
-          >
-            <MenuItem disabled value="default"></MenuItem>
-            <MenuItem value="line">Line</MenuItem>
-            <MenuItem value="area">Area</MenuItem>
-            <MenuItem value="bar">Bar</MenuItem>
-            <MenuItem disabled value="composed">
-              Composed
-            </MenuItem>
-            <MenuItem disabled value="scatter">
-              Scatter
-            </MenuItem>
-            <MenuItem disabled value="pie">
-              Pie
-            </MenuItem>
-            <MenuItem disabled value="radar">
-              Radar
-            </MenuItem>
-            <MenuItem disabled value="radialBar">
-              Radial Bar
-            </MenuItem>
-            <MenuItem disabled value="treeMap">
-              Tree Map
-            </MenuItem>
-          </Select>
-        </FormControl>
-        <div className="progressText">
-          <PriorityHighIcon
-            color="warning"
-            aria-describedby={idInfoPop}
-            fontSize={"large"}
-            onClick={handleInfoWelcomeOpen}
-          />
-          <Popover
-            id={idInfoPop}
-            open={openInfoWelcome}
-            anchorEl={infoWelcomeEl}
-            onClose={handleInfoWelcomeClose}
-            anchorOrigin={{
-              vertical: "bottom",
-              horizontal: "left",
-            }}
-          >
-            <Typography
-              sx={{
-                backgroundColor: "#ffffffab",
-                padding: "15px 20px 15px 20px",
-                fontSize: "15px",
-                width: "500px",
+      <div className="typeSettingsFlex">
+        <div className="chartTypes">
+          <FormControl variant="standard" fullWidth>
+            <InputLabel id="selectDropdown">Select chart type</InputLabel>
+            <Select
+              labelId="selectDropdown"
+              id="selectWelcome"
+              value={selectedChart !== "default" ? selectedChart : ""}
+              label="Chart list type"
+              onChange={handleChartType}
+            >
+              <MenuItem disabled value="default"></MenuItem>
+              <MenuItem value="line">Line</MenuItem>
+              <MenuItem value="area">Area</MenuItem>
+              <MenuItem value="bar">Bar</MenuItem>
+              <MenuItem disabled value="composed">
+                Composed
+              </MenuItem>
+              <MenuItem disabled value="scatter">
+                Scatter
+              </MenuItem>
+              <MenuItem disabled value="pie">
+                Pie
+              </MenuItem>
+              <MenuItem disabled value="radar">
+                Radar
+              </MenuItem>
+              <MenuItem disabled value="radialBar">
+                Radial Bar
+              </MenuItem>
+              <MenuItem disabled value="treeMap">
+                Tree Map
+              </MenuItem>
+            </Select>
+          </FormControl>
+          <div className="progressText">
+            <PriorityHighIcon
+              color="warning"
+              aria-describedby={idInfoPop}
+              fontSize={"large"}
+              onClick={handleInfoWelcomeOpen}
+            />
+            <Popover
+              id={idInfoPop}
+              open={openInfoWelcome}
+              anchorEl={infoWelcomeEl}
+              onClose={handleInfoWelcomeClose}
+              anchorOrigin={{
+                vertical: "bottom",
+                horizontal: "left",
               }}
             >
-              Hey! Thanks for visiting :). Currently, I am trying to get the{" "}
-              <em>Line, Area, and Bar</em> charts functionality to 100% before moving on to the rest of the chart types. Also, the site is not optimized
-              for smaller screen sizes (1000 viewport width or less). If you run
-              into any issues, or have suggestions about the site, connect with
-              me over{" "}
-              <a
-                href="https://www.linkedin.com/in/koki-vasileski/"
-                target={"_blank"}
+              <Typography
+                sx={{
+                  backgroundColor: "#ffffffab",
+                  padding: "15px 20px 15px 20px",
+                  fontSize: "15px",
+                  width: "500px",
+                }}
               >
-                LinkedIn
-              </a>{" "}
-              or{" "}
-              <a href="https://github.com/Koki001" target={"_blank"}>
-                GitHub
-              </a>{" "}
-              and let me know!
-            </Typography>
-          </Popover>
+                Hey! Thanks for visiting :). Currently, I am trying to get the{" "}
+                <em>Line, Area, and Bar</em> charts' functionality to 100% before
+                moving on to the rest of the chart types. Also, the site is not
+                optimized for smaller screen sizes (1000 viewport width or less).
+                If you run into any issues, or have suggestions about the site,
+                connect with me over{" "}
+                <a
+                  href="https://www.linkedin.com/in/koki-vasileski/"
+                  target={"_blank"}
+                >
+                  LinkedIn
+                </a>{" "}
+                or{" "}
+                <a href="https://github.com/Koki001" target={"_blank"}>
+                  GitHub
+                </a>{" "}
+                and let me know!
+              </Typography>
+            </Popover>
+          </div>
         </div>
+        <Button disabled className="gearButton">
+          <SettingsIcon className="gearIcon" fontSize="large"/>
+        </Button>
       </div>
       {selectedChart !== "default" && (
         <div className="chartExample">
