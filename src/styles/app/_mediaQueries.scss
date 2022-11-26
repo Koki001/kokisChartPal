@@ -1,0 +1,60 @@
+@media (max-width: 800px) {
+  .chartConfig {
+    flex-direction: column;
+    align-items: center;
+  }
+  .topChart {
+    width: 100%;
+  }
+  .selectAndAdd {
+    justify-content: space-around;
+  }
+  .inputsLineContainer {
+    width: 100%;
+    margin-top: 50px;
+  }
+  .containedDataName {
+    max-height: 200px;
+  }
+  .labelsXY {
+    justify-content: space-around;
+  }
+  .newLine {
+    padding: 0 20px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+    button {
+      border-radius: 5px;
+      width: 40px;
+      height: 40px;
+    }
+    div {
+      width: 80%;
+      height: 50px;
+    }
+    div input {
+      font-size: 22px;
+    }
+  }
+  .containedInputs {
+    max-height: 200px;
+  }
+  .xAxis,
+  .yAxis,
+  .containedInputsY {
+    max-height: 200px;
+    width: 100%;
+  }
+  .dataPointInputs {
+    height: 50px;
+    width: 100%;
+    div {
+      height: 50px;
+      width: 100%;
+    }
+    div input {
+      font-size: 22px;
+    }
+  }
+}

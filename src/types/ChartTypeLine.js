@@ -16,41 +16,18 @@ import { SketchPicker } from "react-color";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import ClearIcon from "@mui/icons-material/Clear";
 import IconButton from "@mui/material/IconButton";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import FormGroup from "@mui/material/FormGroup";
-import Slider from "@mui/material/Slider";
-import { findRenderedDOMComponentWithTag } from "react-dom/test-utils";
-import Box from "@mui/material/Box";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
-import { useRef } from "react";
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
-import Swal from "sweetalert2";
-import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
-import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import { height } from "@mui/system";
-import SettingsIcon from "@mui/icons-material/Settings";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  cLineThickness,
-  cLineType,
-  cShowGrid,
-  cShowLabels,
-  cRotateLabels,
-  cShowLegend,
-  cConnectNull,
-  cTickNumber,
-} from "../features/chartOptionsSlice";
+import { useRef } from "react";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { toPng } from "html-to-image";
+import Swal from "sweetalert2";
+import DownloadIcon from "@mui/icons-material/Download";
 
 const ChartTypeLine = function () {
   const [fmainData, setFmainData] = useState({
@@ -66,35 +43,13 @@ const ChartTypeLine = function () {
   const [fchartNames, setFChartNames] = useState([]);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [colorButton, setColorButton] = useState([]);
-  const [options, setOptions] = useState({
-    lineThickness: 2,
-    lineType: "monotone",
-    showGrid: true,
-    showLabels: true,
-    rotateLabels: false,
-    showLegend: true,
-    connectNull: false,
-    tickNumber: 10,
-  });
-  const [chartImage, setChartImage] = useState("");
-  const [showing, setShowing] = useState(0);
-  const [downloadAlert, setDownloadAlert] = useState(false);
-  const [infoTickEl, setInfoTickEl] = useState(null);
-  const [infoNullEl, setInfoNullEl] = useState(null);
-  const [infoRotateEl, setInfoRotateEl] = useState(null);
   const chartRef = useRef();
-  const [chartSettingsShow, setChartSettingsShow] = useState(false);
-  // const { height, width } = useWindowDimensions();
-  const openInfoTick = Boolean(infoTickEl);
-  const openInfoNull = Boolean(infoNullEl);
-  const openInfoRotate = Boolean(infoRotateEl);
-  const idInfoPop = openInfoTick
-    ? "info-popup-tick"
-    : openInfoNull
-    ? "info-popup-null"
-    : openInfoRotate
-    ? "info-popup-rotate"
-    : null;
+  const [showing, setShowing] = useState(0);
+
+  const options = useSelector(function (state) {
+    return state.options;
+  });
+
   useEffect(function () {
     let pointNumArray = [];
     for (let i = 0; i < 20; i++) {
@@ -102,9 +57,6 @@ const ChartTypeLine = function () {
     }
     setDataNumDropdown(pointNumArray);
   }, []);
-  const chartOptions = useSelector(function (state) {
-    return state.options;
-  });
   const dispatch = useDispatch();
   const handleDataPointNum = function (e) {
     const pointArray = [];
@@ -187,13 +139,7 @@ const ChartTypeLine = function () {
     setDataCounter([...counter]);
     setFChartData(dataArray);
   };
-  const handleRemoveLine = function (e) {
-    //   console.log(e.target.value)
-    //   console.log(fchartNames)
-    //   const nameArray = [...fchartNames];
-    //   nameArray.splice(Number(e.target.value), 1)
-    //   setFChartNames(nameArray)
-  };
+  const handleRemoveLine = function (e) {};
   const handleNextClick = function () {
     if (showing < fchartNames.length - 1) {
       setShowing(showing + 1);
@@ -220,77 +166,7 @@ const ChartTypeLine = function () {
     colorArr[colorButton].color = e.hex;
     setFChartNames(colorArr);
   };
-  const handleLineThickness = function (e) {
-    setOptions(function (current) {
-      return { ...current, lineThickness: e.target.value };
-    });
-    dispatch(cLineThickness(e.target.value));
-  };
 
-  const handleShowGrid = function (e) {
-    setOptions(function (current) {
-      return { ...current, showGrid: e.target.checked };
-    });
-    dispatch(cShowGrid(e.target.checked));
-  };
-  const handleShowLabels = function (e) {
-    setOptions(function (current) {
-      return { ...current, showLabels: e.target.checked };
-    });
-    dispatch(cShowLabels(e.target.checked));
-  };
-  const handleRotateLabels = function (e) {
-    setOptions(function (current) {
-      return { ...current, rotateLabels: e.target.checked };
-    });
-    dispatch(cRotateLabels(e.target.checked));
-  };
-  const handleShowLegend = function (e) {
-    setOptions(function (current) {
-      return { ...current, showLegend: e.target.checked };
-    });
-    dispatch(cShowLegend(e.target.checked));
-  };
-  const handleLineType = function (e) {
-    setOptions(function (current) {
-      return { ...current, lineType: e.target.value };
-    });
-    dispatch(cLineType(e.target.value));
-  };
-  const handleNullValues = function (e) {
-    setOptions(function (current) {
-      return { ...current, connectNull: e.target.checked };
-    });
-    dispatch(cConnectNull(e.target.value));
-  };
-  const handleTickChange = function (e) {
-    setOptions(function (current) {
-      return {
-        ...current,
-        tickNumber: e.target.value > 20 ? "20" : e.target.value,
-      };
-    });
-    dispatch(cTickNumber(e.target.value));
-    console.log(chartOptions)
-  };
-  const handleInfoTickOpen = function (e) {
-    setInfoTickEl(e.currentTarget);
-  };
-  const handleInfoTickClose = function (e) {
-    setInfoTickEl(null);
-  };
-  const handleInfoRotateOpen = function (e) {
-    setInfoRotateEl(e.currentTarget);
-  };
-  const handleInfoRotateClose = function (e) {
-    setInfoRotateEl(null);
-  };
-  const handleInfoNullOpen = function (e) {
-    setInfoNullEl(e.currentTarget);
-  };
-  const handleInfoNullClose = function (e) {
-    setInfoNullEl(null);
-  };
   const inputOptions = {
     white: "White",
     transparent: "Transparent",
@@ -330,10 +206,7 @@ const ChartTypeLine = function () {
       });
     }
   };
-  const handleMoreSettings = function () {};
-  const handleChartOptionShow = function (e) {
-    setChartSettingsShow(!chartSettingsShow);
-  };
+
   return (
     <>
       <div className="chartConfig">
@@ -374,6 +247,19 @@ const ChartTypeLine = function () {
             >
               {fchartNames.length <= 0 ? "New" : "Add"} data
             </Button>
+            {fchartNames.length > 0 && (
+              <Button
+                sx={{
+                  padding: "2px 10px",
+                  fontSize: "13px",
+                  backgroundColor: "rgba(255, 255, 255, 0.3)",
+                }}
+                variant="outlined"
+                onClick={handleSaveChart}
+              >
+                <DownloadIcon />
+              </Button>
+            )}
           </div>
           <div className="dataLabelTitle">
             {showColorPicker === true ? (
@@ -485,7 +371,7 @@ const ChartTypeLine = function () {
               <h4>
                 {fchartNames[showing].name
                   ? fchartNames[showing].name
-                  : `No Name`}
+                  : `Dataset ${showing + 1} Title`}
               </h4>
               {dataCounter.length > 1 && (
                 <Button
@@ -567,7 +453,7 @@ const ChartTypeLine = function () {
                                   }}
                                   id={lineIndex.toString()}
                                   onChange={handleDataChange}
-                                  placeholder={`Data Point ${index + 1} Value`}
+                                  placeholder={`Point ${index + 1} Value`}
                                   value={fchartData[index][`line${lineIndex}`]}
                                   variant="standard"
                                 />
@@ -583,386 +469,109 @@ const ChartTypeLine = function () {
             </div>
           </div>
         ) : null}
-        <div className="chartOptionsMain">
-          <Button
-            onClick={handleChartOptionShow}
-            sx={{ padding: "0 10px" }}
-            variant="outlined"
-            endIcon={
-              <SettingsIcon
-                sx={{
-                  transition: "all 0.3s linear",
-                  transform:
-                    chartSettingsShow === true ? "rotate(360deg)" : "rotate(0)",
-                }}
-              />
-            }
-            startIcon={
-              <ArrowDropDownIcon
-                sx={{
-                  transition: "all 0.3s linear",
-                  transform:
-                    chartSettingsShow === true ? "rotate(180deg)" : "rotate(0)",
-                }}
-              />
-            }
-            disabled={dataCounter.length !== 0 ? false : true}
-          >
-            Chart Options
-          </Button>
-          {dataCounter.length !== 0 && fmainData.dataPoints.length > 0 ? (
-            <div
-              className={
-                chartSettingsShow === true
-                  ? "chartSettings chartSettingsShow"
-                  : "chartSettings chartSettingsHide"
-              }
-            >
-              <div className="gridOption">
-                <p>Show grid</p>
-                <Switch size="small" defaultChecked onChange={handleShowGrid} />
-              </div>
-              <div className="labelsOption">
-                <p>Show labels</p>
-                <Switch
-                  size="small"
-                  onChange={handleShowLabels}
-                  defaultChecked
-                />
-              </div>
-              <div className="rotateOption">
-                <div className="infoPopIconAbsolute">
-                  <PriorityHighIcon
-                    color="warning"
-                    aria-describedby={idInfoPop}
-                    fontSize={"small"}
-                    onClick={handleInfoRotateOpen}
-                  />
-                  <Popover
-                    id={idInfoPop}
-                    open={openInfoRotate}
-                    anchorEl={infoRotateEl}
-                    onClose={handleInfoRotateClose}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "left",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        backgroundColor: "#357fca",
-                        color: "white",
-                        padding: "5px 10px 5px 10px",
-                        fontSize: "15px",
-                        width: "230px",
-                      }}
-                    >
-                      Rotates labels along the X-Axis at an angle. This also
-                      causes each space separated word to go in the next line.
-                      If the labels are written before this option is selected,
-                      you must interact with the label input for the word line
-                      break to take effect (Like adding an empty space in the
-                      desired input).
-                    </Typography>
-                  </Popover>
-                </div>
-                <p>Rotate labels</p>
-                <Switch size="small" onChange={handleRotateLabels} />
-              </div>
-              <div className="legendOption">
-                <p>Show legend</p>
-                <Switch
-                  size="small"
-                  onChange={handleShowLegend}
-                  defaultChecked
-                />
-              </div>
-              <div className="lineNullOption">
-                <div className="infoPopIconAbsolute">
-                  <PriorityHighIcon
-                    color="warning"
-                    aria-describedby={idInfoPop}
-                    fontSize={"small"}
-                    onClick={handleInfoNullOpen}
-                  />
-                  <Popover
-                    id={idInfoPop}
-                    open={openInfoNull}
-                    anchorEl={infoNullEl}
-                    onClose={handleInfoNullClose}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "left",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        backgroundColor: "#357fca",
-                        color: "white",
-                        padding: "5px 10px 5px 10px",
-                        fontSize: "15px",
-                        width: "230px",
-                      }}
-                    >
-                      Connects points even if certain data points are missing.
-                      Example: If your 3rd and 4th X-Axis points have no data,
-                      but your 2nd and 5th do, it will connect the 2nd and 5th
-                      points.
-                    </Typography>
-                  </Popover>
-                </div>
-                <p>Connect nulls</p>
-                <Switch size="small" onChange={handleNullValues} />
-              </div>
-              <div className="lineOption">
-                <p>Line thickness</p>
-                <Box sx={{ width: 50 }}>
-                  <Slider
-                    aria-label="Line thickness"
-                    defaultValue={2}
-                    step={1}
-                    marks
-                    min={1}
-                    max={3}
-                    onChange={handleLineThickness}
-                    size="small"
-                  />
-                </Box>
-              </div>
-              <div className="lineTicks">
-                <div className="infoPopIconAbsolute">
-                  <PriorityHighIcon
-                    color="warning"
-                    aria-describedby={idInfoPop}
-                    fontSize={"small"}
-                    onClick={handleInfoTickOpen}
-                  />
-                  <Popover
-                    id={idInfoPop}
-                    open={openInfoTick}
-                    anchorEl={infoTickEl}
-                    onClose={handleInfoTickClose}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "left",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        backgroundColor: "#357fca",
-                        color: "white",
-                        padding: "5px 10px 5px 10px",
-                        fontSize: "15px",
-                        width: "230px",
-                      }}
-                    >
-                      Sets the number of intervals on the Y-Axis. Current
-                      maximum value is 20.
-                    </Typography>
-                  </Popover>
-                </div>
-                <p>Tick count</p>
-                <Box component="form" noValidate autoComplete="off">
-                  <TextField
-                    onChange={handleTickChange}
-                    placeholder={"10"}
-                    id="filled-basic"
-                    variant="filled"
-                    type={"number"}
-                    InputProps={{
-                      inputProps: {
-                        max: 20,
-                        min: 1,
-                      },
-                    }}
-                    value={chartOptions.tickNumber > 20 ? "20" : chartOptions.tickNumber}
-                  />
-                </Box>
-              </div>
-              <div className="lineType">
-                {/* <p id="lineTypeRadio" sx={{ color: "black" }}>
-                  Line Type:
-                </p> */}
-                <RadioGroup
-                  onChange={handleLineType}
-                  // row={true}
-                  aria-labelledby="lineTypeRadio"
-                  defaultValue="monotone"
-                  name="radio-buttons-group"
-                  row
-                  sx={{
-                    "& .MuiTypography-root": {
-                      fontSize: 14,
-                    },
-                    "& .MuiFormControlLabel-root": {
-                      marginTop: 0,
-                    },
-                    "& .MuiButtonBase-root": {
-                      padding: "1px",
-                    },
-                  }}
-                >
-                  <FormControlLabel
-                    value="monotone"
-                    control={
-                      <Radio
-                        sx={{
-                          "& .MuiSvgIcon-root": {
-                            fontSize: 22,
-                          },
-                        }}
-                      />
-                    }
-                    label="Mono"
-                    labelPlacement="start"
-                  />
-                  <FormControlLabel
-                    value="step"
-                    control={
-                      <Radio
-                        sx={{
-                          "& .MuiSvgIcon-root": {
-                            fontSize: 22,
-                          },
-                        }}
-                      />
-                    }
-                    label="Step"
-                    labelPlacement="start"
-                  />
-                  <FormControlLabel
-                    value="linear"
-                    control={
-                      <Radio
-                        sx={{
-                          "& .MuiSvgIcon-root": {
-                            fontSize: 22,
-                          },
-                        }}
-                      />
-                    }
-                    label="Linear"
-                    labelPlacement="start"
-                  />
-                </RadioGroup>
-              </div>
-              <div className="saveChart">
-                <Button
-                  sx={{
-                    padding: "2px 10px",
-                    fontSize: "13px",
-                    backgroundColor: "rgba(255, 255, 255, 0.3)",
-                  }}
-                  variant="outlined"
-                  onClick={handleMoreSettings}
-                  disabled
-                >
-                  Settings +
-                </Button>
-                <Button
-                  sx={{
-                    padding: "2px 10px",
-                    fontSize: "13px",
-                    backgroundColor: "rgba(255, 255, 255, 0.3)",
-                  }}
-                  variant="outlined"
-                  onClick={handleSaveChart}
-                >
-                  Download chart
-                </Button>
-              </div>
-            </div>
-          ) : null}
-        </div>
-      </div>
-      <ResponsiveContainer
-        width={"100%"}
-        height={600}
-        className="chartMainContainer"
-      >
-        <LineChart
-          ref={chartRef}
-          data={fchartData}
-          margin={{
-            top: 10,
-            right: 50,
-            left: options.showLabels === true ? 20 : 0,
-            bottom: 50,
+
+        {/* <Button
+          sx={{
+            padding: "2px 10px",
+            fontSize: "13px",
+            backgroundColor: "rgba(255, 255, 255, 0.3)",
           }}
+          variant="outlined"
+          onClick={handleSaveChart}
         >
-          {options.showGrid === true && <CartesianGrid strokeDasharray="3 3" />}
-          <XAxis
-            interval={0}
-            angle={options.rotateLabels === true ? -45 : 0}
-            dataKey="name"
-            label={
-              options.showLabels === true && {
-                value: fmainData.xLabel,
-                position: "bottom",
-                className: "xAxisLabel",
-                offset: options.rotateLabels === true ? 30 : 15,
-              }
-            }
-            tick={{
-              dy: options.rotateLabels === true ? 20 : 5,
-              fontSize: "14px",
-              width: options.rotateLabels === true ? "50px" : null,
-              wordWrap: options.rotateLabels === true ? "break-word" : "normal",
-              fill: options.showLabels === true ? "black" : "transparent",
+          Download chart
+        </Button> */}
+      </div>
+      <div className="responsiveWrapper">
+        <ResponsiveContainer
+          width={"100%"}
+          height={600}
+          className="chartMainContainer"
+        >
+          <LineChart
+            ref={chartRef}
+            data={fchartData}
+            margin={{
+              top: 10,
+              right: 50,
+              left: options.showLabels === true ? 20 : 0,
+              bottom: 50,
             }}
-          />
-          <YAxis
-            // domain={[0, `dataMax`]}
-            domain={[0, "auto"]}
-            label={
-              options.showLabels === true && {
-                value: fmainData.yLabel,
-                angle: -90,
-                position: "insideLeft",
-                className: "yAxisLabel",
-                offset: -5,
+          >
+            {options.showGrid === true && <CartesianGrid strokeDasharray="3 3" />}
+            <XAxis
+              interval={0}
+              angle={options.rotateLabels === true ? -45 : 0}
+              dataKey="name"
+              label={
+                options.showLabels === true && {
+                  value: fmainData.xLabel,
+                  position: "bottom",
+                  className: "xAxisLabel",
+                  offset: options.rotateLabels === true ? 30 : 15,
+                }
               }
-            }
-            tick={{
-              dx: -5,
-              fontSize: "14px",
-              fill: options.showLabels === true ? "black" : "transparent",
-            }}
-            tickCount={chartOptions.tickNumber}
-          />
-          <Tooltip />
-          {options.showLegend === true && (
-            <Legend
-              verticalAlign="top"
-              align="center"
-              height={36}
-              iconSize="14"
-              iconType={"circle"}
+              tick={{
+                dy: options.rotateLabels === true ? 20 : 5,
+                fontSize: "14px",
+                width: options.rotateLabels === true ? "50px" : null,
+                wordWrap: options.rotateLabels === true ? "break-word" : "normal",
+                fill: options.showLabels === true ? "black" : "transparent",
+              }}
             />
-          )}
-          {dataCounter.map(function (e, index) {
-            return (
-              <Line
-                key={`line${index}`}
-                strokeWidth={options.lineThickness}
-                type={options.lineType}
-                name={
-                  fchartNames[index].name
-                    ? fchartNames[index].name
-                    : `Data ${index + 1}`
+            <YAxis
+              // domain={[0, `dataMax`]}
+              domain={[0, "auto"]}
+              label={
+                options.showLabels === true && {
+                  value: fmainData.yLabel,
+                  angle: -90,
+                  position: "insideLeft",
+                  className: "yAxisLabel",
+                  offset: -5,
                 }
-                dataKey={`line${index}`}
-                stroke={
-                  fchartNames[index].color
-                    ? fchartNames[index].color
-                    : "#000000"
-                }
-                connectNulls={options.connectNull}
+              }
+              tick={{
+                dx: -5,
+                fontSize: "14px",
+                fill: options.showLabels === true ? "black" : "transparent",
+              }}
+              tickCount={options.tickNumber}
+            />
+            <Tooltip />
+            {options.showLegend === true && (
+              <Legend
+                verticalAlign="top"
+                align="center"
+                height={36}
+                iconSize="14"
+                iconType={"circle"}
               />
-            );
-          })}
-        </LineChart>
-      </ResponsiveContainer>
+            )}
+            {dataCounter.map(function (e, index) {
+              return (
+                <Line
+                  key={`line${index}`}
+                  strokeWidth={options.lineThickness}
+                  type={options.lineType}
+                  name={
+                    fchartNames[index].name
+                      ? fchartNames[index].name
+                      : `Data ${index + 1}`
+                  }
+                  dataKey={`line${index}`}
+                  stroke={
+                    fchartNames[index].color
+                      ? fchartNames[index].color
+                      : "#000000"
+                  }
+                  connectNulls={options.connectNull}
+                />
+              );
+            })}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </>
   );
 };

@@ -4,7 +4,7 @@
   text-align: center;
   align-items: center;
   height: 100vh;
-  min-width: 1000px;
+  // min-width: 1000px;
   .wrapper {
     padding-top: 40px;
   }
@@ -12,11 +12,12 @@
 .chartContainer {
   width: 100%;
   height: 95vh;
+  // min-width: 1000px;
+  margin-top: 30px;
   select {
     width: 100px;
   }
   .chartConfig {
-    margin-top: 30px;
     position: relative;
   }
   .chartConfig::after {
@@ -37,6 +38,7 @@
 .chartMainContainer {
   margin-top: 10px;
   min-height: 400px;
+  min-width: 1000px;
 }
 .chartConfig {
   display: flex;
@@ -51,7 +53,8 @@
 }
 .chartSettings {
   animation: rightSlide 0.3s linear 1;
-  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+  box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
 }
 .yAxisLabel {
   text-anchor: middle;
@@ -74,16 +77,14 @@
   background-color: #ffffffab;
 }
 .containedDataName {
-  max-height: 152px;
+  max-height: 138px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
-  
 }
 .containedDataName:first-child {
   border-top-left-radius: 10px;
   border-top-right-radius: 10px;
-  
 }
 .containedDataName:last-child {
   border-bottom-left-radius: 10px;
@@ -96,6 +97,7 @@
   animation: leftSlideLine 0.3s linear 1;
   background-color: #ffffffab;
   padding: 0 5px;
+  height: 27px;
   button {
     cursor: pointer;
     border-radius: 50%;
@@ -116,7 +118,7 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 40px;
+  margin-bottom: 52px;
   button {
     height: 40px;
   }
@@ -133,7 +135,6 @@
   max-height: 135px;
   animation: middleExpand 0.3s linear 1;
 }
-
 .containedInputs {
   display: flex;
   align-items: center;
@@ -182,7 +183,7 @@ h4 {
   justify-content: space-between;
   width: 100%;
   position: relative;
-  
+
   h4 {
     margin: 0;
   }
@@ -193,8 +194,7 @@ h4 {
   margin-bottom: 20px;
 }
 .labelsXY > div:first-child,
-.labelsXY > div:last-child
- {
+.labelsXY > div:last-child {
   background-color: #ffffffab;
   // padding: 5px;
   border-radius: 10px;
@@ -202,6 +202,17 @@ h4 {
 }
 #menu- div ul {
   height: 300px;
+}
+.responsiveWrapper {
+  width: 100%;
+  overflow-x: scroll;
+  background-color: #fffffffd;
+  border-radius: 10px;
+  padding: 5px;
+  box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2),
+    0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  margin-bottom: 10vh;
+  margin-top: 5vh;
 }
 @keyframes leftSlideLine {
   0% {
@@ -214,7 +225,6 @@ h4 {
   100% {
     transform: translateX(0);
     opacity: 1;
-    
   }
 }
 @keyframes rightSlide {
@@ -228,7 +238,6 @@ h4 {
   100% {
     transform: translateX(0);
     opacity: 1;
-    
   }
 }
 @keyframes middleExpand {

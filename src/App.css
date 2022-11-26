@@ -256,7 +256,6 @@ a {
 #root {
   background: rgb(255, 255, 255);
   background: linear-gradient(0deg, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 50%, rgb(202, 214, 228) 100%);
-  min-width: 1000px;
 }
 
 h1,
@@ -273,7 +272,6 @@ h5 {
   text-align: center;
   align-items: center;
   height: 100vh;
-  min-width: 1000px;
 }
 .createChart .wrapper {
   padding-top: 40px;
@@ -282,12 +280,12 @@ h5 {
 .chartContainer {
   width: 100%;
   height: 95vh;
+  margin-top: 30px;
 }
 .chartContainer select {
   width: 100px;
 }
 .chartContainer .chartConfig {
-  margin-top: 30px;
   position: relative;
 }
 .chartContainer .chartConfig::after {
@@ -308,6 +306,7 @@ h5 {
 .chartMainContainer {
   margin-top: 10px;
   min-height: 400px;
+  min-width: 1000px;
 }
 
 .chartConfig {
@@ -350,7 +349,7 @@ h5 {
 }
 
 .containedDataName {
-  max-height: 152px;
+  max-height: 138px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
@@ -373,6 +372,7 @@ h5 {
   animation: leftSlideLine 0.3s linear 1;
   background-color: rgba(255, 255, 255, 0.6705882353);
   padding: 0 5px;
+  height: 27px;
 }
 .newLine button {
   cursor: pointer;
@@ -396,7 +396,7 @@ h5 {
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  margin-bottom: 40px;
+  margin-bottom: 52px;
 }
 .selectAndAdd button {
   height: 40px;
@@ -490,6 +490,17 @@ h4 {
   height: 300px;
 }
 
+.responsiveWrapper {
+  width: 100%;
+  overflow-x: scroll;
+  background-color: rgba(255, 255, 255, 0.9921568627);
+  border-radius: 10px;
+  padding: 5px;
+  box-shadow: 0px 5px 5px -3px rgba(0, 0, 0, 0.2), 0px 8px 10px 1px rgba(0, 0, 0, 0.14), 0px 3px 14px 2px rgba(0, 0, 0, 0.12);
+  margin-bottom: 10vh;
+  margin-top: 5vh;
+}
+
 @keyframes leftSlideLine {
   0% {
     transform: translateX(-120%);
@@ -572,17 +583,18 @@ h4 {
 
 .chartSettings {
   height: 100%;
-  top: 40px;
   right: 0;
+  top: 0;
   width: 270px;
   min-width: 190px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background-color: rgba(255, 255, 255, 0.6705882353);
+  background-color: #ffffff;
   border-radius: 10px;
   padding: 5px;
-  transition: all 0.5s linear;
+  transition: all 0.2s linear;
+  position: absolute;
 }
 .chartSettings p {
   margin: 0;
@@ -664,9 +676,8 @@ h4 {
   text-align: center;
 }
 .chartSettings .infoPopIconAbsolute {
-  position: absolute;
   cursor: pointer;
-  left: -22px;
+  right: 0;
   top: 4px;
 }
 .chartSettings .infoPopIconAbsolute svg {
@@ -675,12 +686,17 @@ h4 {
 .chartSettings .infoPopIconAbsolute svg:hover {
   transform: scale(1.5);
 }
+.chartSettings .textIcon {
+  display: flex;
+}
 
 .chartOptionsMain {
   position: absolute;
-  top: -64px;
+  visibility: hidden;
+  top: 40px;
   right: 0;
   height: 300px;
+  z-index: 100;
 }
 
 .chartSettingsHide {
@@ -691,7 +707,7 @@ h4 {
 }
 
 .chartSettingsShow {
-  position: absolute;
+  position: relative;
   visibility: visible;
   overflow: hidden;
 }
@@ -894,14 +910,15 @@ h4 {
 }
 .navMain {
   width: 100%;
-  background-color: rgba(255, 255, 255, 0.5019607843);
-  position: absolute;
+  background-color: #ffffff;
+  position: fixed;
   top: 0;
   height: 40px;
   border-bottom: 1px solid black;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 }
 
 .navInner {
@@ -911,6 +928,7 @@ h4 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  position: relative;
 }
 .navInner .navBack {
   margin: 0;
@@ -919,6 +937,67 @@ h4 {
 .navChartType span {
   text-transform: capitalize;
   font-weight: bold;
+}
+
+@media (max-width: 800px) {
+  .chartConfig {
+    flex-direction: column;
+    align-items: center;
+  }
+  .topChart {
+    width: 100%;
+  }
+  .selectAndAdd {
+    justify-content: space-around;
+  }
+  .inputsLineContainer {
+    width: 100%;
+    margin-top: 50px;
+  }
+  .containedDataName {
+    max-height: 200px;
+  }
+  .labelsXY {
+    justify-content: space-around;
+  }
+  .newLine {
+    padding: 0 20px;
+    height: 50px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .newLine button {
+    border-radius: 5px;
+    width: 40px;
+    height: 40px;
+  }
+  .newLine div {
+    width: 80%;
+    height: 50px;
+  }
+  .newLine div input {
+    font-size: 22px;
+  }
+  .containedInputs {
+    max-height: 200px;
+  }
+  .xAxis,
+.yAxis,
+.containedInputsY {
+    max-height: 200px;
+    width: 100%;
+  }
+  .dataPointInputs {
+    height: 50px;
+    width: 100%;
+  }
+  .dataPointInputs div {
+    height: 50px;
+    width: 100%;
+  }
+  .dataPointInputs div input {
+    font-size: 22px;
+  }
 }
 
 /*# sourceMappingURL=App.css.map */

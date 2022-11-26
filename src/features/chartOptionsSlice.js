@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const chartOptionsSlice = createSlice({
   name: "options",
   initialState: {
+    chartRef: {},
     lineThickness: 2,
     lineType: "monotone",
     showGrid: true,
@@ -13,6 +14,9 @@ export const chartOptionsSlice = createSlice({
     tickNumber: 10,
   },
   reducers: {
+    cChartRef: (state, action) => {
+      state.ChartRef = action.payload;
+    },
     cLineThickness: (state, action) => {
       state.lineThickness = action.payload;
     },
@@ -41,6 +45,6 @@ export const chartOptionsSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { cLineThickness, cLineType, cShowGrid, cShowLabels, cRotateLabels, cShowLegend, cConnectNull, cTickNumber} = chartOptionsSlice.actions;
+export const { cLineThickness, cLineType, cShowGrid, cShowLabels, cRotateLabels, cShowLegend, cConnectNull, cTickNumber, cChartRef} = chartOptionsSlice.actions;
 
 export default chartOptionsSlice.reducer;
