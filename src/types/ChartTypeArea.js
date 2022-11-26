@@ -784,6 +784,7 @@ const ChartTypeLine = function () {
                 }}
                 variant="outlined"
                 onClick={handleMoreSettings}
+                disabled
               >
                 Settings +
               </Button>
@@ -804,7 +805,7 @@ const ChartTypeLine = function () {
       </div>
       <ResponsiveContainer
         width={"100%"}
-        height={"65%"}
+        height={600}
         className="chartMainContainer"
       >
         <AreaChart

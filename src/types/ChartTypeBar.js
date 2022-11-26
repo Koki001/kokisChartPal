@@ -760,6 +760,7 @@ const ChartTypeLine = function () {
                 }}
                 variant="outlined"
                 onClick={handleMoreSettings}
+                disabled
               >
                 Settings +
               </Button>
@@ -782,16 +783,16 @@ const ChartTypeLine = function () {
         width={"100%"}
         height={
           options.barType === "vertical" && fmainData.dataPoints.length >= 10
-            ? "100%"
+            ? 1000
             : options.barType === "vertical" &&
               fmainData.dataPoints.length > 5 &&
               fmainData.dataPoints.length < 10
-            ? "75%"
+            ? 850
             : options.barType === "vertical" &&
               fchartNames.length > 2 &&
               fmainData.dataPoints.length > 2
-            ? "90%"
-            : "65%"
+            ? 850
+            : 600
         }
         className="chartMainContainer"
       >
