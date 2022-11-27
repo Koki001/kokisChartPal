@@ -10,6 +10,7 @@ const initialState = {
   showLegend: true,
   connectNull: false,
   tickNumber: 10,
+  range: false,
 };
 
 export const chartOptionsSlice = createSlice({

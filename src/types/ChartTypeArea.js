@@ -36,8 +36,15 @@ import {
   addChartData,
   addDataset,
 } from "../slices/chartMainSlice";
+import { current } from "@reduxjs/toolkit";
 
 const ChartTypeLine = function () {
+  const options = useSelector(function (state) {
+    return state.options;
+  });
+  const chart = useSelector(function (state) {
+    return state.chart;
+  });
   const [fmainData, setFmainData] = useState({
     dataPoints: [],
     xTitle: "",
@@ -51,18 +58,36 @@ const ChartTypeLine = function () {
   const [colorButton, setColorButton] = useState([]);
   const chartRef = useRef();
   const [showing, setShowing] = useState(0);
+  const [rangeShow, setRangeShow] = useState(false);
 
-  const options = useSelector(function (state) {
-    return state.options;
-  });
-  const chart = useSelector(function (state) {
-    return state.chart;
-  });
-  const test = [
-    { pointName: "L1", line0: [1, 5] },
-    { pointName: "L2", line0: [2, 4] },
-  ];
-  console.log(fmainData);
+  // const test = [
+  //   { pointName: "L1", line0: [1, 5] },
+  //   { pointName: "L2", line0: [2, 4] },
+  // ];
+  // console.log(fmainData);
+  // console.log(fmainData.data);
+  useEffect(
+    function () {
+      setRangeShow(options.range);
+    },
+    [options.range]
+  );
+  useEffect(
+    function () {
+      if (rangeShow === false) {
+        const chartCopy = [...fmainData.data];
+        for (let obj = 0; obj < fmainData.data.length; obj++) {
+          for (let lin = 0; lin < fmainData.dataset.length; lin++) {
+            chartCopy[obj][`line${lin}`][1] = "";
+          }
+        }
+        setFmainData(function (current) {
+          return { ...current, data: [...chartCopy] };
+        });
+      }
+    },
+    [rangeShow]
+  );
   useEffect(function () {
     let pointNumArray = [];
     for (let i = 0; i < 20; i++) {
@@ -116,13 +141,52 @@ const ChartTypeLine = function () {
   };
   const handleDataChange = function (e) {
     const chartCopy = [...fmainData.data];
+    // const chartRangeCopy = [...fmainData.data, ];
     chartCopy[e.target.parentElement.parentElement.parentElement.id][
       `line${e.target.id}`
-    ] = Number(e.target.value);
-
+    ][0] = Number(e.target.value);
+    // console.log(fmainData);
     setFmainData(function (current) {
       return { ...current, data: [...chartCopy] };
     });
+  };
+  console.log(fmainData);
+  const handleDataChangeRange = function (e) {
+    const chartRangeCopy = [...fmainData.data];
+    // const chartRangeMin = [...fmainData.data];
+    // const chartRangeMax = [...fmainData.data];
+    // chartRangeCopy[e.target.parentElement.parentElement.parentElement.id][
+    //   `line${e.target.id}`
+    // ] = ["", ""];
+    // chartRangeMax[e.target.parentElement.parentElement.parentElement.id][
+    //   `line${e.target.id.replace("max", "")}range`
+    // ] = ["", ""];
+    // chartRangeMin[e.target.parentElement.parentElement.parentElement.id][
+    //   `line${e.target.id}min`
+    // ] = Number(e.target.value);
+    // chartRangeMax[e.target.parentElement.parentElement.parentElement.id][
+    //   `line${e.target.id}max`
+    // ] = Number(e.target.value);
+    // chartRangeMin[e.target.parentElement.parentElement.parentElement.id][
+    //   `line${e.target.id}min`
+    // ] = Number(e.target.value);
+
+    if (e.target.placeholder.includes("Min")) {
+      chartRangeCopy[e.target.parentElement.parentElement.parentElement.id][
+        `line${e.target.id}`
+      ][0] = Number(e.target.value);
+    } else if (e.target.placeholder.includes("Max")) {
+      chartRangeCopy[e.target.parentElement.parentElement.parentElement.id][
+        `line${e.target.id}`
+      ][1] = Number(e.target.value);
+    }
+    // const chartRangeCopy = chartRangeMin.concat(chartRangeMax);
+
+    setFmainData(function (current) {
+      return { ...current, data: [...chartRangeCopy] };
+    });
+    // console.log(fmainData);
+    console.log(fmainData.data);
   };
   const handleDataLabel = function (e) {
     const updateDataLabel = [...fmainData.dataset];
@@ -144,7 +208,17 @@ const ChartTypeLine = function () {
       counter.push(i);
     }
     for (let d = 0; d < dataArray.length; d++) {
-      dataArray[d] = { ...dataArray[d], [`line${dataCounter.length}`]: "" };
+      // if (rangeShow === false) {
+      dataArray[d] = {
+        ...dataArray[d],
+        [`line${dataCounter.length}`]: ["", ""],
+        //   };
+        // } else if (rangeShow === true) {
+        // dataArray[d] = {
+        //   ...dataArray[d],
+        //   [`line${dataCounter.length}`]: ["", ""],
+        //   };
+      };
     }
     setDataCounter([...counter]);
     setFmainData(function (current) {
@@ -447,34 +521,99 @@ const ChartTypeLine = function () {
                             point,
                             index
                           ) {
-                            return (
-                              <div
-                                className="dataPointInputs"
-                                key={`data${index}`}
-                                id={index}
-                              >
-                                <TextField
-                                  type={"number"}
-                                  inputProps={{ type: "number" }}
-                                  onWheel={(e) => e.target.blur()}
-                                  sx={{
-                                    "& .MuiInputBase-input": {
-                                      padding: "2px 12px",
-                                      minWidth: "30px",
-                                      textAlign: "center",
-                                    },
-                                  }}
-                                  id={lineIndex.toString()}
-                                  onChange={handleDataChange}
-                                  placeholder={`Point ${index + 1} Value`}
-                                  value={
-                                    fmainData.data[index][`line${lineIndex}`] &&
-                                    fmainData.data[index][`line${lineIndex}`]
-                                  }
-                                  variant="standard"
-                                />
-                              </div>
-                            );
+                            if (rangeShow === false) {
+                              return (
+                                <div
+                                  className="dataPointInputs"
+                                  key={`data${index}`}
+                                  id={index}
+                                >
+                                  <TextField
+                                    type={"number"}
+                                    inputProps={{ type: "number" }}
+                                    onWheel={(e) => e.target.blur()}
+                                    sx={{
+                                      "& .MuiInputBase-input": {
+                                        padding: "2px 12px",
+                                        minWidth: "30px",
+                                        textAlign: "center",
+                                      },
+                                    }}
+                                    id={lineIndex.toString()}
+                                    onChange={handleDataChange}
+                                    placeholder={`Point ${index + 1} Value`}
+                                    value={
+                                      fmainData.data[index][
+                                        `line${lineIndex}`
+                                      ] &&
+                                      fmainData.data[index][`line${lineIndex}`][0]
+                                    }
+                                    variant="standard"
+                                  />
+                                </div>
+                              );
+                            } else if (rangeShow === true) {
+                              return (
+                                <div
+                                  className="dataPointInputs"
+                                  key={`data${index}`}
+                                  id={index}
+                                >
+                                  <TextField
+                                    type={"number"}
+                                    inputProps={{
+                                      type: "number",
+                                    }}
+                                    onWheel={(e) => e.target.blur()}
+                                    sx={{
+                                      "& .MuiInputBase-input": {
+                                        padding: "2px 12px",
+                                        minWidth: "30px",
+                                        textAlign: "center",
+                                      },
+                                    }}
+                                    id={`${lineIndex.toString()}`}
+                                    onChange={handleDataChangeRange}
+                                    placeholder={`Range ${index + 1} Min`}
+                                    value={
+                                      fmainData.data[index][
+                                        `line${lineIndex}`
+                                      ] &&
+                                      fmainData.data[index][
+                                        `line${lineIndex}`
+                                      ][0]
+                                    }
+                                    variant="standard"
+                                  />
+                                  <TextField
+                                    type={"number"}
+                                    inputProps={{
+                                      type: "number",
+                                    }}
+                                    onWheel={(e) => e.target.blur()}
+                                    sx={{
+                                      "& .MuiInputBase-input": {
+                                        padding: "2px 12px",
+                                        minWidth: "30px",
+                                        textAlign: "center",
+                                      },
+                                    }}
+                                    id={`${lineIndex.toString()}`}
+                                    onChange={handleDataChangeRange}
+                                    placeholder={`Range ${index + 1} Max`}
+                                    value={
+                                      fmainData.data[index][
+                                        `line${lineIndex}`
+                                      ] &&
+                                      fmainData.data[index][
+                                        `line${lineIndex}`
+                                      ][1]
+                                    }
+                                    variant="standard"
+                                  />
+                                </div>
+                              );
+                            }
                           })}
                         </div>
                       );

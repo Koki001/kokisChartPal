@@ -413,6 +413,7 @@ h5 {
   justify-content: space-between;
   max-height: 135px;
   animation: middleExpand 0.3s linear 1;
+  max-width: 300px;
 }
 
 .containedInputs {

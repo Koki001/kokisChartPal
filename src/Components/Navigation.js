@@ -82,10 +82,10 @@ const Navigation = function () {
       showCancelButton: true,
     }).then(function (result) {
       if (result.isConfirmed) {
-        dispatch(RESET_STATE_OPTIONS());
         dispatch(selectedType("default"));
         navigate("/");
       } else if (result.isDenied) {
+        dispatch(RESET_STATE_OPTIONS());
         dispatch(selectedType("default"));
         navigate("/");
       }
