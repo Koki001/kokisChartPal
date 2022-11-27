@@ -109,9 +109,10 @@ const HomePage = function (props) {
                   width: "500px",
                 }}
               >
-                Hey! Thanks for visiting :). Currently implementing Redux on the
-                Line Chart. Area and Bar charts are still using old code with
-                component states. <br />
+                Hey! Thanks for visiting :). Currently working on the Bar chart
+                to implement all features. After testing and final
+                *functionality* touch ups to the Line/Area/Bar charts, I will
+                start working on Composed/Scatter/Pie chart types. <br />
                 <br /> The site is not optimized for smaller screen sizes but
                 I've added a basic media query and the chart view is now in a
                 scrollable container. If you run into any issues, or have
@@ -206,6 +207,9 @@ const HomePage = function (props) {
           </div>
         </div>
       )}
+      <footer className="tempFooter">
+        <p>Background animation from Wallpaper Engine submitted by "mattl45454"</p>
+      </footer>
     </div>
   );
 };

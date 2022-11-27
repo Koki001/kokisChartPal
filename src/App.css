@@ -703,6 +703,19 @@ h4 {
   transform: scale(1.5);
 }
 
+.tempFooter {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+}
+.tempFooter p {
+  margin: 5px;
+  color: rgba(0, 0, 0, 0.493);
+  font-size: 12px;
+}
+
 .trueTextAnimation {
   animation: leftSlide 0.7s ease-out 1;
 }
