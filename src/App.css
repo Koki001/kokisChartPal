@@ -468,7 +468,6 @@ h4 {
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
-  position: relative;
 }
 .dataLabelTitle h4 {
   margin: 0;
@@ -547,10 +546,12 @@ h4 {
   justify-content: center;
   flex-direction: column;
   align-items: stretch;
-  position: absolute;
+  position: fixed;
+  top: 50%;
+  right: 50%;
+  transform: translate(50%, -50%);
   z-index: 100;
-  right: -100%;
-  width: 400px;
+  width: 350px;
 }
 .colorPicker .sketch-picker {
   width: auto;
@@ -579,143 +580,6 @@ h4 {
 
 .recharts-legend-item-text {
   color: black;
-}
-
-.chartSettings {
-  height: 100%;
-  right: 0;
-  top: 0;
-  width: 270px;
-  min-width: 190px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  background-color: #ffffff;
-  border-radius: 10px;
-  padding: 5px;
-  transition: all 0.2s linear;
-  position: absolute;
-}
-.chartSettings p {
-  margin: 0;
-}
-.chartSettings .gridOption {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 25px;
-}
-.chartSettings .labelsOption {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 25px;
-}
-.chartSettings .rotateOption {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 25px;
-  position: relative;
-}
-.chartSettings .legendOption {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 25px;
-}
-.chartSettings .lineOption {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 25px;
-}
-.chartSettings .lineType {
-  display: flex;
-  justify-content: center;
-  height: 25px;
-  margin-top: 5px;
-}
-.chartSettings .lineType p {
-  margin-top: 4px;
-}
-.chartSettings .lineType .MuiFormGroup-root {
-  width: 100%;
-  justify-content: space-between;
-}
-.chartSettings .rangeOption {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 25px;
-}
-.chartSettings .lineNullOption {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 25px;
-  position: relative;
-}
-.chartSettings .MuiFormGroup-root {
-  display: flex;
-  justify-content: center;
-}
-.chartSettings .MuiFormGroup-root label {
-  margin: 0;
-}
-.chartSettings .saveChart {
-  margin-top: 10px;
-  display: flex;
-  justify-content: space-between;
-  height: 25px;
-}
-.chartSettings .lineTicks {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  position: relative;
-  height: 25px;
-}
-.chartSettings #filled-basic {
-  padding: 0;
-  width: 50px;
-  text-align: center;
-}
-.chartSettings .infoPopIconAbsolute {
-  cursor: pointer;
-  right: 0;
-  top: 4px;
-}
-.chartSettings .infoPopIconAbsolute svg {
-  transition: all 0.2s linear;
-}
-.chartSettings .infoPopIconAbsolute svg:hover {
-  transform: scale(1.5);
-}
-.chartSettings .textIcon {
-  display: flex;
-}
-
-.chartOptionsMain {
-  position: absolute;
-  visibility: hidden;
-  top: 50px;
-  right: 0;
-  height: 300px;
-  z-index: 100;
-}
-
-.chartSettingsHide {
-  height: 0px;
-  position: absolute;
-  visibility: hidden;
-  overflow: hidden;
-}
-
-.chartSettingsShow {
-  position: relative;
-  visibility: visible;
-  overflow: hidden;
 }
 
 #chartVideo {
@@ -943,6 +807,143 @@ h4 {
 .navChartType span {
   text-transform: capitalize;
   font-weight: bold;
+}
+
+.chartSettings {
+  height: 100%;
+  right: 0;
+  top: 0;
+  width: 270px;
+  min-width: 190px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 5px;
+  transition: all 0.2s linear;
+  position: absolute;
+}
+.chartSettings p {
+  margin: 0;
+}
+.chartSettings .gridOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 25px;
+}
+.chartSettings .labelsOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 25px;
+}
+.chartSettings .valueOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 25px;
+}
+.chartSettings .rotateOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 25px;
+  position: relative;
+}
+.chartSettings .legendOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 25px;
+}
+.chartSettings .lineOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 25px;
+}
+.chartSettings .lineType {
+  display: flex;
+  justify-content: center;
+  height: 25px;
+  margin-top: 5px;
+}
+.chartSettings .lineType p {
+  margin-top: 4px;
+}
+.chartSettings .lineType .MuiFormGroup-root {
+  width: 100%;
+  justify-content: space-between;
+}
+.chartSettings .rangeOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 25px;
+}
+.chartSettings .lineNullOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 25px;
+  position: relative;
+}
+.chartSettings .MuiFormGroup-root {
+  display: flex;
+  justify-content: center;
+}
+.chartSettings .MuiFormGroup-root label {
+  margin: 0;
+}
+.chartSettings .lineTicks {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  height: 25px;
+}
+.chartSettings #filled-basic {
+  padding: 0;
+  width: 50px;
+  text-align: center;
+}
+.chartSettings .infoPopIconAbsolute {
+  cursor: pointer;
+  right: 0;
+  top: 4px;
+}
+.chartSettings .infoPopIconAbsolute svg {
+  transition: all 0.2s linear;
+}
+.chartSettings .infoPopIconAbsolute svg:hover {
+  transform: scale(1.5);
+}
+.chartSettings .textIcon {
+  display: flex;
+}
+
+.chartOptionsMain {
+  position: absolute;
+  visibility: hidden;
+  top: 50px;
+  right: 0;
+  height: 300px;
+  z-index: 100;
+}
+
+.chartSettingsHide {
+  height: 0px;
+  position: absolute;
+  visibility: hidden;
+  overflow: hidden;
+}
+
+.chartSettingsShow {
+  position: relative;
+  visibility: visible;
+  overflow: hidden;
 }
 
 @media (max-width: 800px) {

@@ -60,12 +60,15 @@ const ChartTypeLine = function () {
   const [showing, setShowing] = useState(0);
   const [rangeShow, setRangeShow] = useState(false);
 
+  // switiching for ranged type
   useEffect(
     function () {
       setRangeShow(options.range);
     },
     [options.range]
   );
+
+  // clearing value when switching between range/normal modes
   useEffect(
     function () {
       if (rangeShow === false) {
@@ -82,6 +85,8 @@ const ChartTypeLine = function () {
     },
     [rangeShow]
   );
+
+  // populates data point dropdown
   useEffect(function () {
     let pointNumArray = [];
     for (let i = 0; i < 20; i++) {
@@ -89,7 +94,8 @@ const ChartTypeLine = function () {
     }
     setDataNumDropdown(pointNumArray);
   }, []);
-  const dispatch = useDispatch();
+
+  // creates a set of *new* fields for number of data points for each dataset
   const handleDataPointNum = function (e) {
     const pointArray = [];
     const dataArray = [...fmainData.data];
@@ -118,16 +124,22 @@ const ChartTypeLine = function () {
       return { ...current, data: [...dataArray] };
     });
   };
+
+  // main label for x-axis
   const handleXLabel = function (e) {
     setFmainData(function (current) {
       return { ...current, xTitle: e.target.value };
     });
   };
+
+  // main label for y-axis
   const handleYLabel = function (e) {
     setFmainData(function (current) {
       return { ...current, yTitle: e.target.value };
     });
   };
+
+  // data point labels / along x-axis
   const handlePointLabel = function (e) {
     const updatePointLabel = [...fmainData.data];
 
@@ -140,6 +152,8 @@ const ChartTypeLine = function () {
       return { ...current, data: [...updatePointLabel] };
     });
   };
+
+  // data point values / along y-axis
   const handleDataChange = function (e) {
     const chartCopy = [...fmainData.data];
     chartCopy[e.target.parentElement.parentElement.parentElement.id][
@@ -149,6 +163,8 @@ const ChartTypeLine = function () {
       return { ...current, data: [...chartCopy] };
     });
   };
+
+  // data point values for area range type
   const handleDataChangeRange = function (e) {
     const chartRangeCopy = [...fmainData.data];
     if (e.target.placeholder.includes("Min")) {
@@ -164,6 +180,8 @@ const ChartTypeLine = function () {
       return { ...current, data: [...chartRangeCopy] };
     });
   };
+
+  // title for each dataset
   const handleDataLabel = function (e) {
     const updateDataLabel = [...fmainData.dataset];
     for (let i = 0; i < dataCounter.length + 1; i++) {
@@ -175,6 +193,8 @@ const ChartTypeLine = function () {
       return { ...current, dataset: [...updateDataLabel] };
     });
   };
+
+  // adding a new dataset with selected data point number
   const handleNewDataset = function (e) {
     const nameArray = [...fmainData.dataset];
     nameArray.push({ name: "", color: "" });
@@ -194,7 +214,11 @@ const ChartTypeLine = function () {
       return { ...current, data: [...dataArray], dataset: [...nameArray] };
     });
   };
+
+  // ***** not implemented *****
   const handleRemoveLine = function (e) {};
+
+  // cycles through datasets -- next
   const handleNextClick = function () {
     if (showing < fmainData.dataset.length - 1) {
       setShowing(showing + 1);
@@ -202,6 +226,8 @@ const ChartTypeLine = function () {
       setShowing(0);
     }
   };
+
+  // cycles through datasets -- prev
   const handlePrevClick = function () {
     if (showing <= fmainData.dataset.length && showing > 0) {
       setShowing(showing - 1);
@@ -209,6 +235,8 @@ const ChartTypeLine = function () {
       setShowing(fmainData.dataset.length - 1);
     }
   };
+
+  // ***** color picker needs revisit *****
   const handleChangeComplete = function (e) {
     setShowColorPicker(false);
   };
@@ -224,6 +252,8 @@ const ChartTypeLine = function () {
     });
   };
 
+  // ***** download chart options needs revisit *****
+  // converts recharts to png
   const inputOptions = {
     white: "White",
     transparent: "Transparent",
@@ -382,7 +412,6 @@ const ChartTypeLine = function () {
             )}
           </div>
         </div>
-
         {dataCounter.length !== 0 && fmainData.dataPoints.length > 0 ? (
           <div className="inputsLineContainer">
             <div className="labelsXY">

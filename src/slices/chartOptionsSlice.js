@@ -3,9 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   chartRef: {},
   lineThickness: 2,
+  barThickness: 10,
   lineType: "monotone",
+  barType: "horizontal",
   showGrid: true,
   showLabels: true,
+  showBarVal: true,
   rotateLabels: false,
   showLegend: true,
   connectNull: false,
@@ -18,9 +21,12 @@ export const chartOptionsSlice = createSlice({
   initialState: {
     chartRef: {},
     lineThickness: 2,
+    barThickness: 10,
     lineType: "monotone",
+    barType: "horizontal",
     showGrid: true,
     showLabels: true,
+    showBarVal: true,
     rotateLabels: false,
     showLegend: true,
     connectNull: false,
@@ -34,14 +40,23 @@ export const chartOptionsSlice = createSlice({
     cLineThickness: (state, action) => {
       state.lineThickness = action.payload;
     },
+    cBarThickness: (state, action) => {
+      state.barThickness = action.payload;
+    },
     cLineType: (state, action) => {
       state.lineType = action.payload;
+    },
+    cBarType: (state, action) => {
+      state.barType = action.payload;
     },
     cShowGrid: (state, action) => {
       state.showGrid = action.payload;
     },
     cShowLabels: (state, action) => {
       state.showLabels = action.payload;
+    },
+    cShowBarVal: (state, action) => {
+      state.showBarVal = action.payload;
     },
     cRotateLabels: (state, action) => {
       state.rotateLabels = action.payload;
@@ -65,9 +80,11 @@ export const chartOptionsSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const {
   cLineThickness,
+  cBarThickness,
   cLineType,
   cShowGrid,
   cShowLabels,
+  cShowBarVal,
   cRotateLabels,
   cShowLegend,
   cConnectNull,

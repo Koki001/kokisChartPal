@@ -26,9 +26,11 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
 import {
   cLineThickness,
+  cBarThickness,
   cLineType,
   cShowGrid,
   cShowLabels,
+  cShowBarVal,
   cRotateLabels,
   cShowLegend,
   cConnectNull,
@@ -95,12 +97,17 @@ const Navigation = function () {
   const handleLineThickness = function (e) {
     dispatch(cLineThickness(e.target.value));
   };
-
+  const handleBarThickness = function (e) {
+    dispatch(cBarThickness(e.target.value));
+  };
   const handleShowGrid = function (e) {
     dispatch(cShowGrid(e.target.checked));
   };
   const handleShowLabels = function (e) {
     dispatch(cShowLabels(e.target.checked));
+  };
+  const handleShowBarVal = function (e) {
+    dispatch(cShowBarVal(e.target.checked));
   };
   const handleRotateLabels = function (e) {
     dispatch(cRotateLabels(e.target.checked));
@@ -108,7 +115,7 @@ const Navigation = function () {
   const handleShowLegend = function (e) {
     dispatch(cShowLegend(e.target.checked));
   };
-  const handleLineType = function (e) {
+  const handleType = function (e) {
     dispatch(cLineType(e.target.value));
   };
   const handleNullValues = function (e) {
@@ -252,6 +259,14 @@ const Navigation = function () {
                 checked={options.showLabels}
               />
             </div>
+            <div className="valueOption">
+              <p>Show value</p>
+              <Switch
+                size="small"
+                onChange={handleShowBarVal}
+                checked={options.showBarVal}
+              />
+            </div>
             <div className="rotateOption">
               <div className="textIcon">
                 <p>Rotate labels</p>
@@ -307,65 +322,85 @@ const Navigation = function () {
                 checked={options.showLegend}
               />
             </div>
-            <div className="lineNullOption">
-              <div className="textIcon">
-                <p>Connect nulls</p>
-                <div className="infoPopIconAbsolute">
-                  <PriorityHighIcon
-                    color="warning"
-                    aria-describedby={idInfoPop}
-                    fontSize={"small"}
-                    onClick={handleInfoNullOpen}
-                  />
-                  <Popover
-                    id={idInfoPop}
-                    open={openInfoNull}
-                    anchorEl={infoNullEl}
-                    onClose={handleInfoNullClose}
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "left",
-                    }}
-                  >
-                    <Typography
-                      sx={{
-                        backgroundColor: "#357fca",
-                        color: "white",
-                        padding: "5px 10px 5px 10px",
-                        fontSize: "15px",
-                        width: "230px",
+            {chart.value !== "bar" && (
+              <div className="lineNullOption">
+                <div className="textIcon">
+                  <p>Connect nulls</p>
+                  <div className="infoPopIconAbsolute">
+                    <PriorityHighIcon
+                      color="warning"
+                      aria-describedby={idInfoPop}
+                      fontSize={"small"}
+                      onClick={handleInfoNullOpen}
+                    />
+                    <Popover
+                      id={idInfoPop}
+                      open={openInfoNull}
+                      anchorEl={infoNullEl}
+                      onClose={handleInfoNullClose}
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "left",
                       }}
                     >
-                      Connects points even if certain data points are missing.
-                      Example: If your 3rd and 4th X-Axis points have no data,
-                      but your 2nd and 5th do, it will connect the 2nd and 5th
-                      points.
-                    </Typography>
-                  </Popover>
+                      <Typography
+                        sx={{
+                          backgroundColor: "#357fca",
+                          color: "white",
+                          padding: "5px 10px 5px 10px",
+                          fontSize: "15px",
+                          width: "230px",
+                        }}
+                      >
+                        Connects points even if certain data points are missing.
+                        Example: If your 3rd and 4th X-Axis points have no data,
+                        but your 2nd and 5th do, it will connect the 2nd and 5th
+                        points.
+                      </Typography>
+                    </Popover>
+                  </div>
                 </div>
-              </div>
-              <Switch
-                inputProps={{ "aria-label": "controlled" }}
-                size="small"
-                onChange={handleNullValues}
-                checked={options.connectNull}
-              />
-            </div>
-            <div className="lineOption">
-              <p>Line thickness</p>
-              <Box sx={{ width: 50 }}>
-                <Slider
-                  aria-label="Line thickness"
-                  value={options.lineThickness}
-                  step={1}
-                  marks
-                  min={1}
-                  max={3}
-                  onChange={handleLineThickness}
+                <Switch
+                  inputProps={{ "aria-label": "controlled" }}
                   size="small"
+                  onChange={handleNullValues}
+                  checked={options.connectNull}
                 />
-              </Box>
-            </div>
+              </div>
+            )}
+            {chart.value !== "bar" ? (
+              <div className="lineOption">
+                <p>Line thickness</p>
+                <Box sx={{ width: 50 }}>
+                  <Slider
+                    aria-label="Line thickness"
+                    value={options.lineThickness}
+                    step={1}
+                    marks
+                    min={1}
+                    max={3}
+                    onChange={handleLineThickness}
+                    size="small"
+                  />
+                </Box>
+              </div>
+            ) : (
+              <div className="lineOption">
+                <p>Bar thickness</p>
+                <Box sx={{ width: 100 }}>
+                  <Slider
+                    aria-label="Bar thickness"
+                    value={options.barThickness}
+                    step={10}
+                    marks
+                    min={1}
+                    max={60}
+                    onChange={handleBarThickness}
+                    size="small"
+                  />
+                </Box>
+              </div>
+            )}
             {chart.value === "area" ? (
               <div className="rangeOption">
                 <p>Range</p>
@@ -431,7 +466,7 @@ const Navigation = function () {
             </div>
             <div className="lineType">
               <RadioGroup
-                onChange={handleLineType}
+                onChange={handleType}
                 // row={true}
                 aria-labelledby="lineTypeRadio"
                 defaultValue="monotone"
@@ -463,7 +498,7 @@ const Navigation = function () {
                   label="Mono"
                   labelPlacement="start"
                 />
-                {chart.value !== "area" ? (
+                {chart.value !== "area" && chart.value !== "bar" ? (
                   <FormControlLabel
                     value="step"
                     control={
@@ -479,20 +514,53 @@ const Navigation = function () {
                     labelPlacement="start"
                   />
                 ) : null}
-                <FormControlLabel
-                  value="linear"
-                  control={
-                    <Radio
-                      sx={{
-                        "& .MuiSvgIcon-root": {
-                          fontSize: 22,
-                        },
-                      }}
-                    />
-                  }
-                  label="Linear"
-                  labelPlacement="start"
-                />
+                {chart.value === "bar" && (
+                  <FormControlLabel
+                    value="vertical"
+                    control={
+                      <Radio
+                        sx={{
+                          "& .MuiSvgIcon-root": {
+                            fontSize: 22,
+                          },
+                        }}
+                      />
+                    }
+                    label="Horizontal"
+                    labelPlacement="start"
+                  />
+                )}
+                {chart.value === "bar" ? (
+                  <FormControlLabel
+                    value="stacked"
+                    control={
+                      <Radio
+                        sx={{
+                          "& .MuiSvgIcon-root": {
+                            fontSize: 22,
+                          },
+                        }}
+                      />
+                    }
+                    label="Stacked"
+                    labelPlacement="start"
+                  />
+                ) : (
+                  <FormControlLabel
+                    value="linear"
+                    control={
+                      <Radio
+                        sx={{
+                          "& .MuiSvgIcon-root": {
+                            fontSize: 22,
+                          },
+                        }}
+                      />
+                    }
+                    label="Linear"
+                    labelPlacement="start"
+                  />
+                )}
               </RadioGroup>
             </div>
             <Button
