@@ -1,4 +1,39 @@
 @media (max-width: 800px) {
+  .navMain {
+    height: 60px;
+    button {
+      height: 50px;
+      font-size: 20px;
+    }
+    .navChartType {
+      display: none;
+    }
+  }
+  .chartContainer {
+    margin-top: 50px;
+  }
+  .chartOptionsMain {
+    top: 60px;
+    height: 400px;
+    .chartSettings {
+      width: 350px;
+      p {
+        font-size: 24px;
+      }
+      #filled-basic {
+        width: 80px;
+        font-size: 24px;
+      }
+      .css-kgitkj {
+        width: 80px;
+      }
+    }
+    .lineType {
+      .css-7tebp8-MuiFormGroup-root .MuiTypography-root {
+        font-size: 24px;
+      }
+    }
+  }
   .chartExample {
     flex-direction: column-reverse;
     align-items: center;
@@ -22,6 +57,20 @@
   }
   .selectAndAdd {
     justify-content: space-around;
+    div:first-child {
+      width: 50px;
+      font-size: 24px;
+    }
+    button {
+      height: 55px;
+      font-size: 20px;
+    }
+    .css-i4bv87-MuiSvgIcon-root {
+      font-size: 44px;
+    }
+  }
+  #menu- div ul li {
+    font-size: 24px;
   }
   .inputsLineContainer {
     width: 100%;
@@ -32,6 +81,27 @@
   }
   .labelsXY {
     justify-content: space-around;
+  }
+  .labelsXY div {
+    height: 50px;
+  }
+  .labelsXY div div input {
+    height: 50px;
+    font-size: 22px;
+  }
+  .labelArrowContainer {
+    margin-top: 50px;
+    button {
+      height: 30px;
+      width: 80px;
+    }
+    .css-1d6wzja-MuiButton-startIcon > :nth-of-type(1) {
+      font-size: 40px;
+    }
+    h4 {
+      font-size: 24px;
+      font-weight: 400;
+    }
   }
   .newLine {
     padding: 0 20px;
