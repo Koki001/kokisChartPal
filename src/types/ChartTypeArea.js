@@ -60,12 +60,6 @@ const ChartTypeLine = function () {
   const [showing, setShowing] = useState(0);
   const [rangeShow, setRangeShow] = useState(false);
 
-  // const test = [
-  //   { pointName: "L1", line0: [1, 5] },
-  //   { pointName: "L2", line0: [2, 4] },
-  // ];
-  // console.log(fmainData);
-  // console.log(fmainData.data);
   useEffect(
     function () {
       setRangeShow(options.range);
@@ -106,7 +100,14 @@ const ChartTypeLine = function () {
       if (!dataArray.includes(dataArray[i])) {
         dataArray.push({ pointName: "" });
       }
+
+      for (let l = 0; l < fmainData.dataset.length; l++) {
+        if (!Object.keys(dataArray[i]).includes(`line${l}`)) {
+          dataArray[i][`line${l}`] = ["", ""];
+        }
+      }
     }
+
     for (let x = e.target.value; x < dataArray.length; x++) {
       dataArray.splice(x, dataArray.length - (x - 1));
     }
@@ -141,36 +142,15 @@ const ChartTypeLine = function () {
   };
   const handleDataChange = function (e) {
     const chartCopy = [...fmainData.data];
-    // const chartRangeCopy = [...fmainData.data, ];
     chartCopy[e.target.parentElement.parentElement.parentElement.id][
       `line${e.target.id}`
     ][0] = Number(e.target.value);
-    // console.log(fmainData);
     setFmainData(function (current) {
       return { ...current, data: [...chartCopy] };
     });
   };
-  console.log(fmainData);
   const handleDataChangeRange = function (e) {
     const chartRangeCopy = [...fmainData.data];
-    // const chartRangeMin = [...fmainData.data];
-    // const chartRangeMax = [...fmainData.data];
-    // chartRangeCopy[e.target.parentElement.parentElement.parentElement.id][
-    //   `line${e.target.id}`
-    // ] = ["", ""];
-    // chartRangeMax[e.target.parentElement.parentElement.parentElement.id][
-    //   `line${e.target.id.replace("max", "")}range`
-    // ] = ["", ""];
-    // chartRangeMin[e.target.parentElement.parentElement.parentElement.id][
-    //   `line${e.target.id}min`
-    // ] = Number(e.target.value);
-    // chartRangeMax[e.target.parentElement.parentElement.parentElement.id][
-    //   `line${e.target.id}max`
-    // ] = Number(e.target.value);
-    // chartRangeMin[e.target.parentElement.parentElement.parentElement.id][
-    //   `line${e.target.id}min`
-    // ] = Number(e.target.value);
-
     if (e.target.placeholder.includes("Min")) {
       chartRangeCopy[e.target.parentElement.parentElement.parentElement.id][
         `line${e.target.id}`
@@ -180,13 +160,9 @@ const ChartTypeLine = function () {
         `line${e.target.id}`
       ][1] = Number(e.target.value);
     }
-    // const chartRangeCopy = chartRangeMin.concat(chartRangeMax);
-
     setFmainData(function (current) {
       return { ...current, data: [...chartRangeCopy] };
     });
-    // console.log(fmainData);
-    console.log(fmainData.data);
   };
   const handleDataLabel = function (e) {
     const updateDataLabel = [...fmainData.dataset];
@@ -208,16 +184,9 @@ const ChartTypeLine = function () {
       counter.push(i);
     }
     for (let d = 0; d < dataArray.length; d++) {
-      // if (rangeShow === false) {
       dataArray[d] = {
         ...dataArray[d],
         [`line${dataCounter.length}`]: ["", ""],
-        //   };
-        // } else if (rangeShow === true) {
-        // dataArray[d] = {
-        //   ...dataArray[d],
-        //   [`line${dataCounter.length}`]: ["", ""],
-        //   };
       };
     }
     setDataCounter([...counter]);
@@ -270,7 +239,6 @@ const ChartTypeLine = function () {
         input: "radio",
         inputOptions: inputOptions,
         inputValidator: (value) => {
-          console.log(value);
           if (!value) {
             return "You need to choose something!";
           } else {
@@ -546,7 +514,9 @@ const ChartTypeLine = function () {
                                       fmainData.data[index][
                                         `line${lineIndex}`
                                       ] &&
-                                      fmainData.data[index][`line${lineIndex}`][0]
+                                      fmainData.data[index][
+                                        `line${lineIndex}`
+                                      ][0]
                                     }
                                     variant="standard"
                                   />
