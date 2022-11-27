@@ -393,8 +393,8 @@ const Navigation = function () {
                     value={options.barThickness}
                     step={10}
                     marks
-                    min={1}
-                    max={60}
+                    min={5}
+                    max={55}
                     onChange={handleBarThickness}
                     size="small"
                   />

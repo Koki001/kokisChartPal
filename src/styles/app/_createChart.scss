@@ -148,6 +148,9 @@ h4 {
   align-self: center;
   margin-top: 0;
 }
+h4.noName {
+  animation: nameFlash 1s infinite;
+}
 .dataLabelContainer {
   display: flex;
   flex-direction: column;
@@ -185,9 +188,6 @@ h4 {
   width: 100%;
   // position: relative;
 
-  h4 {
-    margin: 0;
-  }
 }
 .labelsXY {
   display: flex;
@@ -253,5 +253,13 @@ h4 {
     max-height: auto;
     overflow: visible;
     visibility: visible;
+  }
+}
+@keyframes nameFlash {
+  0% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 1;
   }
 }

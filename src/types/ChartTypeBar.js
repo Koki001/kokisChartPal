@@ -80,7 +80,7 @@ const ChartTypeLine = function () {
   //   connectNull: false,
   //   tickNumber: 10,
   // });
-  const [chartImage, setChartImage] = useState("");
+  const [chartCalc, setChartCalc] = useState(0);
   const [showing, setShowing] = useState(0);
   const [downloadAlert, setDownloadAlert] = useState(false);
   const [infoTickEl, setInfoTickEl] = useState(null);
@@ -124,6 +124,7 @@ const ChartTypeLine = function () {
       return { ...current, dataPoints: pointArray };
     });
     setFChartData(dataArray);
+    setChartCalc(pointArray.length)
   };
   const handleXLabel = function (e) {
     setFmainData(function (current) {
@@ -220,6 +221,7 @@ const ChartTypeLine = function () {
     colorArr[colorButton].color = e.hex;
     setFChartNames(colorArr);
   };
+
   // const handleLineThickness = function (e) {
   //   setOptions(function (current) {
   //     return { ...current, lineThickness: e.target.value };
@@ -288,6 +290,7 @@ const ChartTypeLine = function () {
   // const handleInfoNullClose = function (e) {
   //   setInfoNullEl(null);
   // };
+  console.log(options.lineType)
   const inputOptions = {
     white: "White",
     transparent: "Transparent",
@@ -476,7 +479,11 @@ const ChartTypeLine = function () {
                   }}
                 ></Button>
               )}
-              <h4>
+              <h4
+                className={
+                  fchartNames[showing].name === "" ? "noName" : "nameFilled"
+                }
+              >
                 {fchartNames[showing].name
                   ? fchartNames[showing].name
                   : `No Name`}
@@ -585,23 +592,15 @@ const ChartTypeLine = function () {
         <ResponsiveContainer
           width={"100%"}
           height={
-            options.lineType === "vertical" && fmainData.dataPoints.length >= 10
-              ? 1000
-              : options.lineType === "vertical" &&
-                fmainData.dataPoints.length > 5 &&
-                fmainData.dataPoints.length < 10
-              ? 850
-              : options.lineType === "vertical" &&
-                fchartNames.length > 2 &&
-                fmainData.dataPoints.length > 2
-              ? 850
-              : "100%"
+            options.lineType === "vertical"
+              ? (250 + chartCalc * 10 ) + (options.barThickness * 2.75 ) * ((chartCalc + 10) * 1.5)
+              : options.lineType !== "vertical" && 500
           }
           className="chartMainContainer"
         >
           <BarChart
             layout={options.lineType === "vertical" ? "vertical" : "horizontal"}
-            barGap={8}
+            barGap={5}
             ref={chartRef}
             data={fchartData}
             margin={{
@@ -618,6 +617,7 @@ const ChartTypeLine = function () {
               <>
                 <YAxis
                   type="category"
+                  reversed
                   interval={0}
                   dataKey="name"
                   label={
@@ -685,7 +685,7 @@ const ChartTypeLine = function () {
                 />
                 <YAxis
                   // domain={[0, `dataMax`]}
-                  domain={[0, `auto`]}
+                  domain={[0, 10]}
                   type={"number"}
                   label={
                     options.showLabels === true && {
@@ -724,7 +724,11 @@ const ChartTypeLine = function () {
                       ? { position: "top", offset: "5" }
                       : options.showBarVal === true &&
                         options.lineType === "vertical"
-                      ? { position: "right", offset: "5" }
+                      ? {
+                          position: "right",
+                          offset: "5",
+                          fontSize: options.barThickness < 25 ? "12px" : "16px",
+                        }
                       : null
                   }
                   stackId={options.lineType === "stacked" ? "stacked" : null}
