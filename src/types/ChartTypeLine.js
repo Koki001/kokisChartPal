@@ -45,11 +45,8 @@ const ChartTypeLine = function () {
     data: [],
     dataset: [],
   });
-  const [fchartData, setFChartData] = useState([]);
   const [dataCounter, setDataCounter] = useState([]);
   const [dataNumDropdown, setDataNumDropdown] = useState([]);
-  const [xAxisData, setXAxisData] = useState([]);
-  const [fchartNames, setFChartNames] = useState([]);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [colorButton, setColorButton] = useState([]);
   const chartRef = useRef();
@@ -87,7 +84,6 @@ const ChartTypeLine = function () {
     setFmainData(function (current) {
       return { ...current, dataPoints: pointArray };
     });
-    // setFChartData(dataArray);
     setFmainData(function (current) {
       return { ...current, data: [...dataArray] };
     });
@@ -102,17 +98,6 @@ const ChartTypeLine = function () {
       return { ...current, yTitle: e.target.value };
     });
   };
-  // useEffect(
-  //   function () {
-  //     let xAxisDataNames = [];
-  //     for (let i = 0; i < fmainData.dataPoints.length; i++) {
-  //       xAxisDataNames.push({ name: "" });
-  //     }
-  //     setXAxisData([...xAxisDataNames]);
-  //   },
-  //   [fmainData.dataPoints]
-  // );
-
   const handlePointLabel = function (e) {
     const updatePointLabel = [...fmainData.data];
 
@@ -121,7 +106,6 @@ const ChartTypeLine = function () {
         updatePointLabel[i].pointName = e.target.value;
       }
     }
-    // setFChartData(updatePointLabel);
     setFmainData(function (current) {
       return { ...current, data: [...updatePointLabel] };
     });
@@ -132,7 +116,6 @@ const ChartTypeLine = function () {
       `line${e.target.id}`
     ] = Number(e.target.value);
 
-    // setFChartData(chartCopy);
     setFmainData(function (current) {
       return { ...current, data: [...chartCopy] };
     });
@@ -144,7 +127,6 @@ const ChartTypeLine = function () {
         updateDataLabel[i].name = e.target.value;
       }
     }
-    // setFChartNames(updateDataLabel);
     setFmainData(function (current) {
       return { ...current, dataset: [...updateDataLabel] };
     });
@@ -160,9 +142,7 @@ const ChartTypeLine = function () {
     for (let d = 0; d < dataArray.length; d++) {
       dataArray[d] = { ...dataArray[d], [`line${dataCounter.length}`]: "" };
     }
-    // setFChartNames(nameArray);
     setDataCounter([...counter]);
-    // setFChartData(dataArray);
     setFmainData(function (current) {
       return { ...current, data: [...dataArray], dataset: [...nameArray] };
     });
@@ -192,7 +172,6 @@ const ChartTypeLine = function () {
   const handleColorSlider = function (e, color) {
     let colorArr = [...fmainData.dataset];
     colorArr[colorButton].color = e.hex;
-    // setFChartNames(colorArr);
     setFmainData(function (current) {
       return { ...current, dataset: [...colorArr] };
     });
@@ -203,9 +182,6 @@ const ChartTypeLine = function () {
     transparent: "Transparent",
   };
   const handleSaveChart = function (e) {
-    // console.log(fmainData, "main data");
-    // console.log(fchartData, "chart data");
-    // console.log(fchartNames, "chart names");
     if (chartRef.current === null) {
       return;
     } else {
@@ -223,8 +199,6 @@ const ChartTypeLine = function () {
             toPng(chartRef.current.container, {
               cacheBust: true,
               backgroundColor: value,
-              // canvasWidth: 1920,
-              // canvasHeight: 1080,
             })
               .then((dataUrl) => {
                 const link = document.createElement("a");
@@ -507,18 +481,6 @@ const ChartTypeLine = function () {
             </div>
           </div>
         ) : null}
-
-        {/* <Button
-          sx={{
-            padding: "2px 10px",
-            fontSize: "13px",
-            backgroundColor: "rgba(255, 255, 255, 0.3)",
-          }}
-          variant="outlined"
-          onClick={handleSaveChart}
-        >
-          Download chart
-        </Button> */}
       </div>
       <div className="responsiveWrapper">
         <ResponsiveContainer

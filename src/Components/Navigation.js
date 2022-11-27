@@ -33,6 +33,7 @@ import {
   cShowLegend,
   cConnectNull,
   cTickNumber,
+  cRange,
   RESET_STATE_OPTIONS,
 } from "../slices/chartOptionsSlice";
 import { RESET_STATE_MAIN } from "../slices/chartMainSlice";
@@ -133,6 +134,9 @@ const Navigation = function () {
   };
   const handleInfoNullClose = function (e) {
     setInfoNullEl(null);
+  };
+  const handleRange = function (e) {
+    dispatch(cRange(e.target.checked));
   };
   const inputOptions = {
     white: "White",
@@ -362,6 +366,17 @@ const Navigation = function () {
                 />
               </Box>
             </div>
+            {chart.value === "area" ? (
+              <div className="rangeOption">
+                <p>Range</p>
+                <Switch
+                  inputProps={{ "aria-label": "controlled" }}
+                  size="small"
+                  onChange={handleRange}
+                  checked={options.range}
+                />
+              </div>
+            ) : null}
             <div className="lineTicks">
               <div className="textIcon">
                 <p>Tick count</p>
@@ -415,9 +430,6 @@ const Navigation = function () {
               </Box>
             </div>
             <div className="lineType">
-              {/* <p id="lineTypeRadio" sx={{ color: "black" }}>
-                  Line Type:
-                </p> */}
               <RadioGroup
                 onChange={handleLineType}
                 // row={true}
@@ -451,20 +463,22 @@ const Navigation = function () {
                   label="Mono"
                   labelPlacement="start"
                 />
-                <FormControlLabel
-                  value="step"
-                  control={
-                    <Radio
-                      sx={{
-                        "& .MuiSvgIcon-root": {
-                          fontSize: 22,
-                        },
-                      }}
-                    />
-                  }
-                  label="Step"
-                  labelPlacement="start"
-                />
+                {chart.value !== "area" ? (
+                  <FormControlLabel
+                    value="step"
+                    control={
+                      <Radio
+                        sx={{
+                          "& .MuiSvgIcon-root": {
+                            fontSize: 22,
+                          },
+                        }}
+                      />
+                    }
+                    label="Step"
+                    labelPlacement="start"
+                  />
+                ) : null}
                 <FormControlLabel
                   value="linear"
                   control={
@@ -481,20 +495,6 @@ const Navigation = function () {
                 />
               </RadioGroup>
             </div>
-            {/* <div className="saveChart"> */}
-            {/* <Button
-                sx={{
-                  padding: "2px 10px",
-                  fontSize: "13px",
-                  backgroundColor: "rgba(255, 255, 255, 0.3)",
-                }}
-                variant="outlined"
-                onClick={handleMoreSettings}
-                disabled
-              >
-                Settings +
-              </Button> */}
-            {/* </div> */}
             <Button
               sx={{
                 padding: "2px 10px",
@@ -509,7 +509,6 @@ const Navigation = function () {
               Exit Options
             </Button>
           </div>
-          {/* ) : null} */}
         </div>
       </div>
     </nav>

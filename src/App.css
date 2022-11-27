@@ -642,6 +642,12 @@ h4 {
   width: 100%;
   justify-content: space-between;
 }
+.chartSettings .rangeOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 25px;
+}
 .chartSettings .lineNullOption {
   display: flex;
   justify-content: space-between;
@@ -939,6 +945,20 @@ h4 {
 }
 
 @media (max-width: 800px) {
+  .chartExample {
+    flex-direction: column-reverse;
+    align-items: center;
+  }
+  .chartExample .chartExampleText {
+    width: 90%;
+  }
+  .chartExample .lineExample {
+    align-items: center;
+  }
+  .chartExample .chartExampleImage {
+    width: 90%;
+    margin-bottom: 30px;
+  }
   .chartConfig {
     flex-direction: column;
     align-items: center;

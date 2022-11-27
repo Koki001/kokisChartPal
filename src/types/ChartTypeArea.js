@@ -16,71 +16,53 @@ import { SketchPicker } from "react-color";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import Button from "@mui/material/Button";
 import TextField from "@mui/material/TextField";
 import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
 import KeyboardArrowRightIcon from "@mui/icons-material/KeyboardArrowRight";
 import ClearIcon from "@mui/icons-material/Clear";
 import IconButton from "@mui/material/IconButton";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Switch from "@mui/material/Switch";
-import FormGroup from "@mui/material/FormGroup";
-import Slider from "@mui/material/Slider";
-import { findRenderedDOMComponentWithTag } from "react-dom/test-utils";
-import Box from "@mui/material/Box";
-import Radio from "@mui/material/Radio";
-import RadioGroup from "@mui/material/RadioGroup";
+import { useDispatch, useSelector } from "react-redux";
 import { useRef } from "react";
-import { toPng, toJpeg, toBlob, toPixelData, toSvg } from "html-to-image";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import { toPng } from "html-to-image";
 import Swal from "sweetalert2";
-import Popover from "@mui/material/Popover";
-import Typography from "@mui/material/Typography";
-import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
-import { height } from "@mui/system";
+import DownloadIcon from "@mui/icons-material/Download";
+import {
+  selectedType,
+  dataPointNum,
+  addXTitle,
+  addYTitle,
+  addChartData,
+  addDataset,
+} from "../slices/chartMainSlice";
 
 const ChartTypeLine = function () {
   const [fmainData, setFmainData] = useState({
     dataPoints: [],
-    xLabel: "",
-    yLabel: "",
+    xTitle: "",
+    yTitle: "",
     data: [],
+    dataset: [],
   });
-  const [fchartData, setFChartData] = useState([]);
   const [dataCounter, setDataCounter] = useState([]);
   const [dataNumDropdown, setDataNumDropdown] = useState([]);
-  const [xAxisData, setXAxisData] = useState([]);
-  const [fchartNames, setFChartNames] = useState([]);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [colorButton, setColorButton] = useState([]);
-  const [options, setOptions] = useState({
-    lineThickness: 2,
-    lineType: "monotone",
-    showGrid: true,
-    showLabels: true,
-    rotateLabels: false,
-    showLegend: true,
-    connectNull: false,
-    tickNumber: 10,
-  });
-  const [chartImage, setChartImage] = useState("");
-  const [showing, setShowing] = useState(0);
-  const [downloadAlert, setDownloadAlert] = useState(false);
-  const [infoTickEl, setInfoTickEl] = useState(null);
-  const [infoNullEl, setInfoNullEl] = useState(null);
-  const [infoRotateEl, setInfoRotateEl] = useState(null);
   const chartRef = useRef();
-  // const { height, width } = useWindowDimensions();
-  const openInfoTick = Boolean(infoTickEl);
-  const openInfoNull = Boolean(infoNullEl);
-  const openInfoRotate = Boolean(infoRotateEl);
-  const idInfoPop = openInfoTick
-    ? "info-popup-tick"
-    : openInfoNull
-    ? "info-popup-null"
-    : openInfoRotate
-    ? "info-popup-rotate"
-    : null;
+  const [showing, setShowing] = useState(0);
+
+  const options = useSelector(function (state) {
+    return state.options;
+  });
+  const chart = useSelector(function (state) {
+    return state.chart;
+  });
+  const test = [
+    { pointName: "L1", line0: [1, 5] },
+    { pointName: "L2", line0: [2, 4] },
+  ];
+  console.log(fmainData);
   useEffect(function () {
     let pointNumArray = [];
     for (let i = 0; i < 20; i++) {
@@ -88,16 +70,16 @@ const ChartTypeLine = function () {
     }
     setDataNumDropdown(pointNumArray);
   }, []);
-
+  const dispatch = useDispatch();
   const handleDataPointNum = function (e) {
     const pointArray = [];
-    const dataArray = [...fchartData];
+    const dataArray = [...fmainData.data];
 
     for (let i = 0; i < Number(e.target.value); i++) {
       pointArray.push(i);
 
       if (!dataArray.includes(dataArray[i])) {
-        dataArray.push({ name: "" });
+        dataArray.push({ pointName: "" });
       }
     }
     for (let x = e.target.value; x < dataArray.length; x++) {
@@ -106,59 +88,57 @@ const ChartTypeLine = function () {
     setFmainData(function (current) {
       return { ...current, dataPoints: pointArray };
     });
-    setFChartData(dataArray);
+    setFmainData(function (current) {
+      return { ...current, data: [...dataArray] };
+    });
   };
   const handleXLabel = function (e) {
     setFmainData(function (current) {
-      return { ...current, xLabel: e.target.value };
+      return { ...current, xTitle: e.target.value };
     });
   };
   const handleYLabel = function (e) {
     setFmainData(function (current) {
-      return { ...current, yLabel: e.target.value };
+      return { ...current, yTitle: e.target.value };
     });
   };
-  useEffect(
-    function () {
-      let xAxisDataNames = [];
-      for (let i = 0; i < fmainData.dataPoints.length; i++) {
-        xAxisDataNames.push({ name: "" });
-      }
-      setXAxisData([...xAxisDataNames]);
-    },
-    [fmainData.dataPoints]
-  );
-
-  const handleXData = function (e) {
-    const updateXDataName = fchartData.slice();
+  const handlePointLabel = function (e) {
+    const updatePointLabel = [...fmainData.data];
 
     for (let i = 0; i < Object.entries(fmainData.dataPoints).length; i++) {
       if (`xData${i}` == e.target.id) {
-        updateXDataName[i].name = e.target.value;
+        updatePointLabel[i].pointName = e.target.value;
       }
     }
-    setFChartData(updateXDataName);
+    setFmainData(function (current) {
+      return { ...current, data: [...updatePointLabel] };
+    });
   };
   const handleDataChange = function (e) {
-    const chartCopy = [...fchartData];
+    const chartCopy = [...fmainData.data];
     chartCopy[e.target.parentElement.parentElement.parentElement.id][
       `line${e.target.id}`
     ] = Number(e.target.value);
-    setFChartData(chartCopy);
+
+    setFmainData(function (current) {
+      return { ...current, data: [...chartCopy] };
+    });
   };
   const handleDataLabel = function (e) {
-    const updateDataLabel = [...fchartNames];
+    const updateDataLabel = [...fmainData.dataset];
     for (let i = 0; i < dataCounter.length + 1; i++) {
       if (e.target.id == `line${i}`) {
         updateDataLabel[i].name = e.target.value;
       }
     }
-    setFChartNames(updateDataLabel);
+    setFmainData(function (current) {
+      return { ...current, dataset: [...updateDataLabel] };
+    });
   };
-  const handleNewLine = function (e) {
-    const nameArray = [...fchartNames];
+  const handleNewDataset = function (e) {
+    const nameArray = [...fmainData.dataset];
     nameArray.push({ name: "", color: "" });
-    let dataArray = [...fchartData];
+    let dataArray = [...fmainData.data];
     let counter = [];
     for (let i = 0; i < dataCounter.length + 1; i++) {
       counter.push(i);
@@ -166,29 +146,24 @@ const ChartTypeLine = function () {
     for (let d = 0; d < dataArray.length; d++) {
       dataArray[d] = { ...dataArray[d], [`line${dataCounter.length}`]: "" };
     }
-    setFChartNames(nameArray);
     setDataCounter([...counter]);
-    setFChartData(dataArray);
+    setFmainData(function (current) {
+      return { ...current, data: [...dataArray], dataset: [...nameArray] };
+    });
   };
-  const handleRemoveLine = function (e) {
-    //   console.log(e.target.value)
-    //   console.log(fchartNames)
-    //   const nameArray = [...fchartNames];
-    //   nameArray.splice(Number(e.target.value), 1)
-    //   setFChartNames(nameArray)
-  };
+  const handleRemoveLine = function (e) {};
   const handleNextClick = function () {
-    if (showing < fchartNames.length - 1) {
+    if (showing < fmainData.dataset.length - 1) {
       setShowing(showing + 1);
-    } else if (showing === fchartNames.length - 1) {
+    } else if (showing === fmainData.dataset.length - 1) {
       setShowing(0);
     }
   };
   const handlePrevClick = function () {
-    if (showing <= fchartNames.length && showing > 0) {
+    if (showing <= fmainData.dataset.length && showing > 0) {
       setShowing(showing - 1);
     } else if (showing === 0 || showing < 0) {
-      setShowing(fchartNames.length - 1);
+      setShowing(fmainData.dataset.length - 1);
     }
   };
   const handleChangeComplete = function (e) {
@@ -199,72 +174,13 @@ const ChartTypeLine = function () {
     setShowColorPicker(true);
   };
   const handleColorSlider = function (e, color) {
-    let colorArr = [...fchartNames];
+    let colorArr = [...fmainData.dataset];
     colorArr[colorButton].color = e.hex;
-    setFChartNames(colorArr);
-  };
-  const handleLineThickness = function (e) {
-    setOptions(function (current) {
-      return { ...current, lineThickness: e.target.value };
+    setFmainData(function (current) {
+      return { ...current, dataset: [...colorArr] };
     });
   };
 
-  const handleShowGrid = function (e) {
-    setOptions(function (current) {
-      return { ...current, showGrid: e.target.checked };
-    });
-  };
-  const handleShowLabels = function (e) {
-    setOptions(function (current) {
-      return { ...current, showLabels: e.target.checked };
-    });
-  };
-  const handleRotateLabels = function (e) {
-    setOptions(function (current) {
-      return { ...current, rotateLabels: e.target.checked };
-    });
-  };
-  const handleShowLegend = function (e) {
-    setOptions(function (current) {
-      return { ...current, showLegend: e.target.checked };
-    });
-  };
-  const handleLineType = function (e) {
-    setOptions(function (current) {
-      return { ...current, lineType: e.target.value };
-    });
-  };
-  const handleNullValues = function (e) {
-    setOptions(function (current) {
-      return { ...current, connectNull: e.target.checked };
-    });
-  };
-  const handleTickChange = function (e) {
-    setOptions(function (current) {
-      return {
-        ...current,
-        tickNumber: e.target.value > 20 ? "20" : e.target.value,
-      };
-    });
-  };
-  const handleInfoTickOpen = function (e) {
-    setInfoTickEl(e.currentTarget);
-  };
-  const handleInfoTickClose = function (e) {
-    setInfoTickEl(null);
-  };
-  const handleInfoRotateOpen = function (e) {
-    setInfoRotateEl(e.currentTarget);
-  };
-  const handleInfoRotateClose = function (e) {
-    setInfoRotateEl(null);
-  };
-  const handleInfoNullOpen = function (e) {
-    setInfoNullEl(e.currentTarget);
-  };
-  const handleInfoNullClose = function (e) {
-    setInfoNullEl(null);
-  };
   const inputOptions = {
     white: "White",
     transparent: "Transparent",
@@ -287,8 +203,6 @@ const ChartTypeLine = function () {
             toPng(chartRef.current.container, {
               cacheBust: true,
               backgroundColor: value,
-              // canvasWidth: 1920,
-              // canvasHeight: 1080,
             })
               .then((dataUrl) => {
                 const link = document.createElement("a");
@@ -304,7 +218,7 @@ const ChartTypeLine = function () {
       });
     }
   };
-  const handleMoreSettings = function () {};
+
   return (
     <>
       <div className="chartConfig">
@@ -335,7 +249,7 @@ const ChartTypeLine = function () {
               </FormControl>
             ) : null}
             <Button
-              onClick={handleNewLine}
+              onClick={handleNewDataset}
               variant="outlined"
               disabled={fmainData.dataPoints.length > 0 ? false : true}
               sx={{
@@ -343,15 +257,28 @@ const ChartTypeLine = function () {
                 fontWeight: "bold",
               }}
             >
-              {fchartNames.length <= 0 ? "New" : "Add"} data
+              {fmainData.dataset.length <= 0 ? "New" : "Add"} data
             </Button>
+            {fmainData.dataset.length > 0 && (
+              <Button
+                sx={{
+                  padding: "2px 10px",
+                  fontSize: "13px",
+                  backgroundColor: "rgba(255, 255, 255, 0.3)",
+                }}
+                variant="outlined"
+                onClick={handleSaveChart}
+              >
+                <DownloadIcon />
+              </Button>
+            )}
           </div>
           <div className="dataLabelTitle">
             {showColorPicker === true ? (
               <div className="colorPicker">
                 <SketchPicker
                   triangle="hide"
-                  color={fchartNames[colorButton].color}
+                  color={fmainData.dataset[colorButton].color}
                   onChange={handleColorSlider}
                   width="auto"
                 />
@@ -364,16 +291,16 @@ const ChartTypeLine = function () {
                 </Button>
               </div>
             ) : null}
-            {fchartNames.length > 0 && (
+            {fmainData.dataset.length > 0 && (
               <div className="containedDataName">
                 {dataCounter.map(function (line, index) {
                   return (
                     <div key={`yeah${index}`} className="newLine">
                       <button
                         style={
-                          fchartNames[index].color
+                          fmainData.dataset[index].color
                             ? {
-                                backgroundColor: `${fchartNames[index].color}`,
+                                backgroundColor: `${fmainData.dataset[index].color}`,
                               }
                             : {
                                 background:
@@ -420,22 +347,22 @@ const ChartTypeLine = function () {
               <TextField
                 onChange={handleXLabel}
                 name={"xAxisLabel"}
-                value={fmainData.xLabel}
+                value={fmainData.xTitle}
                 id="standard-basic"
                 label="X-Axis Label"
                 variant="outlined"
-                sx={{ width: "45%" }}
                 size="small"
+                sx={{ width: "45%" }}
               />
               <TextField
                 onChange={handleYLabel}
+                size="small"
                 name={"yAxisLabel"}
-                value={fmainData.yLabel}
+                value={fmainData.yTitle}
                 id="standard-basic"
                 label="Y-Axis Label"
                 variant="outlined"
                 sx={{ width: "45%" }}
-                size="small"
               />
             </div>
             <div className="labelArrowContainer">
@@ -454,9 +381,9 @@ const ChartTypeLine = function () {
                 ></Button>
               )}
               <h4>
-                {fchartNames[showing].name
-                  ? fchartNames[showing].name
-                  : `No Name`}
+                {fmainData.dataset[showing].name
+                  ? fmainData.dataset[showing].name
+                  : `Dataset ${showing + 1} Title`}
               </h4>
               {dataCounter.length > 1 && (
                 <Button
@@ -476,7 +403,7 @@ const ChartTypeLine = function () {
             <div
               className="containedDivBorder"
               style={{
-                border: `1px solid ${fchartNames[showing].color}`,
+                border: `1px solid ${fmainData.dataset[showing].color}`,
                 borderRadius: "5px",
               }}
             >
@@ -499,9 +426,9 @@ const ChartTypeLine = function () {
                             },
                           }}
                           id={`xData${index.toString()}`}
-                          onChange={handleXData}
+                          onChange={handlePointLabel}
                           placeholder={`Point ${index + 1} Label`}
-                          value={fchartData[index].name}
+                          value={fmainData.data[index].pointName}
                           variant="filled"
                         />
                       </div>
@@ -528,6 +455,7 @@ const ChartTypeLine = function () {
                               >
                                 <TextField
                                   type={"number"}
+                                  inputProps={{ type: "number" }}
                                   onWheel={(e) => e.target.blur()}
                                   sx={{
                                     "& .MuiInputBase-input": {
@@ -538,8 +466,11 @@ const ChartTypeLine = function () {
                                   }}
                                   id={lineIndex.toString()}
                                   onChange={handleDataChange}
-                                  placeholder={`Data Point ${index + 1} Value`}
-                                  value={fchartData[index][`line${lineIndex}`]}
+                                  placeholder={`Point ${index + 1} Value`}
+                                  value={
+                                    fmainData.data[index][`line${lineIndex}`] &&
+                                    fmainData.data[index][`line${lineIndex}`]
+                                  }
                                   variant="standard"
                                 />
                               </div>
@@ -554,348 +485,110 @@ const ChartTypeLine = function () {
             </div>
           </div>
         ) : null}
-        {dataCounter.length !== 0 && fmainData.dataPoints.length > 0 ? (
-          <div className="chartSettings">
-            <div className="gridOption">
-              <p>Show grid</p>
-              <Switch size="small" defaultChecked onChange={handleShowGrid} />
-            </div>
-            <div className="labelsOption">
-              <p>Show labels</p>
-              <Switch size="small" onChange={handleShowLabels} defaultChecked />
-            </div>
-            <div className="rotateOption">
-              <div className="infoPopIconAbsolute">
-                <PriorityHighIcon
-                  color="warning"
-                  aria-describedby={idInfoPop}
-                  fontSize={"small"}
-                  onClick={handleInfoRotateOpen}
-                />
-                <Popover
-                  id={idInfoPop}
-                  open={openInfoRotate}
-                  anchorEl={infoRotateEl}
-                  onClose={handleInfoRotateClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      backgroundColor: "#357fca",
-                      color: "white",
-                      padding: "5px 10px 5px 10px",
-                      fontSize: "15px",
-                      width: "230px",
-                    }}
-                  >
-                    Rotates labels along the X-Axis at an angle. This also
-                    causes each space separated word to go in the next line. If
-                    the labels are written before this option is selected, you
-                    must interact with the label input for the word line break
-                    to take effect (Like adding an empty space in the desired
-                    input).
-                  </Typography>
-                </Popover>
-              </div>
-              <p>Rotate labels</p>
-              <Switch size="small" onChange={handleRotateLabels} />
-            </div>
-            <div className="legendOption">
-              <p>Show legend</p>
-              <Switch size="small" onChange={handleShowLegend} defaultChecked />
-            </div>
-            {/* <div className="lineNullOption">
-              <div className="infoPopIconAbsolute">
-                <PriorityHighIcon
-                  color="warning"
-                  aria-describedby={idInfoPop}
-                  fontSize={"small"}
-                  onClick={handleInfoNullOpen}
-                />
-                <Popover
-                  id={idInfoPop}
-                  open={openInfoNull}
-                  anchorEl={infoNullEl}
-                  onClose={handleInfoNullClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      backgroundColor: "#357fca",
-                      color: "white",
-                      padding: "5px 10px 5px 10px",
-                      fontSize: "15px",
-                      width: "230px",
-                    }}
-                  >
-                    Connects points even if certain data points are missing.
-                    Example: If your 3rd and 4th X-Axis points have no data, but
-                    your 2nd and 5th do, it will connect the 2nd and 5th points.
-                  </Typography>
-                </Popover>
-              </div>
-              <p>Connect nulls</p>
-              <Switch size="small" onChange={handleNullValues} />
-            </div> */}
-            <div className="lineOption">
-              <p>Line thickness</p>
-              <Box sx={{ width: 50 }}>
-                <Slider
-                  aria-label="Line thickness"
-                  defaultValue={2}
-                  step={1}
-                  marks
-                  min={1}
-                  max={3}
-                  onChange={handleLineThickness}
-                  size="small"
-                />
-              </Box>
-            </div>
-            <div className="lineTicks">
-              <div className="infoPopIconAbsolute">
-                <PriorityHighIcon
-                  color="warning"
-                  aria-describedby={idInfoPop}
-                  fontSize={"small"}
-                  onClick={handleInfoTickOpen}
-                />
-                <Popover
-                  id={idInfoPop}
-                  open={openInfoTick}
-                  anchorEl={infoTickEl}
-                  onClose={handleInfoTickClose}
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "left",
-                  }}
-                >
-                  <Typography
-                    sx={{
-                      backgroundColor: "#357fca",
-                      color: "white",
-                      padding: "5px 10px 5px 10px",
-                      fontSize: "15px",
-                      width: "230px",
-                    }}
-                  >
-                    Sets the number of intervals on the Y-Axis. Current maximum
-                    value is 20.
-                  </Typography>
-                </Popover>
-              </div>
-              <p>Tick count</p>
-              <Box component="form" noValidate autoComplete="off">
-                <TextField
-                  onChange={handleTickChange}
-                  placeholder={"10"}
-                  id="filled-basic"
-                  variant="filled"
-                  type={"number"}
-                  InputProps={{
-                    inputProps: {
-                      max: 20,
-                      min: 1,
-                    },
-                  }}
-                  value={options.tickNumber > 20 ? "20" : options.tickNumber}
-                />
-              </Box>
-            </div>
-            <div className="lineType">
-              {/* <p id="lineTypeRadio" sx={{ color: "black" }}>
-                Line Type:
-              </p> */}
-              <RadioGroup
-                onChange={handleLineType}
-                // row={true}
-                aria-labelledby="lineTypeRadio"
-                defaultValue="monotone"
-                name="radio-buttons-group"
-                row
-                sx={{
-                  "& .MuiTypography-root": {
-                    fontSize: 14,
-                  },
-                  "& .MuiFormControlLabel-root": {
-                    marginTop: 0,
-                  },
-                  "& .MuiButtonBase-root": {
-                    padding: "1px",
-                  },
-                }}
-              >
-                <FormControlLabel
-                  value="monotone"
-                  control={
-                    <Radio
-                      sx={{
-                        "& .MuiSvgIcon-root": {
-                          fontSize: 22,
-                        },
-                      }}
-                    />
-                  }
-                  label="Mono"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  value="step"
-                  control={
-                    <Radio
-                      sx={{
-                        "& .MuiSvgIcon-root": {
-                          fontSize: 22,
-                        },
-                      }}
-                    />
-                  }
-                  label="Step"
-                  labelPlacement="start"
-                />
-                <FormControlLabel
-                  value="linear"
-                  control={
-                    <Radio
-                      sx={{
-                        "& .MuiSvgIcon-root": {
-                          fontSize: 22,
-                        },
-                      }}
-                    />
-                  }
-                  label="Linear"
-                  labelPlacement="start"
-                />
-              </RadioGroup>
-            </div>
-            <div className="saveChart">
-              <Button
-                sx={{
-                  padding: "2px 10px",
-                  fontSize: "13px",
-                  backgroundColor: "rgba(255, 255, 255, 0.3)",
-                }}
-                variant="outlined"
-                onClick={handleMoreSettings}
-                disabled
-              >
-                Settings +
-              </Button>
-              <Button
-                sx={{
-                  padding: "2px 10px",
-                  fontSize: "13px",
-                  backgroundColor: "rgba(255, 255, 255, 0.3)",
-                }}
-                variant="outlined"
-                onClick={handleSaveChart}
-              >
-                Download chart
-              </Button>
-            </div>
-          </div>
-        ) : null}
       </div>
-      <ResponsiveContainer
-        width={"100%"}
-        height={600}
-        className="chartMainContainer"
-      >
-        <AreaChart
-          ref={chartRef}
-          data={fchartData}
-          margin={{
-            top: 10,
-            right: 50,
-            left: options.showLabels === true ? 20 : 0,
-            bottom: 50,
-          }}
+      <div className="responsiveWrapper">
+        <ResponsiveContainer
+          width={"100%"}
+          height={600}
+          className="chartMainContainer"
         >
-          {options.showGrid === true && <CartesianGrid strokeDasharray="3 3" />}
-          <XAxis
-            interval={0}
-            angle={options.rotateLabels === true ? -45 : 0}
-            dataKey="name"
-            label={
-              options.showLabels === true && {
-                value: fmainData.xLabel,
-                position: "bottom",
-                className: "xAxisLabel",
-                offset: options.rotateLabels === true ? 30 : 15,
-              }
-            }
-            tick={{
-              dy: options.rotateLabels === true ? 20 : 5,
-              fontSize: "14px",
-              width: options.rotateLabels === true ? "50px" : null,
-              wordWrap: options.rotateLabels === true ? "break-word" : "normal",
-              fill: options.showLabels === true ? "black" : "transparent",
+          <AreaChart
+            ref={chartRef}
+            data={fmainData.data}
+            margin={{
+              top: 10,
+              right: 50,
+              left: options.showLabels === true ? 20 : 0,
+              bottom: 50,
             }}
-          />
-          <YAxis
-            // domain={[0, `dataMax`]}
-            domain={[0, "auto"]}
-            label={
-              options.showLabels === true && {
-                value: fmainData.yLabel,
-                angle: -90,
-                position: "insideLeft",
-                className: "yAxisLabel",
-                offset: -5,
+          >
+            {options.showGrid === true && (
+              <CartesianGrid strokeDasharray="3 3" />
+            )}
+            <XAxis
+              domain={"     "}
+              interval={0}
+              angle={options.rotateLabels === true ? -45 : 0}
+              dataKey={
+                fmainData.data[0] && fmainData.data[0].pointName !== ""
+                  ? "pointName"
+                  : "      "
               }
-            }
-            tick={{
-              dx: -5,
-              fontSize: "14px",
-              fill: options.showLabels === true ? "black" : "transparent",
-            }}
-            tickCount={options.tickNumber}
-          />
-          <Tooltip />
-          {options.showLegend === true && (
-            <Legend
-              verticalAlign="top"
-              align="center"
-              height={36}
-              iconSize="14"
-              iconType={"circle"}
+              label={
+                options.showLabels === true && {
+                  value: fmainData.xTitle,
+                  position: "bottom",
+                  className: "xAxisLabel",
+                  offset: options.rotateLabels === true ? 30 : 15,
+                }
+              }
+              tick={{
+                dy: options.rotateLabels === true ? 20 : 5,
+                fontSize: "14px",
+                width: options.rotateLabels === true ? "50px" : null,
+                wordWrap:
+                  options.rotateLabels === true ? "break-word" : "normal",
+                fill: options.showLabels === true ? "black" : "transparent",
+              }}
             />
-          )}
-          {dataCounter.map(function (e, index) {
-            return (
-              <Area
-                key={`line${index}`}
-                strokeWidth={options.lineThickness}
-                type={options.lineType}
-                name={
-                  fchartNames[index].name
-                    ? fchartNames[index].name
-                    : `Data ${index + 1}`
+            <YAxis
+              // domain={[0, `dataMax`]}
+              domain={[0, "auto"]}
+              label={
+                options.showLabels === true && {
+                  value: fmainData.yTitle,
+                  angle: -90,
+                  position: "insideLeft",
+                  className: "yAxisLabel",
+                  offset: -5,
                 }
-                dataKey={`line${index}`}
-                fill={
-                  fchartNames[index].color
-                    ? fchartNames[index].color
-                    : "#000000"
-                }
-                connectNulls={options.connectNull}
-                stroke={
-                  fchartNames[index].color
-                    ? fchartNames[index].color
-                    : "#000000"
-                }
+              }
+              tick={{
+                dx: -5,
+                fontSize: "14px",
+                fill: options.showLabels === true ? "black" : "transparent",
+              }}
+              tickCount={options.tickNumber}
+            />
+            <Tooltip />
+            {options.showLegend === true && (
+              <Legend
+                verticalAlign="top"
+                align="center"
+                height={36}
+                iconSize="14"
+                iconType={"circle"}
               />
-            );
-          })}
-        </AreaChart>
-      </ResponsiveContainer>
+            )}
+            {dataCounter.map(function (e, index) {
+              return (
+                <Area
+                  key={`line${index}`}
+                  strokeWidth={options.lineThickness}
+                  type={options.lineType}
+                  name={
+                    fmainData.dataset[index].name
+                      ? fmainData.dataset[index].name
+                      : `Data ${index + 1}`
+                  }
+                  dataKey={`line${index}`}
+                  fill={
+                    fmainData.dataset[index].color
+                      ? fmainData.dataset[index].color
+                      : "#000000"
+                  }
+                  stroke={
+                    fmainData.dataset[index].color
+                      ? fmainData.dataset[index].color
+                      : "#000000"
+                  }
+                  connectNulls={options.connectNull}
+                />
+              );
+            })}
+          </AreaChart>
+        </ResponsiveContainer>
+      </div>
     </>
   );
 };

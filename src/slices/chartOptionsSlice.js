@@ -24,6 +24,7 @@ export const chartOptionsSlice = createSlice({
     showLegend: true,
     connectNull: false,
     tickNumber: 10,
+    range: false,
   },
   reducers: {
     cChartRef: (state, action) => {
@@ -53,6 +54,9 @@ export const chartOptionsSlice = createSlice({
     cTickNumber: (state, action) => {
       state.tickNumber = action.payload;
     },
+    cRange: (state, action) => {
+      state.range = action.payload;
+    },
     RESET_STATE_OPTIONS: () => initialState,
   },
 });
@@ -68,6 +72,7 @@ export const {
   cConnectNull,
   cTickNumber,
   cChartRef,
+  cRange,
   RESET_STATE_OPTIONS,
 } = chartOptionsSlice.actions;
 

@@ -98,6 +98,12 @@
       justify-content: space-between;
     }
   }
+  .rangeOption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 25px;
+  }
   .lineNullOption {
     display: flex;
     justify-content: space-between;
