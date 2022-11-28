@@ -20,20 +20,20 @@
   .chartConfig {
     position: relative;
   }
-  .chartConfig::after {
-    content: "";
-    background-image: url(../public/assets/background/chartBackground.png);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    opacity: 0.08;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    position: absolute;
-    pointer-events: none;
-  }
+  // .chartConfig::after {
+  //   content: "";
+  //   background-image: url(../public/assets/background/chartBackground.png);
+  //   background-size: cover;
+  //   background-repeat: no-repeat;
+  //   background-position: center;
+  //   opacity: 0.08;
+  //   top: 0;
+  //   left: 0;
+  //   bottom: 0;
+  //   right: 0;
+  //   position: absolute;
+  //   pointer-events: none;
+  // }
 }
 .chartMainContainer {
   margin-top: 10px;

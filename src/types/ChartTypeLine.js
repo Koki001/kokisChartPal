@@ -573,7 +573,7 @@ const ChartTypeLine = function () {
                       ? fmainData.dataset[index].color
                       : "#000000"
                   }
-                  connectNulls={options.connectNull}
+                  // connectNulls={options.connectNull}
                 />
               );
             })}

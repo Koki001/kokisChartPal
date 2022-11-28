@@ -69,6 +69,7 @@ const ChartTypeLine = function () {
   const [fchartNames, setFChartNames] = useState([]);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [colorButton, setColorButton] = useState([]);
+  const [tickMax, setTickMax] = useState("")
   // const [options, setOptions] = useState({
   //   lineThickness: 2,
   //   barType: "simple",
@@ -221,77 +222,8 @@ const ChartTypeLine = function () {
     colorArr[colorButton].color = e.hex;
     setFChartNames(colorArr);
   };
-  // console.log(fchartNames.length)
+
   console.log(options.barThickness);
-  // const handleLineThickness = function (e) {
-  //   setOptions(function (current) {
-  //     return { ...current, lineThickness: e.target.value };
-  //   });
-  // };
-
-  // const handleShowGrid = function (e) {
-  //   setOptions(function (current) {
-  //     return { ...current, showGrid: e.target.checked };
-  //   });
-  // };
-  // const handleShowLabels = function (e) {
-  //   setOptions(function (current) {
-  //     return { ...current, showLabels: e.target.checked };
-  //   });
-  // };
-
-  // const handleShowBarVal = function (e) {
-  //   setOptions(function (current) {
-  //     return { ...current, showBarVal: e.target.checked };
-  //   });
-  // };
-  // const handleRotateLabels = function (e) {
-  //   setOptions(function (current) {
-  //     return { ...current, rotateLabels: e.target.checked };
-  //   });
-  // };
-  // const handleShowLegend = function (e) {
-  //   setOptions(function (current) {
-  //     return { ...current, showLegend: e.target.checked };
-  //   });
-  // };
-  // const handleLineType = function (e) {
-  //   setOptions(function (current) {
-  //     return { ...current, barType: e.target.value };
-  //   });
-  // };
-  // const handleNullValues = function (e) {
-  //   setOptions(function (current) {
-  //     return { ...current, connectNull: e.target.checked };
-  //   });
-  // };
-  // const handleTickChange = function (e) {
-  //   setOptions(function (current) {
-  //     return {
-  //       ...current,
-  //       tickNumber: e.target.value > 20 ? "20" : e.target.value,
-  //     };
-  //   });
-  // };
-  // const handleInfoTickOpen = function (e) {
-  //   setInfoTickEl(e.currentTarget);
-  // };
-  // const handleInfoTickClose = function (e) {
-  //   setInfoTickEl(null);
-  // };
-  // const handleInfoRotateOpen = function (e) {
-  //   setInfoRotateEl(e.currentTarget);
-  // };
-  // const handleInfoRotateClose = function (e) {
-  //   setInfoRotateEl(null);
-  // };
-  // const handleInfoNullOpen = function (e) {
-  //   setInfoNullEl(e.currentTarget);
-  // };
-  // const handleInfoNullClose = function (e) {
-  //   setInfoNullEl(null);
-  // };
-  // console.log(options.lineType);
   const inputOptions = {
     white: "White",
     transparent: "Transparent",
@@ -332,6 +264,9 @@ const ChartTypeLine = function () {
     }
   };
   const handleMoreSettings = function () {};
+  const handleTickAbsolute = function (e){
+    setTickMax(e.target.value)
+  }
   return (
     <>
       <div className="chartConfig">
@@ -590,11 +525,25 @@ const ChartTypeLine = function () {
         ) : null}
       </div>
       <div className="responsiveWrapper">
+        <div className="absoluteTickChange">
+          <TextField
+            onChange={handleTickAbsolute}
+            name={"tickTooltip"}
+            value={tickMax}
+            // id="standard-basic"
+            placeholder={"Tick max"}
+            variant="outlined"
+            sx={{ width: "45%" }}
+            size="small"
+          />
+        </div>
         <ResponsiveContainer
           width={"100%"}
           height={
             options.lineType === "vertical"
-              ? 125 + ((55 + options.barThickness * (fchartNames.length)) * chartCalc + 20)
+              ? 125 +
+                ((55 + options.barThickness * fchartNames.length) * chartCalc +
+                  20)
               : options.lineType !== "vertical" && 500
           }
           className="chartMainContainer"
@@ -642,7 +591,12 @@ const ChartTypeLine = function () {
                 <XAxis
                   type="number"
                   // domain={[0, `dataMax`]}
-                  domain={[0, "auto"]}
+                  domain={[
+                    0,
+                    tickMax === "" && chart.value === "vertical"
+                      ? "auto"
+                      : Number(tickMax),
+                  ]}
                   angle={options.rotateLabels === true ? -45 : 0}
                   label={
                     options.showLabels === true && {
@@ -686,7 +640,12 @@ const ChartTypeLine = function () {
                 />
                 <YAxis
                   // domain={[0, `dataMax`]}
-                  domain={[0, 10]}
+                  domain={[
+                    0,
+                    tickMax === "" && chart.value === "horizontal"
+                      ? "auto"
+                      : Number(tickMax),
+                  ]}
                   type={"number"}
                   label={
                     options.showLabels === true && {

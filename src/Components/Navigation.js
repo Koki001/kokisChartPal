@@ -118,9 +118,9 @@ const Navigation = function () {
   const handleType = function (e) {
     dispatch(cLineType(e.target.value));
   };
-  const handleNullValues = function (e) {
-    dispatch(cConnectNull(e.target.value));
-  };
+  // const handleNullValues = function (e) {
+  //   dispatch(cConnectNull(e.target.value));
+  // };
   const handleTickChange = function (e) {
     dispatch(cTickNumber(e.target.value));
   };
@@ -324,7 +324,7 @@ const Navigation = function () {
                 checked={options.showLegend}
               />
             </div>
-            {chart.value !== "bar" && (
+            {/* {chart.value !== "bar" && (
               <div className="lineNullOption">
                 <div className="textIcon">
                   <p>Connect nulls</p>
@@ -369,7 +369,7 @@ const Navigation = function () {
                   checked={options.connectNull}
                 />
               </div>
-            )}
+            )} */}
             {chart.value !== "bar" ? (
               <div className="lineOption">
                 <p>Line thickness</p>

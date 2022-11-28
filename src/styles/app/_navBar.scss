@@ -144,6 +144,22 @@
     display: flex;
   }
 }
+.responsiveWrapper {
+  position: relative;
+}
+.absoluteTickChange {
+  position: absolute;
+  left: 5px;
+  width: 80px;
+  z-index: 100;
+  div {
+    width: 100%;
+    input {
+      padding: 5px 0;
+      text-align: center;
+    }
+  }
+}
 .chartOptionsMain {
   position: absolute;
   visibility: hidden;

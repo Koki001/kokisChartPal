@@ -287,20 +287,6 @@ h5 {
 .chartContainer .chartConfig {
   position: relative;
 }
-.chartContainer .chartConfig::after {
-  content: "";
-  background-image: url(../public/assets/background/chartBackground.png);
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  opacity: 0.08;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  position: absolute;
-  pointer-events: none;
-}
 
 .chartMainContainer {
   margin-top: 10px;
@@ -944,6 +930,24 @@ h4.noName {
 }
 .chartSettings .textIcon {
   display: flex;
+}
+
+.responsiveWrapper {
+  position: relative;
+}
+
+.absoluteTickChange {
+  position: absolute;
+  left: 5px;
+  width: 80px;
+  z-index: 100;
+}
+.absoluteTickChange div {
+  width: 100%;
+}
+.absoluteTickChange div input {
+  padding: 5px 0;
+  text-align: center;
 }
 
 .chartOptionsMain {
