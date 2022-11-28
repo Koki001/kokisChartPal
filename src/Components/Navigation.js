@@ -259,14 +259,16 @@ const Navigation = function () {
                 checked={options.showLabels}
               />
             </div>
-            <div className="valueOption">
-              <p>Show value</p>
-              <Switch
-                size="small"
-                onChange={handleShowBarVal}
-                checked={options.showBarVal}
-              />
-            </div>
+            {chart.value === "bar" && (
+              <div className="valueOption">
+                <p>Show value</p>
+                <Switch
+                  size="small"
+                  onChange={handleShowBarVal}
+                  checked={options.showBarVal}
+                />
+              </div>
+            )}
             <div className="rotateOption">
               <div className="textIcon">
                 <p>Rotate labels</p>
@@ -375,10 +377,10 @@ const Navigation = function () {
                   <Slider
                     aria-label="Line thickness"
                     value={options.lineThickness}
-                    step={1}
+                    step={10}
                     marks
-                    min={1}
-                    max={3}
+                    min={5}
+                    max={25}
                     onChange={handleLineThickness}
                     size="small"
                   />
@@ -391,10 +393,10 @@ const Navigation = function () {
                   <Slider
                     aria-label="Bar thickness"
                     value={options.barThickness}
-                    step={10}
                     marks
-                    min={5}
-                    max={55}
+                    step={31}
+                    min={2}
+                    max={60}
                     onChange={handleBarThickness}
                     size="small"
                   />

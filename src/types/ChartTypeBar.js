@@ -124,7 +124,7 @@ const ChartTypeLine = function () {
       return { ...current, dataPoints: pointArray };
     });
     setFChartData(dataArray);
-    setChartCalc(pointArray.length)
+    setChartCalc(pointArray.length);
   };
   const handleXLabel = function (e) {
     setFmainData(function (current) {
@@ -221,7 +221,8 @@ const ChartTypeLine = function () {
     colorArr[colorButton].color = e.hex;
     setFChartNames(colorArr);
   };
-
+  // console.log(fchartNames.length)
+  console.log(options.barThickness);
   // const handleLineThickness = function (e) {
   //   setOptions(function (current) {
   //     return { ...current, lineThickness: e.target.value };
@@ -290,7 +291,7 @@ const ChartTypeLine = function () {
   // const handleInfoNullClose = function (e) {
   //   setInfoNullEl(null);
   // };
-  console.log(options.lineType)
+  // console.log(options.lineType);
   const inputOptions = {
     white: "White",
     transparent: "Transparent",
@@ -593,7 +594,7 @@ const ChartTypeLine = function () {
           width={"100%"}
           height={
             options.lineType === "vertical"
-              ? (250 + chartCalc * 10 ) + (options.barThickness * 2.75 ) * ((chartCalc + 10) * 1.5)
+              ? 125 + ((55 + options.barThickness * (fchartNames.length)) * chartCalc + 20)
               : options.lineType !== "vertical" && 500
           }
           className="chartMainContainer"
@@ -617,7 +618,7 @@ const ChartTypeLine = function () {
               <>
                 <YAxis
                   type="category"
-                  reversed
+                  // reversed
                   interval={0}
                   dataKey="name"
                   label={
@@ -718,6 +719,16 @@ const ChartTypeLine = function () {
             {dataCounter.map(function (e, index) {
               return (
                 <Bar
+                  radius={[
+                    options.lineType === "monotone" ? 8 : 0,
+                    options.lineType === "monotone"
+                      ? 8
+                      : options.lineType === "vertical"
+                      ? 8
+                      : 0,
+                    options.lineType === "vertical" ? 8 : 0,
+                    0,
+                  ]}
                   label={
                     options.showBarVal === true &&
                     options.lineType !== "vertical"

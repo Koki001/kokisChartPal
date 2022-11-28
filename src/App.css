@@ -543,7 +543,7 @@ h4.noName {
 }
 @keyframes nameFlash {
   0% {
-    opacity: 0.5;
+    opacity: 0.3;
   }
   100% {
     opacity: 1;
