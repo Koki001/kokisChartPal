@@ -18,6 +18,15 @@ export const chartMainSlice = createSlice({
     data: [],
     dataset: {},
   },
+  // name: "chart",
+  // initialState: {
+  //   value: "default",
+  //   type: {
+  //     line: { dataPoints: [], xTitle: "", yTitle: "", data: [], dataset: {} },
+  //     area: { dataPoints: [], xTitle: "", yTitle: "", data: [], dataset: {} },
+  //     bar: { dataPoints: [], xTitle: "", yTitle: "", data: [], dataset: {} },
+  //   },
+  // },
   reducers: {
     selectedType: (state, action) => {
       state.value = action.payload;

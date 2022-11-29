@@ -52,6 +52,7 @@ const ChartTypeLine = function () {
     data: [],
     dataset: [],
   });
+  const [tickMax, setTickMax] = useState("");
   const [dataCounter, setDataCounter] = useState([]);
   const [dataNumDropdown, setDataNumDropdown] = useState([]);
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -59,6 +60,7 @@ const ChartTypeLine = function () {
   const chartRef = useRef();
   const [showing, setShowing] = useState(0);
   const [rangeShow, setRangeShow] = useState(false);
+  const [iconClicks, setIconClicks] = useState(0);
 
   // switiching for ranged type
   useEffect(
@@ -197,11 +199,12 @@ const ChartTypeLine = function () {
   // adding a new dataset with selected data point number
   const handleNewDataset = function (e) {
     const nameArray = [...fmainData.dataset];
-    nameArray.push({ name: "", color: "" });
+    nameArray.push({ name: "", color: "", id: "" });
     let dataArray = [...fmainData.data];
     let counter = [];
     for (let i = 0; i < dataCounter.length + 1; i++) {
       counter.push(i);
+      nameArray[i] = { ...nameArray[i], id: `line${i}id` };
     }
     for (let d = 0; d < dataArray.length; d++) {
       dataArray[d] = {
@@ -290,7 +293,28 @@ const ChartTypeLine = function () {
       });
     }
   };
+  const handleTickAbsolute = function (e) {
+    setTickMax(e.target.value);
+  };
+  const handleLegendClick = function (e) {
+    const typeArray = [...fmainData.dataset];
 
+    let iconArray = ["line", "diamond", "star", "wye", "circle"];
+    for (let i = 0; i < fmainData.dataset.length; i++) {
+      if (e.id === fmainData.dataset[i].id) {
+        console.log(iconClicks);
+        if (iconClicks === 4) {
+          setIconClicks(0);
+        } else {
+          setIconClicks(iconClicks + 1);
+        }
+        typeArray[i].type = iconArray[iconClicks];
+      }
+    }
+    setFmainData(function (current) {
+      return { ...current, dataset: [...typeArray] };
+    });
+  };
   return (
     <>
       <div className="chartConfig">
@@ -346,6 +370,14 @@ const ChartTypeLine = function () {
             )}
           </div>
           <div className="dataLabelTitle">
+            {showColorPicker === true && (
+              <div
+                onClick={() => {
+                  setShowColorPicker(false);
+                }}
+                className="colorPickerExit"
+              ></div>
+            )}
             {showColorPicker === true ? (
               <div className="colorPicker">
                 <SketchPicker
@@ -451,10 +483,16 @@ const ChartTypeLine = function () {
                   }}
                 ></Button>
               )}
-              <h4>
+              <h4
+                className={
+                  fmainData.dataset[showing].name === ""
+                    ? "noName"
+                    : "nameFilled"
+                }
+              >
                 {fmainData.dataset[showing].name
                   ? fmainData.dataset[showing].name
-                  : `Dataset ${showing + 1} Title`}
+                  : `No Name`}
               </h4>
               {dataCounter.length > 1 && (
                 <Button
@@ -625,6 +663,18 @@ const ChartTypeLine = function () {
         ) : null}
       </div>
       <div className="responsiveWrapper">
+        <div className="absoluteTickChange">
+          <TextField
+            onChange={handleTickAbsolute}
+            name={"tickTooltip"}
+            value={tickMax}
+            // id="standard-basic"
+            placeholder={"Tick max"}
+            variant="outlined"
+            sx={{ width: "45%" }}
+            size="small"
+          />
+        </div>
         <ResponsiveContainer
           width={"100%"}
           height={600}
@@ -671,7 +721,7 @@ const ChartTypeLine = function () {
             />
             <YAxis
               // domain={[0, `dataMax`]}
-              domain={[0, "auto"]}
+              domain={[0, tickMax === "" ? "auto" : Number(tickMax)]}
               label={
                 options.showLabels === true && {
                   value: fmainData.yTitle,
@@ -691,11 +741,20 @@ const ChartTypeLine = function () {
             <Tooltip />
             {options.showLegend === true && (
               <Legend
+                onClick={handleLegendClick}
                 verticalAlign="top"
                 align="center"
                 height={36}
                 iconSize="14"
-                iconType={"circle"}
+                iconType={""}
+                payload={fmainData.dataset?.map(function (each, index) {
+                  return {
+                    id: each.id,
+                    value: each.name ? each.name : `set ${index}`,
+                    color: each.color !== "" ? each.color : "black",
+                    type: each.type,
+                  };
+                })}
               />
             )}
             {dataCounter.map(function (e, index) {

@@ -476,6 +476,16 @@ h4.noName {
   height: 300px;
 }
 
+.recharts-wrapper .recharts-legend-item {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.1s linear;
+}
+
+.recharts-wrapper .recharts-legend-item svg:active {
+  transform: scale(1.3);
+}
+
 .responsiveWrapper {
   width: 100%;
   overflow-x: scroll;
@@ -550,6 +560,16 @@ h4.noName {
 }
 .colorPicker .sketch-picker {
   width: auto;
+}
+
+.colorPickerExit {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: transparent;
+  z-index: 50;
 }
 
 .labelArrowContainer {
@@ -712,11 +732,11 @@ h4.noName {
 }
 
 .trueTextAnimation {
-  animation: leftSlide 0.7s ease-out 1;
+  animation: leftSlide 0.25s linear 1;
 }
 
 .trueImageAnimation {
-  animation: rightSlide 0.7s ease-out 1;
+  animation: rightSlide 0.25s linear 1;
 }
 
 @keyframes leftSlide {
@@ -847,6 +867,18 @@ h4.noName {
   align-items: center;
   height: 25px;
 }
+.chartSettings .xAxisOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 25px;
+}
+.chartSettings .yAxisOption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 25px;
+}
 .chartSettings .valueOption {
   display: flex;
   justify-content: space-between;
@@ -865,6 +897,7 @@ h4.noName {
   justify-content: space-between;
   align-items: center;
   height: 25px;
+  position: relative;
 }
 .chartSettings .lineOption {
   display: flex;
@@ -930,6 +963,16 @@ h4.noName {
 }
 .chartSettings .textIcon {
   display: flex;
+}
+.chartSettings .iconPickAbsolute {
+  position: absolute;
+  display: block;
+  border: 1px solid black;
+  top: 0;
+  right: 40px;
+}
+.chartSettings .iconPickHide {
+  display: none;
 }
 
 .responsiveWrapper {

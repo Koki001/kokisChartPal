@@ -57,6 +57,18 @@
     align-items: center;
     height: 25px;
   }
+  .xAxisOption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 25px;
+  }
+  .yAxisOption {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 25px;
+  }
   .valueOption {
     display: flex;
     justify-content: space-between;
@@ -75,6 +87,7 @@
     justify-content: space-between;
     align-items: center;
     height: 25px;
+    position: relative;
   }
   .lineOption {
     display: flex;
@@ -142,6 +155,16 @@
   }
   .textIcon {
     display: flex;
+  }
+  .iconPickAbsolute {
+    position: absolute;
+    display: block;
+    border: 1px solid black;
+    top: 0;
+    right: 40px;
+  }
+  .iconPickHide {
+    display: none;
   }
 }
 .responsiveWrapper {

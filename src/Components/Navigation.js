@@ -24,6 +24,7 @@ import TextField from "@mui/material/TextField";
 import { height } from "@mui/system";
 import SettingsIcon from "@mui/icons-material/Settings";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import IconButton from "@mui/material/IconButton";
 import {
   cLineThickness,
   cBarThickness,
@@ -33,6 +34,8 @@ import {
   cShowBarVal,
   cRotateLabels,
   cShowLegend,
+  cShowXAxis,
+  cShowYAxis,
   cConnectNull,
   cTickNumber,
   cRange,
@@ -40,6 +43,7 @@ import {
 } from "../slices/chartOptionsSlice";
 import { RESET_STATE_MAIN } from "../slices/chartMainSlice";
 import { useNavigate } from "react-router-dom";
+import BuildIcon from "@mui/icons-material/Build";
 
 const Navigation = function () {
   const dispatch = useDispatch();
@@ -57,6 +61,7 @@ const Navigation = function () {
   const [infoNullEl, setInfoNullEl] = useState(null);
   const [infoRotateEl, setInfoRotateEl] = useState(null);
   const [chartSettingsShow, setChartSettingsShow] = useState(false);
+  const [iconPicker, setIconPicker] = useState(false);
   // const { height, width } = useWindowDimensions();
   const openInfoTick = Boolean(infoTickEl);
   const openInfoNull = Boolean(infoNullEl);
@@ -75,22 +80,23 @@ const Navigation = function () {
 
   const handleGoBack = function () {
     Swal.fire({
-      text: "Would you like to save your chart options?",
+      text: "Return to home page?",
       confirmButtonText: "Yes",
       confirmButtonColor: "green",
-      denyButtonText: "No",
+      // denyButtonText: "No",
       showConfirmButton: true,
-      showDenyButton: true,
+      // showDenyButton: true,
       showCancelButton: true,
     }).then(function (result) {
       if (result.isConfirmed) {
-        dispatch(selectedType("default"));
-        navigate("/");
-      } else if (result.isDenied) {
         dispatch(RESET_STATE_OPTIONS());
         dispatch(selectedType("default"));
         navigate("/");
       }
+      //     dispatch(selectedType("default"));
+      //   navigate("/");
+      // } else if (result.isDenied) {
+      //   }
     });
     // dispatch(RESET_STATE_OPTIONS());
   };
@@ -106,6 +112,12 @@ const Navigation = function () {
   const handleShowLabels = function (e) {
     dispatch(cShowLabels(e.target.checked));
   };
+  const handleShowXAxis = function (e) {
+    dispatch(cShowXAxis(e.target.checked));
+  };
+  const handleShowYAxis = function (e) {
+    dispatch(cShowYAxis(e.target.checked));
+  };
   const handleShowBarVal = function (e) {
     dispatch(cShowBarVal(e.target.checked));
   };
@@ -117,6 +129,9 @@ const Navigation = function () {
   };
   const handleType = function (e) {
     dispatch(cLineType(e.target.value));
+  };
+  const handleIconPicker = function (e) {
+    setIconPicker(!iconPicker);
   };
   // const handleNullValues = function (e) {
   //   dispatch(cConnectNull(e.target.value));
@@ -187,6 +202,7 @@ const Navigation = function () {
   const handleMoreSettings = function () {};
   const handleChartOptionShow = function (e) {
     setChartSettingsShow(!chartSettingsShow);
+    setIconPicker(false);
   };
   return (
     <nav className="navMain">
@@ -259,6 +275,24 @@ const Navigation = function () {
                 checked={options.showLabels}
               />
             </div>
+            <div className="xAxisOption">
+              <p>Show X-Axis</p>
+              <Switch
+                inputProps={{ "aria-label": "controlled" }}
+                size="small"
+                onChange={handleShowXAxis}
+                checked={options.showXAxis}
+              />
+            </div>
+            <div className="yAxisOption">
+              <p>Show Y-Axis</p>
+              <Switch
+                inputProps={{ "aria-label": "controlled" }}
+                size="small"
+                onChange={handleShowYAxis}
+                checked={options.showYAxis}
+              />
+            </div>
             {chart.value === "bar" && (
               <div className="valueOption">
                 <p>Show value</p>
@@ -317,6 +351,7 @@ const Navigation = function () {
             </div>
             <div className="legendOption">
               <p>Show legend</p>
+
               <Switch
                 inputProps={{ "aria-label": "controlled" }}
                 size="small"

@@ -187,7 +187,6 @@ h4.noName {
   justify-content: space-between;
   width: 100%;
   // position: relative;
-
 }
 .labelsXY {
   display: flex;
@@ -203,6 +202,17 @@ h4.noName {
 }
 #menu- div ul {
   height: 300px;
+}
+.recharts-wrapper .recharts-legend-item {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.1s linear;
+}
+// .recharts-wrapper .recharts-legend-item svg:hover {
+//   transform: scale(1.3);
+// }
+.recharts-wrapper .recharts-legend-item svg:active {
+  transform: scale(1.3);
 }
 .responsiveWrapper {
   width: 100%;

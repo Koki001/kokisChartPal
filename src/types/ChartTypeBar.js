@@ -70,6 +70,7 @@ const ChartTypeLine = function () {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [colorButton, setColorButton] = useState([]);
   const [tickMax, setTickMax] = useState("")
+  const [iconClicks, setIconClicks] = useState(0);
   // const [options, setOptions] = useState({
   //   lineThickness: 2,
   //   barType: "simple",
@@ -176,11 +177,12 @@ const ChartTypeLine = function () {
   };
   const handleNewLine = function (e) {
     const nameArray = [...fchartNames];
-    nameArray.push({ name: "", color: "" });
+    nameArray.push({ name: "", color: "", id: "" });
     let dataArray = [...fchartData];
     let counter = [];
     for (let i = 0; i < dataCounter.length + 1; i++) {
       counter.push(i);
+      nameArray[i] = { ...nameArray[i], id: `line${i}id` };
     }
     for (let d = 0; d < dataArray.length; d++) {
       dataArray[d] = { ...dataArray[d], [`line${dataCounter.length}`]: "" };
@@ -188,6 +190,9 @@ const ChartTypeLine = function () {
     setFChartNames(nameArray);
     setDataCounter([...counter]);
     setFChartData(dataArray);
+    setFmainData(function (current) {
+      return { ...current, data: [...dataArray], dataset: [...nameArray] };
+    });
   };
   const handleRemoveLine = function (e) {
     //   console.log(e.target.value)
@@ -267,6 +272,31 @@ const ChartTypeLine = function () {
   const handleTickAbsolute = function (e){
     setTickMax(e.target.value)
   }
+    const handleLegendClick = function (e) {
+    const typeArray = [...fmainData.dataset];
+
+    let iconArray = [
+      "line",
+      "diamond",
+      "star",
+      "wye",
+      "circle",
+    ];
+    for (let i = 0; i < fmainData.dataset.length; i++) {
+      if (e.id === fmainData.dataset[i].id) {
+        console.log(iconClicks);
+        if (iconClicks === 4) {
+          setIconClicks(0);
+        } else {
+          setIconClicks(iconClicks + 1);
+        }
+        typeArray[i].type = iconArray[iconClicks];
+      }
+    }
+    setFmainData(function (current) {
+      return { ...current, dataset: [...typeArray] };
+    });
+  }
   return (
     <>
       <div className="chartConfig">
@@ -309,6 +339,14 @@ const ChartTypeLine = function () {
             </Button>
           </div>
           <div className="dataLabelTitle">
+            {showColorPicker === true && (
+              <div
+                onClick={() => {
+                  setShowColorPicker(false);
+                }}
+                className="colorPickerExit"
+              ></div>
+            )}
             {showColorPicker === true ? (
               <div className="colorPicker">
                 <SketchPicker
@@ -668,11 +706,20 @@ const ChartTypeLine = function () {
             <Tooltip />
             {options.showLegend === true && (
               <Legend
+                onClick={handleLegendClick}
                 verticalAlign="top"
                 align="center"
                 height={36}
                 iconSize="14"
-                iconType={"circle"}
+                iconType={""}
+                payload={fmainData.dataset?.map(function (each, index) {
+                  return {
+                    id: each.id,
+                    value: each.name ? each.name : `set ${index}`,
+                    color: each.color !== "" ? each.color : "black",
+                    type: each.type,
+                  };
+                })}
               />
             )}
             {dataCounter.map(function (e, index) {

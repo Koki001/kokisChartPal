@@ -109,10 +109,10 @@
   }
 }
 .trueTextAnimation {
-  animation: leftSlide 0.7s ease-out 1;
+  animation: leftSlide 0.25s linear 1;
 }
 .trueImageAnimation {
-  animation: rightSlide 0.7s ease-out 1;
+  animation: rightSlide 0.25s linear 1;
 }
 @keyframes leftSlide {
   0% {

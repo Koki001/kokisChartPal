@@ -38,6 +38,12 @@ import {
 } from "../slices/chartMainSlice";
 
 const ChartTypeLine = function () {
+  const options = useSelector(function (state) {
+    return state.options;
+  });
+  const chart = useSelector(function (state) {
+    return state.chart;
+  });
   const [fmainData, setFmainData] = useState({
     dataPoints: [],
     xTitle: "",
@@ -45,20 +51,14 @@ const ChartTypeLine = function () {
     data: [],
     dataset: [],
   });
+  const [tickMax, setTickMax] = useState("");
   const [dataCounter, setDataCounter] = useState([]);
   const [dataNumDropdown, setDataNumDropdown] = useState([]);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [colorButton, setColorButton] = useState([]);
   const chartRef = useRef();
   const [showing, setShowing] = useState(0);
-
-  const options = useSelector(function (state) {
-    return state.options;
-  });
-  const chart = useSelector(function (state) {
-    return state.chart;
-  });
-
+  const [iconClicks, setIconClicks] = useState(0);
   useEffect(function () {
     let pointNumArray = [];
     for (let i = 0; i < 20; i++) {
@@ -125,6 +125,7 @@ const ChartTypeLine = function () {
     for (let i = 0; i < dataCounter.length + 1; i++) {
       if (e.target.id == `line${i}`) {
         updateDataLabel[i].name = e.target.value;
+        updateDataLabel[i].id = e.target.id;
       }
     }
     setFmainData(function (current) {
@@ -133,11 +134,12 @@ const ChartTypeLine = function () {
   };
   const handleNewDataset = function (e) {
     const nameArray = [...fmainData.dataset];
-    nameArray.push({ name: "", color: "" });
+    nameArray.push({ name: "", color: "", id: "" });
     let dataArray = [...fmainData.data];
     let counter = [];
     for (let i = 0; i < dataCounter.length + 1; i++) {
       counter.push(i);
+      nameArray[i] = { ...nameArray[i], id: `line${i}id` };
     }
     for (let d = 0; d < dataArray.length; d++) {
       dataArray[d] = { ...dataArray[d], [`line${dataCounter.length}`]: "" };
@@ -147,6 +149,7 @@ const ChartTypeLine = function () {
       return { ...current, data: [...dataArray], dataset: [...nameArray] };
     });
   };
+  // console.log(fmainData)
   const handleRemoveLine = function (e) {};
   const handleNextClick = function () {
     if (showing < fmainData.dataset.length - 1) {
@@ -214,7 +217,28 @@ const ChartTypeLine = function () {
       });
     }
   };
+  const handleTickAbsolute = function (e) {
+    setTickMax(e.target.value);
+  };
+  const handleLegendClick = function (e) {
+    const typeArray = [...fmainData.dataset];
 
+    let iconArray = ["line", "diamond", "star", "wye", "circle"];
+    for (let i = 0; i < fmainData.dataset.length; i++) {
+      if (e.id === fmainData.dataset[i].id) {
+        console.log(iconClicks);
+        if (iconClicks === 4) {
+          setIconClicks(0);
+        } else {
+          setIconClicks(iconClicks + 1);
+        }
+        typeArray[i].type = iconArray[iconClicks];
+      }
+    }
+    setFmainData(function (current) {
+      return { ...current, dataset: [...typeArray] };
+    });
+  };
   return (
     <>
       <div className="chartConfig">
@@ -270,6 +294,14 @@ const ChartTypeLine = function () {
             )}
           </div>
           <div className="dataLabelTitle">
+            {showColorPicker === true && (
+              <div
+                onClick={() => {
+                  setShowColorPicker(false);
+                }}
+                className="colorPickerExit"
+              ></div>
+            )}
             {showColorPicker === true ? (
               <div className="colorPicker">
                 <SketchPicker
@@ -376,10 +408,16 @@ const ChartTypeLine = function () {
                   }}
                 ></Button>
               )}
-              <h4>
+              <h4
+                className={
+                  fmainData.dataset[showing].name === ""
+                    ? "noName"
+                    : "nameFilled"
+                }
+              >
                 {fmainData.dataset[showing].name
                   ? fmainData.dataset[showing].name
-                  : `Dataset ${showing + 1} Title`}
+                  : `No Name`}
               </h4>
               {dataCounter.length > 1 && (
                 <Button
@@ -483,6 +521,18 @@ const ChartTypeLine = function () {
         ) : null}
       </div>
       <div className="responsiveWrapper">
+        <div className="absoluteTickChange">
+          <TextField
+            onChange={handleTickAbsolute}
+            name={"tickTooltip"}
+            value={tickMax}
+            // id="standard-basic"
+            placeholder={"Tick max"}
+            variant="outlined"
+            sx={{ width: "45%" }}
+            size="small"
+          />
+        </div>
         <ResponsiveContainer
           width={"100%"}
           height={600}
@@ -501,59 +551,72 @@ const ChartTypeLine = function () {
             {options.showGrid === true && (
               <CartesianGrid strokeDasharray="3 3" />
             )}
-            <XAxis
-              domain={"     "}
-              interval={0}
-              angle={options.rotateLabels === true ? -45 : 0}
-              dataKey={
-                fmainData.data[0] && fmainData.data[0].pointName !== ""
-                  ? "pointName"
-                  : "      "
-              }
-              label={
-                options.showLabels === true && {
-                  value: fmainData.xTitle,
-                  position: "bottom",
-                  className: "xAxisLabel",
-                  offset: options.rotateLabels === true ? 30 : 15,
+            {options.showXAxis === true && (
+              <XAxis
+                domain={"     "}
+                interval={0}
+                angle={options.rotateLabels === true ? -45 : 0}
+                dataKey={
+                  fmainData.data[0] && fmainData.data[0].pointName !== ""
+                    ? "pointName"
+                    : "      "
                 }
-              }
-              tick={{
-                dy: options.rotateLabels === true ? 20 : 5,
-                fontSize: "14px",
-                width: options.rotateLabels === true ? "50px" : null,
-                wordWrap:
-                  options.rotateLabels === true ? "break-word" : "normal",
-                fill: options.showLabels === true ? "black" : "transparent",
-              }}
-            />
-            <YAxis
-              // domain={[0, `dataMax`]}
-              domain={[0, "auto"]}
-              label={
-                options.showLabels === true && {
-                  value: fmainData.yTitle,
-                  angle: -90,
-                  position: "insideLeft",
-                  className: "yAxisLabel",
-                  offset: -5,
+                label={
+                  options.showLabels === true && {
+                    value: fmainData.xTitle,
+                    position: "bottom",
+                    className: "xAxisLabel",
+                    offset: options.rotateLabels === true ? 30 : 15,
+                  }
                 }
-              }
-              tick={{
-                dx: -5,
-                fontSize: "14px",
-                fill: options.showLabels === true ? "black" : "transparent",
-              }}
-              tickCount={options.tickNumber}
-            />
+                tick={{
+                  dy: options.rotateLabels === true ? 20 : 5,
+                  fontSize: "14px",
+                  width: options.rotateLabels === true ? "50px" : null,
+                  wordWrap:
+                    options.rotateLabels === true ? "break-word" : "normal",
+                  fill: options.showLabels === true ? "black" : "transparent",
+                }}
+              />
+            )}
+            {options.showYAxis === true && (
+              <YAxis
+                // domain={[0, `dataMax`]}
+                domain={[0, tickMax === "" ? "auto" : Number(tickMax)]}
+                label={
+                  options.showLabels === true && {
+                    value: fmainData.yTitle,
+                    angle: -90,
+                    position: "insideLeft",
+                    className: "yAxisLabel",
+                    offset: -5,
+                  }
+                }
+                tick={{
+                  dx: -5,
+                  fontSize: "14px",
+                  fill: options.showLabels === true ? "black" : "transparent",
+                }}
+                tickCount={options.tickNumber}
+              />
+            )}
             <Tooltip />
             {options.showLegend === true && (
               <Legend
+                onClick={handleLegendClick}
                 verticalAlign="top"
                 align="center"
                 height={36}
                 iconSize="14"
-                iconType={"circle"}
+                iconType={""}
+                payload={fmainData.dataset?.map(function (each, index) {
+                  return {
+                    id: each.id,
+                    value: each.name ? each.name : `set ${index}`,
+                    color: each.color !== "" ? each.color : "black",
+                    type: each.type,
+                  };
+                })}
               />
             )}
             {dataCounter.map(function (e, index) {

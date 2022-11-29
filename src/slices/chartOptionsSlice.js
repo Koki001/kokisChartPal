@@ -8,6 +8,8 @@ const initialState = {
   barType: "horizontal",
   showGrid: true,
   showLabels: true,
+  showXAxis: true,
+  showYAxis: true,
   showBarVal: true,
   rotateLabels: false,
   showLegend: true,
@@ -26,6 +28,8 @@ export const chartOptionsSlice = createSlice({
     barType: "horizontal",
     showGrid: true,
     showLabels: true,
+    showXAxis: true,
+    showYAxis: true,
     showBarVal: true,
     rotateLabels: false,
     showLegend: true,
@@ -54,6 +58,12 @@ export const chartOptionsSlice = createSlice({
     },
     cShowLabels: (state, action) => {
       state.showLabels = action.payload;
+    },
+    cShowXAxis: (state, action) => {
+      state.showXAxis = action.payload;
+    },
+    cShowYAxis: (state, action) => {
+      state.showYAxis = action.payload;
     },
     cShowBarVal: (state, action) => {
       state.showBarVal = action.payload;
@@ -84,6 +94,8 @@ export const {
   cLineType,
   cShowGrid,
   cShowLabels,
+  cShowXAxis,
+  cShowYAxis,
   cShowBarVal,
   cRotateLabels,
   cShowLegend,
