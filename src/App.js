@@ -19,7 +19,7 @@ function App() {
     <div className="mainApp">
       <Routes>
         <Route path="/" element={<HomePage type={handleChartLink} />} />
-        <Route path={`/create/${chart}`} element={<CreateChart />} />
+        <Route path={`/${chart}`} element={<CreateChart />} />
       </Routes>
     </div>
   );

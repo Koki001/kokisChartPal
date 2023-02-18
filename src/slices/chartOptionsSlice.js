@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   chartRef: {},
   lineThickness: 2,
-  barThickness: 5,
+  barThickness: 31,
   lineType: "monotone",
   barType: "horizontal",
   showGrid: true,
@@ -23,7 +23,7 @@ export const chartOptionsSlice = createSlice({
   initialState: {
     chartRef: {},
     lineThickness: 2,
-    barThickness: 5,
+    barThickness: 31,
     lineType: "monotone",
     barType: "horizontal",
     showGrid: true,
@@ -39,7 +39,7 @@ export const chartOptionsSlice = createSlice({
   },
   reducers: {
     cChartRef: (state, action) => {
-      state.ChartRef = action.payload;
+      state.chartRef = action.payload;
     },
     cLineThickness: (state, action) => {
       state.lineThickness = action.payload;

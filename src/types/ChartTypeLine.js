@@ -521,13 +521,21 @@ const ChartTypeLine = function () {
         ) : null}
       </div>
       <div className="responsiveWrapper">
-        <div className="absoluteTickChange">
+        <div
+          className="absoluteTickChange"
+          style={{
+            transform:
+              options.showLegend === false ? "rotate(-90deg)" : "rotate(0)",
+            left: options.showLegend === false ? "-5px" : "5px",
+            top: options.showLegend === false ? "15px" : "5px",
+          }}
+        >
           <TextField
             onChange={handleTickAbsolute}
             name={"tickTooltip"}
             value={tickMax}
             // id="standard-basic"
-            placeholder={"Tick max"}
+            placeholder={"Max"}
             variant="outlined"
             sx={{ width: "45%" }}
             size="small"

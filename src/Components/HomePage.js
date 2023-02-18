@@ -155,7 +155,7 @@ const HomePage = function (props) {
                   </p>
                 </div>
                 <div className="buttonLink">
-                  <Link to={`/create/${selectedChart}`}>
+                  <Link to={`/line`}>
                     <Button variant="outlined">Use this type</Button>
                   </Link>
                 </div>
@@ -172,7 +172,7 @@ const HomePage = function (props) {
                   </p>
                 </div>
                 <div className="buttonLink">
-                  <Link to={`/create/${selectedChart}`}>
+                  <Link to={`/area`}>
                     <Button variant="outlined">Use this type</Button>
                   </Link>
                 </div>
@@ -189,7 +189,7 @@ const HomePage = function (props) {
                   </p>
                 </div>
                 <div className="buttonLink">
-                  <Link to={`/create/${selectedChart}`}>
+                  <Link to={`/bar`}>
                     <Button variant="outlined">Use this type</Button>
                   </Link>
                 </div>

@@ -412,10 +412,10 @@ const Navigation = function () {
                   <Slider
                     aria-label="Line thickness"
                     value={options.lineThickness}
-                    step={10}
+                    step={1}
                     marks
-                    min={5}
-                    max={25}
+                    min={1}
+                    max={5}
                     onChange={handleLineThickness}
                     size="small"
                   />

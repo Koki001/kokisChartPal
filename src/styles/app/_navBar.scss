@@ -163,6 +163,10 @@
     top: 0;
     right: 40px;
   }
+  .labelCustomIconAbsolute {
+    position: absolute;
+  }
+
   .iconPickHide {
     display: none;
   }
@@ -173,7 +177,7 @@
 .absoluteTickChange {
   position: absolute;
   left: 5px;
-  width: 80px;
+  width: 55px;
   z-index: 100;
   div {
     width: 100%;

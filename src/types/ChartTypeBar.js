@@ -39,6 +39,7 @@ import Typography from "@mui/material/Typography";
 import PriorityHighIcon from "@mui/icons-material/PriorityHigh";
 import { height } from "@mui/system";
 import { useDispatch, useSelector } from "react-redux";
+import DownloadIcon from "@mui/icons-material/Download";
 import {
   selectedType,
   dataPointNum,
@@ -49,7 +50,7 @@ import {
 } from "../slices/chartMainSlice";
 import { current } from "@reduxjs/toolkit";
 
-const ChartTypeLine = function () {
+const ChartTypeBar = function () {
   const options = useSelector(function (state) {
     return state.options;
   });
@@ -61,6 +62,7 @@ const ChartTypeLine = function () {
     xLabel: "",
     yLabel: "",
     data: [],
+    dataset: [],
   });
   const [fchartData, setFChartData] = useState([]);
   const [dataCounter, setDataCounter] = useState([]);
@@ -69,7 +71,7 @@ const ChartTypeLine = function () {
   const [fchartNames, setFChartNames] = useState([]);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [colorButton, setColorButton] = useState([]);
-  const [tickMax, setTickMax] = useState("")
+  const [tickMax, setTickMax] = useState("");
   const [iconClicks, setIconClicks] = useState(0);
   // const [options, setOptions] = useState({
   //   lineThickness: 2,
@@ -228,7 +230,6 @@ const ChartTypeLine = function () {
     setFChartNames(colorArr);
   };
 
-  console.log(options.barThickness);
   const inputOptions = {
     white: "White",
     transparent: "Transparent",
@@ -244,7 +245,6 @@ const ChartTypeLine = function () {
         input: "radio",
         inputOptions: inputOptions,
         inputValidator: (value) => {
-          console.log(value);
           if (!value) {
             return "You need to choose something!";
           } else {
@@ -269,22 +269,15 @@ const ChartTypeLine = function () {
     }
   };
   const handleMoreSettings = function () {};
-  const handleTickAbsolute = function (e){
-    setTickMax(e.target.value)
-  }
-    const handleLegendClick = function (e) {
+  const handleTickAbsolute = function (e) {
+    setTickMax(e.target.value);
+  };
+  const handleLegendClick = function (e) {
     const typeArray = [...fmainData.dataset];
 
-    let iconArray = [
-      "line",
-      "diamond",
-      "star",
-      "wye",
-      "circle",
-    ];
+    let iconArray = ["line", "diamond", "star", "wye", "circle"];
     for (let i = 0; i < fmainData.dataset.length; i++) {
       if (e.id === fmainData.dataset[i].id) {
-        console.log(iconClicks);
         if (iconClicks === 4) {
           setIconClicks(0);
         } else {
@@ -296,7 +289,7 @@ const ChartTypeLine = function () {
     setFmainData(function (current) {
       return { ...current, dataset: [...typeArray] };
     });
-  }
+  };
   return (
     <>
       <div className="chartConfig">
@@ -337,6 +330,19 @@ const ChartTypeLine = function () {
             >
               {fchartNames.length <= 0 ? "New" : "Add"} data
             </Button>
+            {fmainData.dataset.length > 0 && (
+              <Button
+                sx={{
+                  padding: "2px 10px",
+                  fontSize: "13px",
+                  backgroundColor: "rgba(255, 255, 255, 0.3)",
+                }}
+                variant="outlined"
+                onClick={handleSaveChart}
+              >
+                <DownloadIcon />
+              </Button>
+            )}
           </div>
           <div className="dataLabelTitle">
             {showColorPicker === true && (
@@ -654,53 +660,59 @@ const ChartTypeLine = function () {
               </>
             ) : (
               <>
-                <XAxis
-                  interval={0}
-                  type={"category"}
-                  angle={options.rotateLabels === true ? -45 : 0}
-                  dataKey="name"
-                  label={
-                    options.showLabels === true && {
-                      value: fmainData.xLabel,
-                      position: "bottom",
-                      className: "xAxisLabel",
-                      offset: options.rotateLabels === true ? 30 : 15,
+                {options.showXAxis === true && (
+                  <XAxis
+                    interval={0}
+                    type={"category"}
+                    angle={options.rotateLabels === true ? -45 : 0}
+                    dataKey="name"
+                    label={
+                      options.showLabels === true && {
+                        value: fmainData.xLabel,
+                        position: "bottom",
+                        className: "xAxisLabel",
+                        offset: options.rotateLabels === true ? 30 : 15,
+                      }
                     }
-                  }
-                  tick={{
-                    dy: options.rotateLabels === true ? 20 : 5,
-                    fontSize: "14px",
-                    width: options.rotateLabels === true ? "50px" : null,
-                    wordWrap:
-                      options.rotateLabels === true ? "break-word" : "normal",
-                    fill: options.showLabels === true ? "black" : "transparent",
-                  }}
-                />
-                <YAxis
-                  // domain={[0, `dataMax`]}
-                  domain={[
-                    0,
-                    tickMax === "" && chart.value === "horizontal"
-                      ? "auto"
-                      : Number(tickMax),
-                  ]}
-                  type={"number"}
-                  label={
-                    options.showLabels === true && {
-                      value: fmainData.yLabel,
-                      angle: -90,
-                      position: "insideLeft",
-                      className: "yAxisLabel",
-                      offset: -5,
+                    tick={{
+                      dy: options.rotateLabels === true ? 20 : 5,
+                      fontSize: "14px",
+                      width: options.rotateLabels === true ? "50px" : null,
+                      wordWrap:
+                        options.rotateLabels === true ? "break-word" : "normal",
+                      fill:
+                        options.showLabels === true ? "black" : "transparent",
+                    }}
+                  />
+                )}
+                {options.showYAxis === true && (
+                  <YAxis
+                    // domain={[0, `dataMax`]}
+                    domain={[
+                      0,
+                      tickMax === "" && chart.value === "horizontal"
+                        ? "auto"
+                        : Number(tickMax),
+                    ]}
+                    type={"number"}
+                    label={
+                      options.showLabels === true && {
+                        value: fmainData.yLabel,
+                        angle: -90,
+                        position: "insideLeft",
+                        className: "yAxisLabel",
+                        offset: -5,
+                      }
                     }
-                  }
-                  tick={{
-                    dx: -5,
-                    fontSize: "14px",
-                    fill: options.showLabels === true ? "black" : "transparent",
-                  }}
-                  tickCount={options.tickNumber}
-                />
+                    tick={{
+                      dx: -5,
+                      fontSize: "14px",
+                      fill:
+                        options.showLabels === true ? "black" : "transparent",
+                    }}
+                    tickCount={options.tickNumber}
+                  />
+                )}
               </>
             )}
             <Tooltip />
@@ -779,4 +791,4 @@ const ChartTypeLine = function () {
   );
 };
 
-export default ChartTypeLine;
+export default ChartTypeBar;

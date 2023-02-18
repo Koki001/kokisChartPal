@@ -38,7 +38,7 @@ import {
 } from "../slices/chartMainSlice";
 import { current } from "@reduxjs/toolkit";
 
-const ChartTypeLine = function () {
+const ChartTypeArea = function () {
   const options = useSelector(function (state) {
     return state.options;
   });
@@ -663,13 +663,21 @@ const ChartTypeLine = function () {
         ) : null}
       </div>
       <div className="responsiveWrapper">
-        <div className="absoluteTickChange">
+        <div
+          className="absoluteTickChange"
+          style={{
+            transform:
+              options.showLegend === false ? "rotate(-90deg)" : "rotate(0)",
+            left: options.showLegend === false ? "-5px" : "5px",
+            top: options.showLegend === false ? "15px" : "5px",
+          }}
+        >
           <TextField
             onChange={handleTickAbsolute}
             name={"tickTooltip"}
             value={tickMax}
             // id="standard-basic"
-            placeholder={"Tick max"}
+            placeholder={"Max"}
             variant="outlined"
             sx={{ width: "45%" }}
             size="small"
@@ -693,51 +701,55 @@ const ChartTypeLine = function () {
             {options.showGrid === true && (
               <CartesianGrid strokeDasharray="3 3" />
             )}
-            <XAxis
-              domain={"     "}
-              interval={0}
-              angle={options.rotateLabels === true ? -45 : 0}
-              dataKey={
-                fmainData.data[0] && fmainData.data[0].pointName !== ""
-                  ? "pointName"
-                  : "      "
-              }
-              label={
-                options.showLabels === true && {
-                  value: fmainData.xTitle,
-                  position: "bottom",
-                  className: "xAxisLabel",
-                  offset: options.rotateLabels === true ? 30 : 15,
+            {options.showXAxis === true && (
+              <XAxis
+                domain={"     "}
+                interval={0}
+                angle={options.rotateLabels === true ? -45 : 0}
+                dataKey={
+                  fmainData.data[0] && fmainData.data[0].pointName !== ""
+                    ? "pointName"
+                    : "      "
                 }
-              }
-              tick={{
-                dy: options.rotateLabels === true ? 20 : 5,
-                fontSize: "14px",
-                width: options.rotateLabels === true ? "50px" : null,
-                wordWrap:
-                  options.rotateLabels === true ? "break-word" : "normal",
-                fill: options.showLabels === true ? "black" : "transparent",
-              }}
-            />
-            <YAxis
-              // domain={[0, `dataMax`]}
-              domain={[0, tickMax === "" ? "auto" : Number(tickMax)]}
-              label={
-                options.showLabels === true && {
-                  value: fmainData.yTitle,
-                  angle: -90,
-                  position: "insideLeft",
-                  className: "yAxisLabel",
-                  offset: -5,
+                label={
+                  options.showLabels === true && {
+                    value: fmainData.xTitle,
+                    position: "bottom",
+                    className: "xAxisLabel",
+                    offset: options.rotateLabels === true ? 30 : 15,
+                  }
                 }
-              }
-              tick={{
-                dx: -5,
-                fontSize: "14px",
-                fill: options.showLabels === true ? "black" : "transparent",
-              }}
-              tickCount={options.tickNumber}
-            />
+                tick={{
+                  dy: options.rotateLabels === true ? 20 : 5,
+                  fontSize: "14px",
+                  width: options.rotateLabels === true ? "50px" : null,
+                  wordWrap:
+                    options.rotateLabels === true ? "break-word" : "normal",
+                  fill: options.showLabels === true ? "black" : "transparent",
+                }}
+              />
+            )}
+            {options.showYAxis === true && (
+              <YAxis
+                // domain={[0, `dataMax`]}
+                domain={[0, tickMax === "" ? "auto" : Number(tickMax)]}
+                label={
+                  options.showLabels === true && {
+                    value: fmainData.yTitle,
+                    angle: -90,
+                    position: "insideLeft",
+                    className: "yAxisLabel",
+                    offset: -5,
+                  }
+                }
+                tick={{
+                  dx: -5,
+                  fontSize: "14px",
+                  fill: options.showLabels === true ? "black" : "transparent",
+                }}
+                tickCount={options.tickNumber}
+              />
+            )}
             <Tooltip />
             {options.showLegend === true && (
               <Legend
@@ -790,4 +802,4 @@ const ChartTypeLine = function () {
   );
 };
 
-export default ChartTypeLine;
+export default ChartTypeArea;

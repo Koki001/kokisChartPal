@@ -42,7 +42,8 @@ const CreateChart = function () {
             <ChartTypeArea />
           ) : chartType.value === "bar" ? (
             <ChartTypeBar />
-          ) : // : chartType.value === "pie" ? (
+          ) : 
+          // : chartType.value === "pie" ? (
           //   <ChartTypePie />
           // )
           null}

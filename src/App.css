@@ -374,6 +374,7 @@ h5 {
 
 .dataPointInputs {
   display: flex;
+  position: relative;
 }
 
 .selectAndAdd {
@@ -971,6 +972,9 @@ h4.noName {
   top: 0;
   right: 40px;
 }
+.chartSettings .labelCustomIconAbsolute {
+  position: absolute;
+}
 .chartSettings .iconPickHide {
   display: none;
 }
@@ -982,7 +986,7 @@ h4.noName {
 .absoluteTickChange {
   position: absolute;
   left: 5px;
-  width: 80px;
+  width: 55px;
   z-index: 100;
 }
 .absoluteTickChange div {
